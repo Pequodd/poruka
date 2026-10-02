@@ -1,0 +1,10 @@
+:root{
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;--space-24:96px;--space-32:128px;--space-40:160px;--space-50:200px;
+--container-max:100%;--margin-outer:20px;--gutter:20px;--section-pad:160px;
+--radius-none:0;--radius-card:24px;--radius-pill:999px;
+--ease:cubic-bezier(0.2,0.7,0,1);/* @kind other */--dur-hover:200ms;/* @kind other */--dur-ui:450ms;/* @kind other */--dur-reveal:900ms;/* @kind other */--dur-stagger:60ms;/* @kind other */
+}
+@media (min-width:1920px){:root{--margin-outer:24px;--gutter:24px}}
+@media (max-width:1023px){:root{--margin-outer:16px;--gutter:16px}}
+@media (max-width:767px){:root{--margin-outer:12px;--gutter:12px;--section-pad:96px}}
+@media (prefers-reduced-motion:reduce){:root{--dur-hover:0ms;/* @kind other */--dur-ui:0ms;/* @kind other */--dur-reveal:0ms;/* @kind other */--dur-stagger:0ms;/* @kind other */}}

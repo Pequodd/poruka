@@ -1,0 +1,12 @@
+.btn {
+  flex: none; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; text-decoration: none; font-family: var(--font-sans); border: none;
+  transition: background var(--dur-hover) var(--ease), color var(--dur-hover) var(--ease);
+}
+.dark { background: var(--ink); color: #fff; }
+.light { background: var(--surface); color: var(--ink); border: 1px solid var(--line-hairline); }
+.btn:hover, .hoverParent:hover .btn { background: var(--accent-seal); color: #fff; }
+.glyph { display: inline-block; transition: transform var(--dur-ui) var(--ease); }
+.btn:hover .rot, :global(.icon-hover):hover .rot { transform: rotate(45deg); }
+:global(.icon-hover):hover .btn { background: var(--accent-seal); color: #fff; }

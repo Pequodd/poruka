@@ -1,0 +1,19 @@
+.chip {
+  display: inline-flex; align-items: center; height: 28px; padding: 0 12px;
+  border-radius: var(--radius-pill); border: 1px solid var(--line-hairline);
+  background: transparent; color: var(--text-primary);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap; cursor: default;
+  transition: all var(--dur-hover) var(--ease);
+}
+button.chip { cursor: pointer; }
+button.chip:hover { border-color: var(--ink); }
+.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.onInk { border-color: var(--line-hairline-ink); color: var(--text-on-ink); }
+button.onInk:hover { border-color: var(--text-on-ink); }
+.onInk.active { background: var(--text-on-ink); border-color: var(--text-on-ink); color: var(--ink); }
+
+.seal, .seal:hover { border-color: var(--accent-seal); color: var(--accent-seal); }
+.lg { height: 36px; padding: 0 16px; }
+.md { height: 36px; padding: 0 14px; }

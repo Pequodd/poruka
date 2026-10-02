@@ -1,0 +1,18 @@
+.form { display: flex; flex-direction: column; gap: 40px; }
+.submit { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.consent { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); line-height: 1.5; }
+.done { min-height: 420px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 24px; }
+.stamp {
+  font-family: var(--font-mono); font-size: 40px; letter-spacing: 0.08em; color: var(--accent-seal);
+  border: 3px solid var(--accent-seal); padding: 10px 24px;
+  animation: stamp var(--dur-ui) var(--ease) both;
+  transform: rotate(-6deg);
+}
+.doneText { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-secondary); max-width: 420px; }
+.doneText b { color: var(--text-primary); font-weight: 400; }
+@keyframes stamp {
+  0% { transform: rotate(-6deg) scale(2.2); opacity: 0; }
+  60% { transform: rotate(-6deg) scale(0.94); opacity: 1; }
+  100% { transform: rotate(-6deg) scale(1); }
+}
+@media (max-width: 767px) { .submit > :first-child { width: 100%; justify-content: space-between; display: flex; } }
