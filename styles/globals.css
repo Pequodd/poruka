@@ -2,10 +2,10 @@
 @import './tokens/typography.css';
 @import './tokens/spacing.css';
 
-/* Fonts come from next/font (self-hosted at build time) — map them onto the token names. */
+/* Fonts are self-hosted from @fontsource (imported in app/layout.tsx); no network needed at build time. */
 :root {
-  --font-sans: var(--font-onest), 'Onest', system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Onest', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --placeholder: #deded9;
   --placeholder-line: #cfcfca;
   --placeholder-dark: #1e1e1e;

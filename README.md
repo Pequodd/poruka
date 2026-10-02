@@ -13,7 +13,7 @@ Next.js (App Router) + TypeScript + CSS Modules. Статический эксп
 ```
 app/                      маршруты (layout, page, portfolio, cases/[slug])
 styles/tokens/*.css       токены дизайн-системы (цвета, типографика, отступы) — источник истины
-styles/globals.css        подключение токенов, шрифты Onest + JetBrains Mono (next/font), reduced-motion
+styles/globals.css        подключение токенов, шрифты Onest + JetBrains Mono (@fontsource, локально), reduced-motion
 src/components/ui/        Button, IconButton, Chip, SectionMarker, Stat, Marquee, Placeholder,
                           ServiceRow, TeamCard, ProjectCard, TextField, ChipGroup, ContactForm, Wordmark
 src/components/layout/    HeaderV2, Footer

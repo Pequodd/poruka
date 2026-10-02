@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { Onest, JetBrains_Mono } from 'next/font/google';
+import '@fontsource/onest/400.css';
+import '@fontsource/onest/500.css';
+import '@fontsource/jetbrains-mono/400.css';
 import '@styles/globals.css';
 import { HeaderV2 } from '@/components/layout/HeaderV2';
-
-const onest = Onest({ subsets: ['latin', 'cyrillic'], weight: ['400', '500'], variable: '--font-onest', display: 'swap' });
-const jetbrains = JetBrains_Mono({ subsets: ['latin', 'cyrillic'], weight: ['400'], variable: '--font-jetbrains', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'ПОРУКА — цифровая студия',
@@ -15,7 +14,7 @@ export const viewport: Viewport = { themeColor: '#F3F3F1', width: 'device-width'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${onest.variable} ${jetbrains.variable}`}>
+    <html lang="ru">
       <body>
         <HeaderV2 />
         <main>{children}</main>
