@@ -9,11 +9,17 @@ import s from './ProcessStage.module.css';
 
 const N = STEPS.length;
 const pad = (n: number) => String(n).padStart(2, '0');
-// Scroll budget in viewport heights: title zooms in → title out / object in → 8 steps.
-const A = 0.8, B = 0.6, STEP = 0.7;
+// Scroll budget in viewport heights: intro (title zoom / statement) → intro out, object in → 8 steps.
+const B = 0.6, STEP = 0.7;
+const STATEMENT = 'Восемь этапов. Один результат, за который мы ручаемся.'.split(' ');
 
-/** Process v6 — «product on stage»: giant title zooms in from blur, then the muted object rises; copy centred under it. */
-export function ProcessStage() {
+/**
+ * Process v6 — «product on stage»: the muted object rises with the copy centred under it.
+ * intro='zoom' — giant title zooms in from blur (v6); intro='statement' — v4 statement whose words light up (main).
+ */
+export function ProcessStage({ intro = 'zoom' }: { intro?: 'zoom' | 'statement' }) {
+  const A = intro === 'statement' ? 1 : 0.8;
+  const lead = intro === 'statement' ? 0 : 0.35;
   const ref = useRef<HTMLElement>(null);
   const rm = useReducedMotion();
   const [step, setStep] = useState(0);
@@ -28,7 +34,7 @@ export function ProcessStage() {
       const vh = window.innerHeight;
       const y = -el.getBoundingClientRect().top;
       const c = (v: number) => Math.max(0, Math.min(1, v));
-      const a = rm ? 1 : c((y + vh * 0.35) / (A * vh));
+      const a = rm ? 1 : c((y + vh * lead) / (A * vh));
       const b = rm ? 1 : c((y - A * vh) / (B * vh));
       const sp = c((y - (A + B) * vh) / (N * STEP * vh));
       el.style.setProperty('--a', a.toFixed(3));
@@ -42,35 +48,47 @@ export function ProcessStage() {
     window.addEventListener('scroll', q, { passive: true });
     window.addEventListener('resize', q);
     return () => { window.removeEventListener('scroll', q); window.removeEventListener('resize', q); cancelAnimationFrame(raf); };
-  }, [rm]);
+  }, [rm, A, lead]);
 
   const jump = useCallback((i: number) => {
     const el = ref.current;
     if (!el) return;
     const vh = window.innerHeight;
     window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + (A + B + (i + 0.5) * STEP) * vh, behavior: rm ? 'auto' : 'smooth' });
-  }, [rm]);
+  }, [rm, A]);
 
   const cur = STEPS[step];
   return (
     <section ref={ref} id="process" data-ink className={`${s.section} ${on ? s.on : ''}`} aria-label="Процесс">
       <div className={s.stage}>
-        <div className={s.title} aria-hidden={on}>
-          <h2 className={s.titleText}>Как мы<br />работаем<span>.</span></h2>
-        </div>
-
-        <div className={s.scene}><Process3D step={step} muted /></div>
-
-        <div className={s.layer} aria-hidden={!on}>
-          <div className={`mono ${s.top}`}>
-            <SectionMarker onInk active>Процесс</SectionMarker>
-            <span className={s.muted} aria-live="polite">({pad(step + 1)}/{pad(N)})</span>
+        {intro === 'statement' ? (
+          <div className={s.statement} aria-hidden={on}>
+            <h2 className={s.statementText}>
+              {STATEMENT.map((w, i) => (
+                <span key={i} className={`${s.w} ${w.startsWith('ручаемся') ? s.sealWord : ''}`} style={{ ['--i' as string]: i, ['--n' as string]: STATEMENT.length }}>{w} </span>
+              ))}
+            </h2>
           </div>
+        ) : (
+          <div className={s.title} aria-hidden={on}>
+            <h2 className={s.titleText}>Как мы<br />работаем<span>.</span></h2>
+          </div>
+        )}
+
+        <div className={s.group} aria-hidden={!on}>
+          <div className={s.scene}><Process3D step={step} muted /></div>
           <div key={step} className={s.copy}>
             <span className={`mono ${s.eyebrow} ${s.in}`}>Этап {pad(step + 1)} из {pad(N)} · {cur.duration}</span>
             <h3 className={`${s.stepTitle} ${s.in}`} style={{ animationDelay: '60ms' }}>{cur.title}</h3>
             <p className={`${s.desc} ${s.in}`} style={{ animationDelay: '140ms' }}>{cur.description}</p>
             <div className={`${s.chips} ${s.in}`} style={{ animationDelay: '220ms' }}>{cur.deliverables.map((d) => <Chip key={d} onInk>{d}</Chip>)}</div>
+          </div>
+        </div>
+
+        <div className={s.layer} aria-hidden={!on}>
+          <div className={`mono ${s.top}`}>
+            <SectionMarker onInk active>Процесс</SectionMarker>
+            <span className={s.muted} aria-live="polite">({pad(step + 1)}/{pad(N)})</span>
           </div>
           <div className={s.dots} role="group" aria-label="Этапы">
             {STEPS.map((t, i) => (

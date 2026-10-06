@@ -16,9 +16,27 @@
 .titleText { margin: 0; font-size: clamp(64px, 11vw, 200px); line-height: 0.9; letter-spacing: -0.06em; font-weight: 500; }
 .titleText span { color: var(--accent-seal); }
 
+/* Statement intro (v4): words light up one by one as --a grows, then it fades out on --b. */
+.statement {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 var(--margin-outer);
+  pointer-events: none;
+  opacity: clamp(0, calc(1 - var(--b) * 2.4), 1);
+  transform: translateY(calc(var(--b) * -6vh)) scale(calc(1 - var(--b) * 0.06));
+}
+.statementText { margin: 0; max-width: 14em; text-align: center; font-size: clamp(44px, 6.2vw, 112px); line-height: 1; letter-spacing: -0.045em; font-weight: 500; text-wrap: balance; }
+.w { opacity: clamp(0.18, calc(var(--a) * var(--n) - var(--i) + 0.6), 1); }
+.sealWord { color: var(--accent-seal); }
+
+/* Object + copy as one group, centred between the top label and the dots. */
+.group {
+  position: absolute; left: var(--margin-outer); right: var(--margin-outer); top: 128px; bottom: 112px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(12px, 3vh, 36px);
+  pointer-events: none;
+}
+.on .group { pointer-events: auto; }
 .scene {
-  position: absolute; left: 50%; top: 9vh; width: min(70vw, 980px); height: 50vh; transform-origin: 50% 60%;
-  transform: translateX(-50%) translateY(calc((1 - var(--b)) * 40vh)) scale(calc(0.7 + var(--b) * 0.3));
+  position: relative; flex: 0 1 44vh; min-height: 160px; width: min(70vw, 980px); transform-origin: 50% 60%;
+  transform: translateY(calc((1 - var(--b)) * 40vh)) scale(calc(0.7 + var(--b) * 0.3));
   opacity: clamp(0, calc((var(--b) - 0.25) * 1.2), 0.85);
 }
 .scene canvas { position: absolute; inset: 0; }
@@ -29,8 +47,9 @@
 .muted { color: var(--text-on-ink-muted); }
 
 .copy {
-  position: absolute; left: 50%; top: 60vh; transform: translateX(-50%); width: min(92vw, 820px);
+  position: relative; width: min(92vw, 820px); flex: none;
   display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  opacity: clamp(0, calc((var(--b) - 0.55) * 2.4), 1);
 }
 .eyebrow { color: var(--text-on-ink-muted); }
 .stepTitle { margin: 0; font-size: clamp(40px, 4.4vw, 80px); line-height: 1; letter-spacing: -0.045em; font-weight: 500; text-wrap: balance; }
@@ -51,8 +70,9 @@
 @media (max-width: 767px) {
   .section { height: 780svh; }
   .stage { height: 100svh; }
-  .scene { top: 13svh; width: 92vw; height: 38svh; }
-  .copy { top: auto; bottom: 96px; gap: 12px; }
+  .group { top: 112px; bottom: 80px; }
+  .scene { flex-basis: 34svh; width: 92vw; }
+  .copy { gap: 12px; }
   .stepTitle { font-size: 38px; }
   .desc { font-size: 16px; }
   .top { top: 84px; }

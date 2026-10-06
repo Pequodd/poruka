@@ -10,14 +10,14 @@ import { Team } from './Team';
 import { Works } from './Works';
 
 /** Everything below the first screen — shared by all home variants. `process` picks the Process section design. */
-export function HomeRest({ process = 'v2' }: { process?: 'v2' | 'apple' | 'stage' }) {
+export function HomeRest({ process = 'v2' }: { process?: 'v2' | 'apple' | 'stage' | 'stage-statement' }) {
   return (
     <>
       <About />
       <Works />
       <Marquee words={['Исследуем', 'Проектируем', 'Разрабатываем', 'Поддерживаем', 'Ручаемся']} sealWord="Ручаемся" />
       <Services />
-      {process === 'apple' ? <ProcessApple /> : process === 'stage' ? <ProcessStage /> : <Process />}
+      {process === 'apple' ? <ProcessApple /> : process === 'stage' ? <ProcessStage /> : process === 'stage-statement' ? <ProcessStage intro="statement" /> : <Process />}
       <Team />
       <Contact />
       <Footer />
