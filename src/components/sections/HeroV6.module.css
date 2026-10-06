@@ -1,0 +1,80 @@
+/*
+ * Home v6 first screen — «a ruled document with a seal»: the headline is laid out on three ruled lines, offset on the
+ * grid, with small mono notes between them; the 3D seal stamps the page on the right. Lines draw in, rows slide in.
+ */
+.hero { position: relative; min-height: max(100vh, 760px); padding: 96px var(--margin-outer) var(--margin-outer); background: var(--paper); display: flex; flex-direction: column; }
+.top { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 20px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-seal); margin-right: 10px; vertical-align: 1px; }
+.muted { color: var(--text-secondary); }
+
+.rows { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.row { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; padding: 14px 0 10px; }
+/* Ruled line that draws in from the left. */
+.row::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-hairline);
+  transform-origin: left; transform: scaleX(0); transition: transform 1100ms var(--ease) var(--d, 0ms);
+}
+.on .row::before { transform: scaleX(1); }
+
+.text { font-size: clamp(64px, 9.6vw, 176px); line-height: 0.88; letter-spacing: -0.06em; font-weight: 500; white-space: nowrap; }
+.mask { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.slide { display: inline-block; transform: translateY(105%); transition: transform 1000ms var(--ease) var(--d, 0ms); }
+.on .slide { transform: none; }
+.grey { color: var(--text-secondary); }
+.mark { position: relative; display: inline-block; }
+.underline { position: absolute; left: 0; right: 0.04em; bottom: 0.04em; height: 0.055em; background: var(--accent-seal); transform-origin: left; transform: scaleX(0); transition: transform 700ms var(--ease) 1300ms; }
+.on .underline { transform: scaleX(1); }
+
+.note { color: var(--text-secondary); padding-bottom: 0.9em; opacity: 0; transition: opacity var(--dur-reveal) var(--ease) var(--d, 0ms); }
+.note b { color: var(--text-primary); font-weight: 400; }
+.on .note { opacity: 1; }
+
+.r1 .text { grid-column: 1 / 7; }
+.r1 .note { grid-column: 7 / 10; }
+.r2 .note { grid-column: 1 / 3; }
+.r2 .text { grid-column: 3 / 11; }
+.r3 .text { grid-column: 1 / 9; }
+.r3 .note { grid-column: 9 / 11; }
+
+/* The seal stamps the document: right, across the first two lines. */
+.seal {
+  position: absolute; right: 0; top: 50%; width: min(28vw, 420px); aspect-ratio: 1; transform: translateY(-62%);
+  opacity: 0; transition: opacity 900ms var(--ease) 600ms;
+}
+.on .seal { opacity: 1; }
+
+.bottom { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; padding-top: 24px; }
+.bottom::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-hairline); transform-origin: left; transform: scaleX(0); transition: transform 1100ms var(--ease) 360ms; }
+.on .bottom::before { transform: scaleX(1); }
+.lead { grid-column: 1 / 6; margin: 0; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-secondary); }
+.lead b { color: var(--text-primary); font-weight: 400; }
+.btns { grid-column: 7 / 13; justify-self: end; display: flex; gap: 12px; }
+.fade { opacity: 0; transform: translateY(12px); transition: opacity var(--dur-reveal) var(--ease) var(--d, 0ms), transform var(--dur-reveal) var(--ease) var(--d, 0ms); }
+.on .fade { opacity: 1; transform: none; }
+
+@media (max-width: 1023px) {
+  .text { font-size: 10.4vw; }
+  .seal { width: 30vw; }
+  .lead { grid-column: 1 / 8; }
+  .btns { grid-column: 1 / 13; justify-self: start; margin-top: 24px; }
+}
+@media (max-width: 767px) {
+  .hero { min-height: max(100svh, 700px); padding-top: 84px; }
+  .long { display: none; }
+  .top span { white-space: nowrap; }
+  .row { grid-template-columns: 1fr; row-gap: 6px; padding: 12px 0 8px; }
+  .text { font-size: 14.4vw; }
+  .r1 .text, .r1 .note, .r2 .text, .r2 .note, .r3 .text, .r3 .note { grid-column: auto; }
+  .note { order: 2; padding-bottom: 0; }
+  .r2 .text { padding-left: 12vw; }
+  .seal { width: 34vw; top: 0; transform: translateY(-20%); }
+  .bottom { grid-template-columns: 1fr; row-gap: 20px; }
+  .lead { grid-column: auto; font-size: 17px; }
+  .btns { grid-column: auto; flex-direction: column; width: 100%; margin-top: 0; }
+  .btns > * { display: flex; width: 100%; justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row::before, .bottom::before { transform: none; }
+  .slide, .fade { transform: none; opacity: 1; }
+  .note, .seal { opacity: 1; }
+}

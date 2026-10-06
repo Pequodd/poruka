@@ -22,7 +22,7 @@ function sealFace(center: string) {
     const a = -Math.PI / 2 + i * step;
     g.save(); g.translate(S / 2 + Math.cos(a) * R, S / 2 + Math.sin(a) * R); g.rotate(a + Math.PI / 2); g.fillText(txt[i], 0, 0); g.restore();
   }
-  g.font = '500 150px Onest, sans-serif'; g.fillText(center, S / 2, S / 2 + 8);
+  g.font = `500 ${center.length > 4 ? 92 : 150}px Onest, sans-serif`; g.fillText(center, S / 2, S / 2 + 8);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.center.set(0.5, 0.5); t.rotation = -Math.PI / 2;
   return t;

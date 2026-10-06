@@ -1,0 +1,61 @@
+/*
+ * Process v6 — «product on stage»: the object sits centred up top, the copy centred beneath it (Apple product-page
+ * rhythm). Entry: a giant title zooms in out of blur; then it gives way and the muted object rises.
+ * JS writes --a (title in), --b (title out → object in), --sp (steps progress) on the section.
+ */
+.section { position: relative; background: var(--ink); color: var(--text-on-ink); height: 780vh; --a: 0; --b: 0; --sp: 0; }
+.stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+
+.title {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 var(--margin-outer);
+  pointer-events: none;
+  opacity: clamp(0, calc(var(--a) * 1.4 - var(--b) * 2.2), 1);
+  transform: scale(calc(1.6 - var(--a) * 0.6 - var(--b) * 0.12));
+  filter: blur(calc((1 - var(--a)) * 16px));
+}
+.titleText { margin: 0; font-size: clamp(64px, 11vw, 200px); line-height: 0.9; letter-spacing: -0.06em; font-weight: 500; }
+.titleText span { color: var(--accent-seal); }
+
+.scene {
+  position: absolute; left: 50%; top: 9vh; width: min(70vw, 980px); height: 50vh; transform-origin: 50% 60%;
+  transform: translateX(-50%) translateY(calc((1 - var(--b)) * 40vh)) scale(calc(0.7 + var(--b) * 0.3));
+  opacity: clamp(0, calc((var(--b) - 0.25) * 1.2), 0.85);
+}
+.scene canvas { position: absolute; inset: 0; }
+
+.layer { position: absolute; inset: 0; opacity: clamp(0, calc((var(--b) - 0.55) * 2.4), 1); pointer-events: none; }
+.on .layer { pointer-events: auto; }
+.top { position: absolute; top: 96px; left: var(--margin-outer); right: var(--margin-outer); display: flex; justify-content: space-between; }
+.muted { color: var(--text-on-ink-muted); }
+
+.copy {
+  position: absolute; left: 50%; top: 60vh; transform: translateX(-50%); width: min(92vw, 820px);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+}
+.eyebrow { color: var(--text-on-ink-muted); }
+.stepTitle { margin: 0; font-size: clamp(40px, 4.4vw, 80px); line-height: 1; letter-spacing: -0.045em; font-weight: 500; text-wrap: balance; }
+.desc { margin: 0; max-width: 560px; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-on-ink-muted); text-wrap: pretty; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.in { animation: in 700ms var(--ease) both; }
+@keyframes in { from { opacity: 0; transform: translateY(20px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* Pagination dots: the current one stretches into a pill. */
+.dots { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; }
+.dotBtn { all: unset; cursor: pointer; height: 44px; display: flex; align-items: center; padding: 0 4px; }
+.dotBtn:focus-visible { outline: 2px solid var(--text-on-ink); outline-offset: 0; border-radius: 22px; }
+.dot { display: block; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--timeline-future); transition: width var(--dur-ui) var(--ease), background var(--dur-ui) var(--ease); }
+.dotBtn:hover .dot { background: var(--text-on-ink-muted); }
+.past .dot { background: var(--text-on-ink-muted); }
+.current .dot, .current:hover .dot { width: 32px; background: var(--text-on-ink); }
+
+@media (max-width: 767px) {
+  .section { height: 780svh; }
+  .stage { height: 100svh; }
+  .scene { top: 13svh; width: 92vw; height: 38svh; }
+  .copy { top: auto; bottom: 96px; gap: 12px; }
+  .stepTitle { font-size: 38px; }
+  .desc { font-size: 16px; }
+  .top { top: 84px; }
+  .dots { bottom: 24px; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { .in { animation: none; } .title { filter: none; } }
