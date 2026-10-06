@@ -61,11 +61,12 @@
 /* ---------- Hero ---------- */
 .hero {
   position: relative; min-height: 100vh; min-height: 100svh; --hp: 0;
-  display: flex; flex-direction: column; justify-content: center; padding: 120px var(--margin-outer) 96px;
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 120px var(--margin-outer) max(96px, 11vh);
 }
 /* Background video (the glass links stay hidden on the first screen — the video is the visual here). */
 .hero { isolation: isolate; }
-.heroMedia { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #d3cac4; }
+/* Lightened in CSS (no re-encode): brighter, a touch less contrast, so the paper tone matches the rest of the page. */
+.heroMedia { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #ebe6e2; filter: brightness(1.22) contrast(0.88) saturate(1.05); }
 .heroMedia video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; }
 .heroTitle {
   mix-blend-mode: difference; color: #fff;
