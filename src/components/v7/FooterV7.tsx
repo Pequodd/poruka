@@ -5,7 +5,7 @@ import { CONTACTS as C, NAV } from '@/data/content';
 import { prefersReducedMotion } from '@/lib/hooks';
 import s from './V7.module.css';
 
-/** The ring as the «О» of the footer wordmark — its own small canvas, mounted when the footer nears view. */
+/** The glass seal as the «О» of the footer wordmark — its own small canvas, mounted when the footer nears view. */
 function MiniOrbit() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {

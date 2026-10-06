@@ -73,6 +73,8 @@ export function HeaderV2() {
           </div>
           <div className={`${s.side} ${s.right}`}>
             {RIGHT.map(([l, h]) => <NavLink key={l} label={l} href={h} />)}
+            {/* Shown only in the v7 glass look (see the html[data-look] rules). */}
+            <Link href="#contact" className={s.cta}><span className={s.ctaDot} aria-hidden="true" />Обсудить проект</Link>
             <button type="button" className={s.burger} aria-label={open ? 'Закрыть меню' : 'Меню'} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(!open)}>
               <span className={s.line} /><span className={s.line} />
             </button>

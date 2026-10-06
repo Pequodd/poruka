@@ -12,8 +12,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const c = (v: number) => Math.max(0, Math.min(1, v));
 
 /**
- * Pinned works: the ring holds centre stage; each project's giant title arrives from the right out of blur
- * and leaves to the left, while the screenshot and a glass info card slide in from opposite sides.
+ * Pinned works, case-first: each project fills the stage as a large window (title above it, a glass result card
+ * on its corner). The next case slides in from the right and grows into place; the current one recedes to the left
+ * out of focus. The glass seal hangs behind and peeks around the window.
  */
 export function WorksV7() {
   const ref = useRef<HTMLElement>(null);
@@ -31,7 +32,7 @@ export function WorksV7() {
     setCur(Math.min(N - 1, Math.floor(p + 0.15)));
   });
   return (
-    <section ref={ref} id="works" className={s.works} style={{ height: `${N * 90 + 100}vh` }} data-orbit="0 0 1.12 0 1" data-orbit-m="0 -6 1.1 0 1" aria-label="Работы">
+    <section ref={ref} id="works" className={s.works} style={{ height: `${N * 90 + 100}vh` }} data-orbit="0 6 1.5 0 1" data-orbit-m="0 -4 1.25 0 1" aria-label="Работы">
       <div className={s.wStage}>
         <div className={s.wTop}>
           <span className={`mono ${s.eyebrow}`}>(02) Работы</span>
@@ -40,16 +41,18 @@ export function WorksV7() {
         {ITEMS.map((p, i) => (
           <div key={p.slug} ref={(el) => { items.current[i] = el; }} className={s.wItem} aria-hidden={i !== cur} data-on={i === cur ? '' : undefined}>
             <h3 className={s.wTitle}>{p.title}</h3>
-            <Link href={caseHref(p)} className={s.wShot} tabIndex={i === cur ? 0 : -1}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={asset(p.image!)} alt={`${p.title} — главный экран`} />
-              <span className={s.wCap}><span>{p.cat}</span><span>[{pad(i + 1)}]</span></span>
-            </Link>
-            <div className={`${s.glass} ${s.wInfo}`}>
-              <span className={`mono ${s.muted}`}>{p.meta}</span>
-              <b className={s.wResult}>{p.result}</b>
-              <p className={s.wText}>{p.case.oneLiner}</p>
-              <Link href={caseHref(p)} className={s.wLink} tabIndex={i === cur ? 0 : -1}>Смотреть кейс →</Link>
+            <div className={s.wCase}>
+              <Link href={caseHref(p)} className={s.wShot} tabIndex={i === cur ? 0 : -1} aria-label={`Кейс «${p.title}»`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={asset(p.image!)} alt="" />
+                <span className={s.wCap}><span>{p.cat} · {p.services}</span><span>[{pad(i + 1)}]</span></span>
+              </Link>
+              <div className={`${s.glass} ${s.wInfo}`}>
+                <span className={`mono ${s.muted}`}>{p.meta}</span>
+                <b className={s.wResult}>{p.result}</b>
+                <p className={s.wText}>{p.case.oneLiner}</p>
+                <Link href={caseHref(p)} className={s.wLink} tabIndex={i === cur ? 0 : -1}>Смотреть кейс →</Link>
+              </div>
             </div>
           </div>
         ))}

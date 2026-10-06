@@ -5,8 +5,8 @@ import type { OrbitApi } from '@/lib/orbitScene';
 import s from './V7.module.css';
 
 /**
- * The page-wide glass ring. Sections declare a pose with data-orbit="x y scale blur opacity"
- * (x in vw, y in vh); the director interpolates between poses by scroll, so the ring travels,
+ * The page-wide glass seal. Sections declare a pose with data-orbit="x y scale blur opacity"
+ * (x in vw, y in vh); the director interpolates between poses by scroll, so the seal travels,
  * grows and drifts out of focus between blocks — the reference's signature move.
  */
 type Pose = [number, number, number, number, number];

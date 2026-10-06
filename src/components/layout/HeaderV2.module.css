@@ -99,13 +99,42 @@
   .foot { flex-direction: column; align-items: stretch; }
 }
 
-/* v7 «glass» look (html[data-look='glass'], set by the v7 page): frosted bar instead of the solid ink one. */
-:global(html[data-look='glass']) .compact .bar, :global(html[data-look='glass']) .open .bar {
-  background: rgba(255, 255, 255, 0.5); color: var(--text-primary); border-color: rgba(255, 255, 255, 0.85);
-  -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+/* v7 «glass» look (html[data-look='glass'], set by the v7 page): a dark frosted bar from the very first screen,
+   white type and an ultramarine CTA — it reads as the brightest object on the light page. Over ink it flips to light glass. */
+.cta { display: none; }
+:global(html[data-look='glass']) .bar, :global(html[data-look='glass']) .compact .bar, :global(html[data-look='glass']) .open .bar {
+  width: min(1040px, calc(100% - 2 * var(--margin-outer)));
+  background: rgba(14, 14, 14, 0.88); color: var(--text-on-ink); border-color: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%);
 }
-:global(html[data-look='glass']) .open .bar { background: rgba(255, 255, 255, 0.82); }
+:global(html[data-look='glass']) .open .bar { background: rgba(14, 14, 14, 0.9); }
+:global(html[data-look='glass']) .row { height: 64px; padding: 0 8px 0 24px; }
+:global(html[data-look='glass']) .right { gap: 22px; }
+:global(html[data-look='glass']) .left { gap: 28px; }
 :global(html[data-look='glass']) .compact.onInk .bar, :global(html[data-look='glass']) .open.onInk .bar {
-  background: rgba(24, 24, 24, 0.5); color: var(--text-on-ink); border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(243, 243, 241, 0.78); color: var(--text-primary); border-color: rgba(255, 255, 255, 0.9);
 }
-:global(html[data-look='glass']) .dot { background: var(--accent-ultra); }
+:global(html[data-look='glass']) .dot { background: var(--accent-ultra); box-shadow: none; }
+:global(html[data-look='glass']) .onInk .dot { background: var(--accent-ultra); }
+:global(html[data-look='glass']) .link:hover { color: #A9AEFF; }
+:global(html[data-look='glass']) .onInk .link:hover { color: var(--accent-ultra); }
+:global(html[data-look='glass']) .item:hover { color: #A9AEFF; }
+:global(html[data-look='glass']) .cta {
+  display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border-radius: var(--radius-pill);
+  background: var(--accent-ultra); color: #fff; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+:global(html[data-look='glass']) .cta:hover { background: var(--accent-ultra-ink); color: #fff; }
+:global(html[data-look='glass']) .cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ctaDot { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: ctaPulse 2.4s var(--ease) infinite; }
+@keyframes ctaPulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .ctaDot { animation: none; } }
+@media (max-width: 767px) {
+  :global(html[data-look='glass']) .row { height: 56px; padding: 0 6px 0 18px; }
+  :global(html[data-look='glass']) .cta { height: 40px; padding: 0 14px; font-size: 14px; }
+  :global(html[data-look='glass']) .right { gap: 14px; }
+}
+@media (max-width: 420px) { :global(html[data-look='glass']) .ctaDot { display: none; } }
+/* Glass look: CTA sits flush at the right edge as an inset pill; the burger moves before it. */
+:global(html[data-look='glass']) .cta { order: 2; }
+:global(html[data-look='glass']) .burger { margin: 0 -6px 0 -10px; }
