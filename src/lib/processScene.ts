@@ -81,7 +81,7 @@ export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean, 
     : new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.05 });
   const mesh = new THREE.InstancedMesh(geo, mat, N);
   const col = new THREE.Color();
-  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(glass ? (i === 0 ? 0x2f3bff : 0xd4d6e2) : i === 0 ? SEAL : muted ? 0x6b6b68 : PAPER));
+  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(glass ? (i === 0 ? 0x2f3bff : i % 9 === 4 ? 0x8f98ff : i % 9 === 7 ? 0xc3c8ff : 0xdcdde6) : i === 0 ? SEAL : muted ? 0x6b6b68 : PAPER));
   const g = new THREE.Group(); g.add(mesh); scene.add(g);
 
   const cur = LAYOUTS[0].map((o) => ({
