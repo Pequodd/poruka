@@ -12,7 +12,7 @@ const FAQ: [string, string][] = [
   ['Как вы используете AI?', 'Для концепций и черновиков контента — это экономит до трети бюджета. Решения, детали и финальное качество остаются за людьми.'],
 ];
 
-/** FAQ: the ring parks on the left in focus; a giant background word slides with scroll; answers expand in place. */
+/** FAQ: the glass seal parks on the left in focus; a giant background word slides with scroll; answers expand in place. */
 export function FaqV7() {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--fq', p.toFixed(4)));

@@ -20,7 +20,7 @@ const Letters = ({ text, from, tail }: { text: string; from: number; tail?: Reac
   );
 };
 
-/** v7 hero: giant title assembles letter by letter over the glass ring; glass HUD chips float around it. */
+/** v7 hero: giant title assembles letter by letter over the glass seal; glass HUD chips float around it. */
 export function HeroV7() {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--hp', Math.max(0, p * 2 - 1).toFixed(3)));

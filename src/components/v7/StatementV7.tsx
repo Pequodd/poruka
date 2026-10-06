@@ -6,7 +6,7 @@ import s from './V7.module.css';
 const TEXT = 'Мы — команда из трёх человек. Проектируем и запускаем сайты от исследования до поддержки и отвечаем за результат своим именем.'.split(' ');
 const HI = new Set(['своим', 'именем.']);
 
-/** Pinned statement: words come out of blur one by one as you scroll; the ring drifts past, out of focus. */
+/** Pinned statement: words come out of blur one by one as you scroll; the glass seal drifts past, out of focus. */
 export function StatementV7() {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pin', (p, el) => el.style.setProperty('--sp', Math.min(1, p * 1.25).toFixed(4)));

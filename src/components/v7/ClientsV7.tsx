@@ -1,7 +1,7 @@
 import { PROJECTS } from '@/data/projects';
 import s from './V7.module.css';
 
-/** Client wordmarks on glass plates, drifting over the blurred ring. Pauses on hover; static with reduced motion. */
+/** Client wordmarks on glass plates, drifting over the blurred glass seal. Pauses on hover; static with reduced motion. */
 export function ClientsV7() {
   const row = PROJECTS.map((p) => ({ name: p.case.client.replace(/ \(NDA\)/, ''), color: p.case.colors[1], slug: p.slug }));
   return (

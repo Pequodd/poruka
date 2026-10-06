@@ -5,7 +5,7 @@ import s from './V7.module.css';
 
 const ITEMS = PROJECTS.filter((p) => p.image).slice(0, 3);
 
-/** Client stories over the ring, now far out of focus: image + task on one side, giant title on the other. */
+/** Client stories over the glass seal, now far out of focus: image + task on one side, giant title on the other. */
 export function StoriesV7() {
   return (
     <section className={s.stories} data-orbit="12 0 1.5 26 0.6" data-orbit-m="0 0 1.3 20 0.5">
