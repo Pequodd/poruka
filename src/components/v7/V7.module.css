@@ -25,6 +25,8 @@
 .muted { color: var(--text-secondary); }
 .ultra { color: var(--accent-ultra); }
 .seal { color: var(--accent-seal); }
+/* Inside the «difference» title: cyan inverts to seal red over the light part of the video. */
+.heroTitle .seal { color: #00C2EB; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .h2 { margin: 0; font-size: clamp(44px, 6vw, 104px); line-height: 0.92; letter-spacing: -0.055em; font-weight: 500; text-transform: uppercase; text-wrap: balance; }
 .secHead { display: flex; flex-direction: column; align-items: center; gap: 20px; max-width: 920px; margin: 0 auto 72px; text-align: center; }
@@ -61,7 +63,12 @@
   position: relative; min-height: 100vh; min-height: 100svh; --hp: 0;
   display: flex; flex-direction: column; justify-content: center; padding: 120px var(--margin-outer) 96px;
 }
+/* Background video (the glass links stay hidden on the first screen — the video is the visual here). */
+.hero { isolation: isolate; }
+.heroMedia { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #d3cac4; }
+.heroMedia video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; }
 .heroTitle {
+  mix-blend-mode: difference; color: #fff;
   margin: 0; display: flex; flex-direction: column; font-weight: 500; text-transform: uppercase;
   font-size: clamp(54px, 10.6vw, 200px); line-height: 0.86; letter-spacing: -0.06em;
   transform: translateY(calc(var(--hp) * -14vh)); filter: blur(calc(var(--hp) * 16px)); opacity: calc(1 - var(--hp) * 0.9);
@@ -90,6 +97,7 @@
 .ctaInk { padding: 0 36px; background: var(--ink); color: var(--text-on-ink); }
 .ctaInk:hover { background: #2a2a2a; color: var(--text-on-ink); }
 .ctaNote { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); }
+.heroCta .ctaNote { padding: 7px 14px; border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.62); color: var(--text-primary); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .scrollHint { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); color: var(--text-secondary); }
 .scrollHint::after { content: ''; display: block; width: 1px; height: 28px; margin: 8px auto 0; background: currentColor; animation: hint 2s var(--ease) infinite; transform-origin: top; }
 @keyframes hint { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
@@ -286,6 +294,9 @@ a.fLink:hover { color: var(--text-on-ink); }
   .heroTitle { font-size: 14.4vw; line-height: 0.9; }
   .heroL2 { align-self: flex-start; justify-content: flex-start; }
   .hero { justify-content: flex-end; padding-bottom: 28px; }
+  /* Phones: the light fills most of the crop, so «difference» would turn the title mid-grey — keep it solid ink. */
+  .heroTitle { mix-blend-mode: normal; color: var(--text-primary); }
+  .heroTitle .seal { color: var(--accent-seal); }
   .heroFoot { flex-direction: column; margin-top: 28px; }
   .heroCta { align-items: stretch; width: 100%; }
   .heroLead { font-size: 17px; }

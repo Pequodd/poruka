@@ -87,30 +87,34 @@
 .glass .sealWord { color: var(--accent-ultra); }
 .glass .scene { opacity: clamp(0, calc((var(--b) - 0.25) * 1.2), 1); }
 .glass .copy {
-  position: absolute; left: 0; bottom: 8px; width: min(440px, 100%); align-items: flex-start; text-align: left; gap: 10px;
-  padding: 22px 24px 24px; border-radius: var(--radius-card);
-  background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(255, 255, 255, 0.9);
+  position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); width: min(560px, 100%); align-items: center; text-align: center; gap: 8px;
+  padding: 16px 28px 18px; border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
 }
-.glass .stepTitle { text-transform: uppercase; letter-spacing: -0.05em; font-size: clamp(30px, 2.6vw, 44px); }
-.glass .desc { font-size: 16px; }
-.glass .chips { justify-content: flex-start; }
+.glass .stepTitle { text-transform: uppercase; letter-spacing: -0.045em; font-size: clamp(22px, 1.8vw, 30px); line-height: 1.05; }
+.glass .desc { font-size: 15px; }
+.glass .chips { justify-content: center; margin-top: 2px; }
 /* Visual first: the object takes the whole stage, the step copy is a compact glass card in the corner. */
 .glass .group { display: block; top: 128px; bottom: 40px; }
 .glass .scene {
-  position: absolute; inset: 0; width: auto; height: auto; min-height: 0; flex: none;
+  position: absolute; inset: -88px 0 270px; width: auto; height: auto; min-height: 0; flex: none;
   transform: translateY(calc((1 - var(--b)) * 30vh)) scale(calc(0.75 + var(--b) * 0.25));
 }
-.glass .dots { left: auto; right: var(--margin-outer); transform: none; bottom: 56px; }
+/* Small centred paginator under the copy. */
+.glass .dots { bottom: 6px; gap: 0; }
+.glass .dotBtn { height: 32px; padding: 0 3px; }
+.glass .dot { width: 5px; height: 5px; }
+.glass .current .dot, .glass .current:hover .dot { width: 18px; }
 .glass .dot { background: rgba(14, 14, 14, 0.14); }
 .glass .past .dot, .glass .dotBtn:hover .dot { background: rgba(14, 14, 14, 0.38); }
 .glass .current .dot, .glass .current:hover .dot { background: var(--accent-ultra); }
 .glass .dotBtn:focus-visible { outline-color: var(--accent-ultra); }
 @media (max-width: 767px) {
-  .glass .group { top: 112px; bottom: 56px; }
-  .glass .copy { right: 0; width: auto; bottom: 0; padding: 16px 18px 18px; }
-  .glass .scene { bottom: 190px; }
-  .glass .dots { right: auto; left: 50%; transform: translateX(-50%); bottom: 12px; }
-  .glass .stepTitle { font-size: 28px; }
+  .glass .group { top: 112px; bottom: 40px; }
+  .glass .copy { left: 0; right: 0; width: auto; transform: none; bottom: 8px; padding: 14px 16px 16px; }
+  .glass .scene { top: -64px; bottom: 260px; }
+  .glass .dots { bottom: 4px; }
+  .glass .stepTitle { font-size: 22px; }
   .glass .statementText { font-size: 40px; }
 }
