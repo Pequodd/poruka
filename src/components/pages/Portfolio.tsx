@@ -76,7 +76,7 @@ export function Portfolio() {
           </div>
         )}
       </div>
-      <section className={s.cta}>
+      <section className={s.cta} data-ink>
         <div className={`container ${s.ctaInner}`}>
           <h2 className={s.ctaH2}>Хотите такой же<br />результат?</h2>
           <Button variant="inverse" href="/#contact" className={s.ctaBtn}>Обсудить проект</Button>

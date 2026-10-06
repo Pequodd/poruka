@@ -14,7 +14,7 @@ export function Footer() {
     </div>
   );
   return (
-    <footer className={s.footer}>
+    <footer className={s.footer} data-ink>
       <div className="container">
         <div className={s.cols}>
           {col('Контакты', [[C.email, `mailto:${C.email}`], [C.telegram, C.telegramUrl]])}

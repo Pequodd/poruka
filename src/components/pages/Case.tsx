@@ -76,7 +76,7 @@ export function Case({ project: p }: { project: Project }) {
         </div>
       </div>
 
-      <section className={s.result}>
+      <section className={s.result} data-ink>
         <div className="container">
           <div className={s.resultMarker}><SectionMarker onInk active>Результат</SectionMarker></div>
           <div className={s.stats}>{c.stats.map((x) => <Stat key={x.caption} onInk {...x} />)}</div>

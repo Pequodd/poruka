@@ -49,7 +49,7 @@ export function Process() {
 
   const cur = STEPS[step];
   return (
-    <section ref={ref} id="process" className={s.section} aria-label="Процесс">
+    <section ref={ref} id="process" className={s.section} aria-label="Процесс" data-ink>
       <div className={s.stage}>
         <div className={`container ${s.top}`}>
           <SectionMarker onInk active>Процесс · Как мы работаем</SectionMarker>
