@@ -11,7 +11,7 @@ export function Contact() {
       <div className="container">
         <div className={s.contactGrid}>
           <div className={s.contactMarker}><SectionMarker>Контакт</SectionMarker></div>
-          <h2 className={s.contactHead}>Расскажите<br />о задаче</h2>
+          <h2 className={s.contactHead}>Расскажите о задаче</h2>
           <aside className={s.contactAside}>
             <span className={`mono ${s.live}`}><span className={s.liveDot} aria-hidden="true" />На связи · ответ за день</span>
             <p className={s.bodyL}><b>Пишите напрямую</b> — тем, кто делает проект. Если нам не подходит задача, честно скажем.</p>
