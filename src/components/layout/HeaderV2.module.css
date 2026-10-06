@@ -98,3 +98,14 @@
   .item { font-size: 36px; }
   .foot { flex-direction: column; align-items: stretch; }
 }
+
+/* v7 «glass» look (html[data-look='glass'], set by the v7 page): frosted bar instead of the solid ink one. */
+:global(html[data-look='glass']) .compact .bar, :global(html[data-look='glass']) .open .bar {
+  background: rgba(255, 255, 255, 0.5); color: var(--text-primary); border-color: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+}
+:global(html[data-look='glass']) .open .bar { background: rgba(255, 255, 255, 0.82); }
+:global(html[data-look='glass']) .compact.onInk .bar, :global(html[data-look='glass']) .open.onInk .bar {
+  background: rgba(24, 24, 24, 0.5); color: var(--text-on-ink); border-color: rgba(255, 255, 255, 0.14);
+}
+:global(html[data-look='glass']) .dot { background: var(--accent-ultra); }
