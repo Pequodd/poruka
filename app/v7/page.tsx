@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import { Contact } from '@/components/sections/Contact';
 import { ProcessStage } from '@/components/sections/ProcessStage';
-import { Team } from '@/components/sections/Team';
 import { ClientsV7 } from '@/components/v7/ClientsV7';
+import { ContactV7 } from '@/components/v7/ContactV7';
 import { FaqV7 } from '@/components/v7/FaqV7';
 import { FooterV7 } from '@/components/v7/FooterV7';
 import { HeroV7 } from '@/components/v7/HeroV7';
@@ -11,6 +10,7 @@ import { Orbit } from '@/components/v7/Orbit';
 import { ServicesV7 } from '@/components/v7/ServicesV7';
 import { StatementV7 } from '@/components/v7/StatementV7';
 import { StoriesV7 } from '@/components/v7/StoriesV7';
+import { TeamV7 } from '@/components/v7/TeamV7';
 import { WipeV7 } from '@/components/v7/WipeV7';
 import { WorksV7 } from '@/components/v7/WorksV7';
 import s from '@/components/v7/V7.module.css';
@@ -35,10 +35,10 @@ export default function HomeV7() {
         <WipeV7 />
         <StoriesV7 />
         <ClientsV7 />
-        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" /></div>
-        <div data-orbit="0 0 1 0 0" className={s.solid}><Team /></div>
+        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" eyebrow="(06) Процесс" look="glass" /></div>
+        <TeamV7 />
         <FaqV7 />
-        <div data-orbit="0 0 1 0 0" className={s.solid}><Contact /></div>
+        <ContactV7 />
         <FooterV7 />
       </div>
     </div>

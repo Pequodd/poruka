@@ -36,3 +36,9 @@
 
 .btn:disabled { background: var(--text-tertiary); color: #fff; border-color: transparent; cursor: not-allowed; }
 .btn:disabled .arrow { background: #fff; color: var(--text-tertiary); }
+
+/* v7 «glass» look: the primary action is ultramarine (seal red stays out of the CTA system there). */
+:global(html[data-look='glass']) .primary { background: var(--accent-ultra); }
+:global(html[data-look='glass']) .primary .arrow { color: var(--accent-ultra); }
+:global(html[data-look='glass']) .primary:hover:not(:disabled) { background: var(--accent-ultra-ink); }
+:global(html[data-look='glass']) .btn:focus-visible { outline-color: var(--accent-ultra); }

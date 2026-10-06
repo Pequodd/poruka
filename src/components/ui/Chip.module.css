@@ -17,3 +17,8 @@ button.onInk:hover { border-color: var(--text-on-ink); }
 .seal, .seal:hover { border-color: var(--accent-seal); color: var(--accent-seal); }
 .lg { height: 36px; padding: 0 16px; }
 .md { height: 36px; padding: 0 14px; }
+
+/* v7 «glass» look: translucent pills, ultramarine when selected. */
+:global(html[data-look='glass']) .chip:not(.onInk) { background: rgba(255, 255, 255, 0.5); border-color: rgba(14, 14, 14, 0.1); }
+:global(html[data-look='glass']) button.chip:not(.onInk):hover { border-color: var(--accent-ultra); color: var(--accent-ultra); }
+:global(html[data-look='glass']) .active:not(.onInk), :global(html[data-look='glass']) button.active:not(.onInk):hover { background: var(--accent-ultra); border-color: var(--accent-ultra); color: #fff; }

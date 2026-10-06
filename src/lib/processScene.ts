@@ -56,8 +56,11 @@ function buildLayouts(): L[][] {
   return fns.map((f) => f());
 }
 
-/** muted: blocks in a dim grey so the object supports the copy instead of competing with it. */
-export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean, muted = false) {
+/**
+ * muted: blocks in a dim grey so the object supports the copy instead of competing with it.
+ * palette 'glass' (v7): pale frosted blocks with a clearcoat sheen on paper, the accent block ultramarine.
+ */
+export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean, muted = false, palette: 'default' | 'glass' = 'default') {
   const LAYOUTS = buildLayouts();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(2, devicePixelRatio));
@@ -72,10 +75,13 @@ export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean, 
   const rim = new THREE.DirectionalLight(0xffffff, 1.2); rim.position.set(3, -1, -2); scene.add(rim);
 
   const geo = new THREE.BoxGeometry(1, 1, 1);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.05 });
+  const glass = palette === 'glass';
+  const mat = glass
+    ? new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.25, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.1 })
+    : new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.05 });
   const mesh = new THREE.InstancedMesh(geo, mat, N);
   const col = new THREE.Color();
-  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(i === 0 ? SEAL : muted ? 0x6b6b68 : PAPER));
+  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(glass ? (i === 0 ? 0x2f3bff : 0xd4d6e2) : i === 0 ? SEAL : muted ? 0x6b6b68 : PAPER));
   const g = new THREE.Group(); g.add(mesh); scene.add(g);
 
   const cur = LAYOUTS[0].map((o) => ({

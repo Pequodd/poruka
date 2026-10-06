@@ -27,3 +27,8 @@ textarea.input { min-height: 112px; }
 .error .box, .error .box:hover { border-color: var(--accent-seal); outline-color: var(--accent-seal); }
 .error .label { color: var(--accent-seal); }
 .msg { font-size: 14px; line-height: 1.4; color: var(--accent-seal); }
+
+/* v7 «glass» look: rounded frosted fields, ultramarine focus. */
+:global(html[data-look='glass']) .box { border-radius: 16px; background: rgba(255, 255, 255, 0.72); border-color: rgba(14, 14, 14, 0.08); }
+:global(html[data-look='glass']) .box:hover { border-color: rgba(14, 14, 14, 0.22); }
+:global(html[data-look='glass']) .box:focus-within { border-color: var(--accent-ultra); outline-color: var(--accent-ultra); }

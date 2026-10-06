@@ -36,7 +36,10 @@ export function WorksV7() {
       <div className={s.wStage}>
         <div className={s.wTop}>
           <span className={`mono ${s.eyebrow}`}>(02) Работы</span>
-          <span key={cur} className={s.wNow} aria-live="polite">{ITEMS[cur].title}<span className="mono">{pad(cur + 1)}/{pad(N)}</span></span>
+          <span className={s.wTopRight}>
+            <span key={cur} className={s.wNow} aria-live="polite">{ITEMS[cur].title}<span className="mono">{pad(cur + 1)}/{pad(N)}</span></span>
+            <Link href="/portfolio/" className={s.wAll}>Все работы →</Link>
+          </span>
         </div>
         {ITEMS.map((p, i) => (
           <div key={p.slug} ref={(el) => { items.current[i] = el; }} className={s.wItem} aria-hidden={i !== cur} data-on={i === cur ? '' : undefined}>
@@ -56,11 +59,6 @@ export function WorksV7() {
             </div>
           </div>
         ))}
-        <div className={s.wProg} aria-hidden="true">
-          <span className={s.wBar} />
-          {ITEMS.map((p, i) => <span key={p.slug} className={`${s.wDot} ${i <= cur ? s.wDotOn : ''}`} style={{ left: `${(i / (N - 1)) * 100}%` }} />)}
-        </div>
-        <Link href="/portfolio/" className={`${s.glass} ${s.wAll}`}>Все работы →</Link>
       </div>
     </section>
   );

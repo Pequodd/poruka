@@ -25,3 +25,11 @@
   .submit { flex-direction: column; align-items: stretch; gap: 16px; }
   .submit > :first-child { width: 100%; justify-content: space-between; display: flex; }
 }
+
+/* v7 «glass» look: softer divider inside the glass panel. */
+:global(html[data-look='glass']) .submit { border-top-color: rgba(14, 14, 14, 0.08); }
+/* v7 «glass» look: no stamp motif — the confirmation is a plain ultramarine pill. */
+:global(html[data-look='glass']) .stamp {
+  transform: none; border: none; border-radius: var(--radius-pill); padding: 12px 22px; background: var(--accent-ultra); color: #fff;
+  font-family: var(--font-sans); font-size: 18px; letter-spacing: -0.01em; animation: none;
+}

@@ -79,3 +79,25 @@
   .dots { bottom: 24px; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { .in { animation: none; } .title { filter: none; } }
+
+/* v7 «glass» skin: same choreography on paper — uppercase type, copy on a frosted card, ultramarine accents. */
+.glass { background: var(--paper); color: var(--text-primary); }
+.glass .muted, .glass .eyebrow, .glass .desc { color: var(--text-secondary); }
+.glass .statementText { text-transform: uppercase; font-size: clamp(44px, 6vw, 104px); line-height: 0.92; letter-spacing: -0.055em; }
+.glass .sealWord { color: var(--accent-ultra); }
+.glass .scene { opacity: clamp(0, calc((var(--b) - 0.25) * 1.2), 1); }
+.glass .copy {
+  width: min(92vw, 760px); padding: 26px 32px 28px; border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+}
+.glass .stepTitle { text-transform: uppercase; letter-spacing: -0.055em; font-size: clamp(36px, 3.8vw, 68px); }
+.glass .dot { background: rgba(14, 14, 14, 0.14); }
+.glass .past .dot, .glass .dotBtn:hover .dot { background: rgba(14, 14, 14, 0.38); }
+.glass .current .dot, .glass .current:hover .dot { background: var(--accent-ultra); }
+.glass .dotBtn:focus-visible { outline-color: var(--accent-ultra); }
+@media (max-width: 767px) {
+  .glass .copy { padding: 18px 18px 20px; }
+  .glass .stepTitle { font-size: 32px; }
+  .glass .statementText { font-size: 40px; }
+}

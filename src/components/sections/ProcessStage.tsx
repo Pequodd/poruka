@@ -17,7 +17,12 @@ const STATEMENT = 'Восемь этапов. Один результат, за 
  * Process v6 — «product on stage»: the muted object rises with the copy centred under it.
  * intro='zoom' — giant title zooms in from blur (v6); intro='statement' — v4 statement whose words light up (main).
  */
-export function ProcessStage({ intro = 'zoom' }: { intro?: 'zoom' | 'statement' }) {
+export function ProcessStage({ intro = 'zoom', eyebrow, look = 'ink' }: {
+  intro?: 'zoom' | 'statement';
+  /** v7: plain «(NN) Процесс» label instead of the dot marker */ eyebrow?: string;
+  /** 'glass' — v7 skin: paper stage, uppercase type, copy on a glass card, ultramarine accents */ look?: 'ink' | 'glass';
+}) {
+  const ink = look === 'ink';
   const A = intro === 'statement' ? 1 : 0.8;
   const lead = intro === 'statement' ? 0 : 0.35;
   const ref = useRef<HTMLElement>(null);
@@ -59,7 +64,7 @@ export function ProcessStage({ intro = 'zoom' }: { intro?: 'zoom' | 'statement' 
 
   const cur = STEPS[step];
   return (
-    <section ref={ref} id="process" data-ink className={`${s.section} ${on ? s.on : ''}`} aria-label="Процесс">
+    <section ref={ref} id="process" data-ink={ink ? '' : undefined} className={`${s.section} ${ink ? '' : s.glass} ${on ? s.on : ''}`} aria-label="Процесс">
       <div className={s.stage}>
         {intro === 'statement' ? (
           <div className={s.statement} aria-hidden={on}>
@@ -76,18 +81,18 @@ export function ProcessStage({ intro = 'zoom' }: { intro?: 'zoom' | 'statement' 
         )}
 
         <div className={s.group} aria-hidden={!on}>
-          <div className={s.scene}><Process3D step={step} muted /></div>
+          <div className={s.scene}><Process3D step={step} muted palette={ink ? 'default' : 'glass'} /></div>
           <div key={step} className={s.copy}>
             <span className={`mono ${s.eyebrow} ${s.in}`}>Этап {pad(step + 1)} из {pad(N)} · {cur.duration}</span>
             <h3 className={`${s.stepTitle} ${s.in}`} style={{ animationDelay: '60ms' }}>{cur.title}</h3>
             <p className={`${s.desc} ${s.in}`} style={{ animationDelay: '140ms' }}>{cur.description}</p>
-            <div className={`${s.chips} ${s.in}`} style={{ animationDelay: '220ms' }}>{cur.deliverables.map((d) => <Chip key={d} onInk>{d}</Chip>)}</div>
+            <div className={`${s.chips} ${s.in}`} style={{ animationDelay: '220ms' }}>{cur.deliverables.map((d) => <Chip key={d} onInk={ink}>{d}</Chip>)}</div>
           </div>
         </div>
 
         <div className={s.layer} aria-hidden={!on}>
           <div className={`mono ${s.top}`}>
-            <SectionMarker onInk active>Процесс</SectionMarker>
+            {eyebrow ? <span className={s.muted}>{eyebrow}</span> : <SectionMarker onInk active>Процесс</SectionMarker>}
             <span className={s.muted} aria-live="polite">({pad(step + 1)}/{pad(N)})</span>
           </div>
           <div className={s.dots} role="group" aria-label="Этапы">

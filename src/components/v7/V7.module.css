@@ -131,7 +131,7 @@
 /* ---------- Works (pinned) ---------- */
 .works { position: relative; --wp: 0; }
 .wStage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-.wTop { position: absolute; z-index: 4; top: 92px; align-items: baseline; left: var(--margin-outer); right: var(--margin-outer); display: flex; justify-content: space-between; }
+.wTop { position: absolute; z-index: 4; top: 86px; align-items: center; left: var(--margin-outer); right: var(--margin-outer); display: flex; justify-content: space-between; }
 .wItem { position: absolute; inset: 0; pointer-events: none; --in: 0; --out: 0; }
 .wItem[data-on] .wShot, .wItem[data-on] .wInfo { pointer-events: auto; }
 .wNow { display: inline-flex; align-items: baseline; gap: 12px; font-size: 17px; font-weight: 500; letter-spacing: -0.02em; animation: wNow 600ms var(--ease) both; }
@@ -140,8 +140,8 @@
 .wName { margin: 2px 0 0; font-size: 22px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
 /* The case window: height = whatever the stage leaves under the title, width follows 16:10. */
 .wCase {
-  --top: 132px;
-  position: absolute; z-index: 1; left: 50%; top: var(--top); bottom: 84px; aspect-ratio: 16 / 10; max-width: calc(100vw - 2 * var(--margin-outer));
+  --top: 148px;
+  position: absolute; z-index: 1; left: 50%; top: var(--top); bottom: 56px; aspect-ratio: 16 / 10; max-width: calc(100vw - 2 * var(--margin-outer));
   transform: translateX(-50%) translateX(calc((1 - var(--in)) * 100vw - var(--out) * 70vw)) scale(calc(0.8 + var(--in) * 0.2 - var(--out) * 0.16)) rotate(calc((1 - var(--in)) * 5deg - var(--out) * 3deg));
   transform-origin: 50% 100%;
   filter: blur(calc(var(--out) * 10px)); opacity: calc(1 - var(--out) * 0.9);
@@ -163,15 +163,12 @@
 .wText { margin: 0; font-size: 15px; line-height: 1.4; color: var(--text-secondary); }
 .wLink { align-self: flex-start; color: var(--text-primary); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; transition: color var(--dur-hover) var(--ease); }
 .wLink:hover { color: var(--accent-ultra); }
-.wProg { position: absolute; z-index: 4; left: var(--margin-outer); right: var(--margin-outer); bottom: 32px; height: 1px; background: var(--line-hairline); }
-.wBar { position: absolute; inset: 0; background: var(--text-primary); transform-origin: left; transform: scaleX(var(--wp)); }
-.wDot { position: absolute; top: -3px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--line-hairline); transition: background-color var(--dur-ui) var(--ease); }
-.wDotOn { background: var(--accent-ultra); }
-.wAll { position: absolute; z-index: 4; right: var(--margin-outer); bottom: 52px; border-radius: var(--radius-pill); padding: 10px 18px; color: var(--text-primary); font-weight: 500; text-decoration: none; }
-.wAll:hover { background: rgba(255, 255, 255, 0.75); color: var(--text-primary); }
+.wTopRight { display: inline-flex; align-items: center; gap: 20px; }
+.wAll { display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: var(--radius-pill); background: var(--ink); color: var(--text-on-ink); font-size: 15px; font-weight: 500; text-decoration: none; transition: background-color var(--dur-hover) var(--ease); }
+.wAll:hover { background: var(--accent-ultra); color: #fff; }
 
 /* ---------- Curtain wipe ---------- */
-.wipe { position: relative; height: 300vh; --wa: 0; --wb: 0; --wm: 0; }
+.wipe { position: relative; height: 260vh; --wa: 0; --wb: 0; --wm: 0; }
 .wipeStage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .wipeBehind { position: absolute; top: 96px; left: var(--margin-outer); }
 .wipePanel {
@@ -213,6 +210,21 @@
 .quote { margin: 0; max-width: 34em; font-size: 18px; line-height: 1.45; }
 .quote cite { display: block; margin-top: 10px; font-style: normal; color: var(--text-secondary); }
 
+/* ---------- Team ---------- */
+.team { position: relative; padding: var(--section-pad) var(--margin-outer); }
+.teamGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); max-width: 1320px; margin: 0 auto; }
+
+/* ---------- Contact ---------- */
+.contactV7 { position: relative; padding: var(--section-pad) var(--margin-outer); }
+.cGrid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 16px; max-width: 1320px; margin: 0 auto; align-items: start; }
+.cAside { position: sticky; top: 104px; border-radius: var(--radius-card); padding: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+.cText { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
+.cAside .ctaInk { height: 60px; font-size: 17px; padding: 0 28px; }
+.cDirect { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 18px; border-top: 1px solid rgba(14, 14, 14, 0.1); }
+.cDirect a { color: var(--text-primary); text-decoration: none; font-size: 17px; }
+.cDirect a:hover { color: var(--accent-ultra); }
+.cForm { border-radius: var(--radius-card); padding: 32px; }
+
 /* ---------- Clients ---------- */
 .clients { position: relative; padding: 120px 0; display: flex; flex-direction: column; gap: 32px; }
 .clientsHead { text-align: center; padding: 0 var(--margin-outer); }
@@ -244,7 +256,7 @@
 @keyframes faqIn { from { opacity: 0; filter: blur(8px); transform: translateY(-6px); } }
 
 /* ---------- Footer ---------- */
-.footer { position: relative; background: var(--ink); color: var(--text-on-ink); padding: 120px var(--margin-outer) 24px; overflow: hidden; }
+.footer { position: relative; background: var(--ink); color: var(--text-on-ink); padding: 120px var(--margin-outer) 24px; overflow: hidden; border-radius: 40px 40px 0 0; }
 .fGrid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--gutter); }
 .fCol { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .fHead { display: block; margin-bottom: 14px; color: var(--text-on-ink-muted); }
@@ -262,6 +274,8 @@ a.fLink:hover { color: var(--text-on-ink); }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1023px) {
+  .cGrid { grid-template-columns: 1fr; }
+  .cAside { position: static; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -299,10 +313,11 @@ a.fLink:hover { color: var(--text-on-ink); }
   .wCap { top: 12px; bottom: auto; }
   .wResult { font-size: 30px; }
   .wText { display: none; }
-  .wAll { display: none; }
-  .wProg { bottom: 40px; }
+  .wTop { flex-wrap: wrap; gap: 8px; }
+  .wNow { display: none; }
+  .wAll { height: 36px; padding: 0 14px; font-size: 14px; }
 
-  .wipe { height: 260svh; }
+  .wipe { height: 240svh; }
   .wipeStage { height: 100svh; }
   .wipeInner { padding: 84px var(--margin-outer) 24px; }
   .wipeTitle { font-size: 13.6vw; }
@@ -318,6 +333,10 @@ a.fLink:hover { color: var(--text-on-ink); }
   .statChip { min-width: 0; flex: 1 1 40%; }
   .statChip b { font-size: 28px; }
 
+  .teamGrid { grid-template-columns: 1fr; gap: 32px; }
+  .cGrid { grid-template-columns: 1fr; }
+  .cAside { position: static; padding: 20px; }
+  .cForm { padding: 16px; }
   .clients { padding: 80px 0; }
   .logo { height: 84px; padding: 0 24px; font-size: 26px; }
 
