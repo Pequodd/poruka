@@ -12,8 +12,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const c = (v: number) => Math.max(0, Math.min(1, v));
 
 /**
- * Pinned works, case-first: each project fills the stage as a large window (title above it, a glass result card
- * on its corner). The next case slides in from the right and grows into place; the current one recedes to the left
+ * Pinned works, case-first: each project fills the stage as a large window with a glass card (name, result) on its
+ * corner; the current name sits quietly in the top row. The next case slides in from the right and grows into place; the current one recedes to the left
  * out of focus. The glass seal hangs behind and peeks around the window.
  */
 export function WorksV7() {
@@ -36,11 +36,10 @@ export function WorksV7() {
       <div className={s.wStage}>
         <div className={s.wTop}>
           <span className={`mono ${s.eyebrow}`}>(02) Работы</span>
-          <span className={`mono ${s.eyebrow}`} aria-live="polite">{pad(cur + 1)}/{pad(N)}</span>
+          <span key={cur} className={s.wNow} aria-live="polite">{ITEMS[cur].title}<span className="mono">{pad(cur + 1)}/{pad(N)}</span></span>
         </div>
         {ITEMS.map((p, i) => (
           <div key={p.slug} ref={(el) => { items.current[i] = el; }} className={s.wItem} aria-hidden={i !== cur} data-on={i === cur ? '' : undefined}>
-            <h3 className={s.wTitle}>{p.title}</h3>
             <div className={s.wCase}>
               <Link href={caseHref(p)} className={s.wShot} tabIndex={i === cur ? 0 : -1} aria-label={`Кейс «${p.title}»`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -49,6 +48,7 @@ export function WorksV7() {
               </Link>
               <div className={`${s.glass} ${s.wInfo}`}>
                 <span className={`mono ${s.muted}`}>{p.meta}</span>
+                <h3 className={s.wName}>{p.title}</h3>
                 <b className={s.wResult}>{p.result}</b>
                 <p className={s.wText}>{p.case.oneLiner}</p>
                 <Link href={caseHref(p)} className={s.wLink} tabIndex={i === cur ? 0 : -1}>Смотреть кейс →</Link>
