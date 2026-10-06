@@ -5,7 +5,7 @@ import { prefersReducedMotion } from '@/lib/hooks';
 type Api = { setStep: (i: number) => void; dispose: () => void };
 
 /** Transparent three.js canvas; three is loaded lazily so it never blocks first paint. */
-export function Process3D({ step, className }: { step: number; className?: string }) {
+export function Process3D({ step, className, rootMargin = '400px 0px' }: { step: number; className?: string; rootMargin?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const api = useRef<Api | null>(null);
   const stepRef = useRef(step);
@@ -26,10 +26,10 @@ export function Process3D({ step, className }: { step: number; className?: strin
           api.current.setStep(stepRef.current);
         } catch { /* no WebGL — leave the slot empty */ }
       });
-    }, { rootMargin: '400px 0px' });
+    }, { rootMargin });
     io.observe(el);
     return () => { dead = true; io.disconnect(); api.current?.dispose(); api.current = null; };
-  }, []);
+  }, [rootMargin]);
 
   useEffect(() => { api.current?.setStep(step); }, [step]);
 
