@@ -18,7 +18,7 @@ import s from '@/components/v7/V7.module.css';
 export const metadata: Metadata = { title: 'ПОРУКА — цифровая студия (v7)', robots: { index: false } };
 
 /**
- * Home v7 (ref: neuracore.uprock.pro): one glass seal travels through the page — it grows behind the glass
+ * Home v7 (ref: neuracore.uprock.pro): a pair of interlocked glass links travels through the page — it grows behind the glass
  * service cards, holds the pinned works, drifts out of focus behind stories, parks beside the FAQ and becomes
  * the «О» of the footer wordmark. Second accent: ultramarine.
  */

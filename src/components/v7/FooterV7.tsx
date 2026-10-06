@@ -5,7 +5,7 @@ import { CONTACTS as C, NAV } from '@/data/content';
 import { prefersReducedMotion } from '@/lib/hooks';
 import s from './V7.module.css';
 
-/** The glass seal as the «О» of the footer wordmark — its own small canvas, mounted when the footer nears view. */
+/** The glass links lying across the footer wordmark — their own canvas, mounted when the footer nears view. */
 function MiniOrbit() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -47,10 +47,9 @@ export function FooterV7() {
           <span className={s.fLink}>{C.socials.join(' · ')}</span>
         </div>
       </div>
-      <div className={s.fMark} aria-label="Порука">
-        <span aria-hidden="true">П</span>
+      <div className={s.fMark}>
+        <span>ПОРУКА</span>
         <span className={s.fO} aria-hidden="true"><MiniOrbit /></span>
-        <span aria-hidden="true">РУКА</span>
       </div>
       <div className={s.fLegal}>
         <span className="mono">© {C.year} Порука. Ручаемся за результат.</span>

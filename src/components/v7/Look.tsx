@@ -16,7 +16,7 @@ export function Look() {
     if (prefersReducedMotion()) { els.forEach((e) => e.setAttribute('data-in', '')); return () => { delete html.dataset.look; delete html.dataset.rv; }; }
     const io = new IntersectionObserver((es) => es.forEach((e) => {
       if (e.isIntersecting) { e.target.setAttribute('data-in', ''); io.unobserve(e.target); }
-    }), { rootMargin: '0px 0px -12% 0px' });
+    }), { rootMargin: '0px 0px -6% 0px' });
     els.forEach((e) => io.observe(e));
     return () => { io.disconnect(); delete html.dataset.look; delete html.dataset.rv; };
   }, []);

@@ -6,7 +6,7 @@ import s from './V7.module.css';
 
 const K = [-70, 30, -40, 80];
 
-/** Services as frosted glass cards over the enlarged glass seal; columns drift at different speeds. */
+/** Services as frosted glass cards over the enlarged glass links; columns drift at different speeds. */
 export function ServicesV7() {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--sv', p.toFixed(4)));

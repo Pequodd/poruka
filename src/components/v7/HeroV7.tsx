@@ -20,19 +20,19 @@ const Letters = ({ text, from, tail }: { text: string; from: number; tail?: Reac
   );
 };
 
-/** v7 hero: giant title assembles letter by letter over the glass seal; glass HUD chips float around it. */
+/** v7 hero: giant title assembles letter by letter over the glass links; glass HUD chips float around it. */
 export function HeroV7() {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--hp', Math.max(0, p * 2 - 1).toFixed(3)));
   return (
     <section ref={ref} className={s.hero} data-orbit="0 -4 1.02 0 1" data-orbit-m="0 -10 1.05 0 1">
-      <div className={`${s.glass} ${s.hud} ${s.hudA}`} data-rv style={{ ['--d' as string]: '1100ms' }}>
+      <div className={`${s.glass} ${s.hud} ${s.hudA}`} style={{ ['--d' as string]: '1100ms' }} data-hero>
         <span className={`mono ${s.hudLabel}`}>Этап</span>
         <span className={s.hudValue}>05<span>/08</span></span>
         <span className={s.hudBar}><span style={{ width: '62%' }} /></span>
         <span className={`mono ${s.hudLabel}`}>Визуальная концепция</span>
       </div>
-      <div className={`${s.glass} ${s.hud} ${s.hudB}`} data-rv style={{ ['--d' as string]: '1300ms' }}>
+      <div className={`${s.glass} ${s.hud} ${s.hudB}`} style={{ ['--d' as string]: '1300ms' }} data-hero>
         <span className={s.liveDot} aria-hidden="true" />
         <span className={`mono ${s.hudLabel}`}>На связи · ответ за день</span>
       </div>
@@ -43,12 +43,14 @@ export function HeroV7() {
       </h1>
 
       <div className={s.heroFoot}>
-        <p className={s.heroLead} data-rv style={{ ['--d' as string]: '1500ms' }}>Цифровая студия «Порука». Проектируем и запускаем сайты для малого и среднего бизнеса — от исследования до поддержки.</p>
-        <div className={s.btns} data-rv style={{ ['--d' as string]: '1650ms' }}>
-          <a className={s.btnUltra} href="#contact">Обсудить проект</a>
-          <Link className={`${s.btnGlass} ${s.glass}`} href="/portfolio/">Смотреть работы</Link>
+        <div className={s.heroCta}>
+          <p className={s.heroLead} style={{ ['--d' as string]: '1500ms' }} data-hero>Цифровая студия «Порука». Проектируем и запускаем сайты для малого и среднего бизнеса — от исследования до поддержки.</p>
+          <div className={s.heroBtns} style={{ ['--d' as string]: '1650ms' }} data-hero>
+            <a className={s.ctaMain} href="#contact">Обсудить проект<span className={s.ctaIcon} aria-hidden="true">↗</span></a>
+            <Link className={s.ctaInk} href="/portfolio/">Смотреть работы</Link>
+          </div>
         </div>
-        <span className={`mono ${s.scrollHint}`} data-rv style={{ ['--d' as string]: '1800ms' }}>Листайте</span>
+        <span className={`mono ${s.scrollHint}`} style={{ ['--d' as string]: '1800ms' }} data-hero>Листайте</span>
       </div>
     </section>
   );

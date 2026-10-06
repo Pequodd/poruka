@@ -52,6 +52,9 @@
   transition-delay: var(--d, 0ms);
 }
 :global(html[data-rv]) .page [data-rv][data-in] { opacity: 1; filter: blur(0); transform: none; }
+/* First-screen items reveal on load (a scroll trigger could leave the CTAs hidden at the bottom of tall screens). */
+.page [data-hero] { animation: heroIn 1s var(--ease) both; animation-delay: var(--d, 0ms); }
+@keyframes heroIn { from { opacity: 0; filter: blur(14px); transform: translateY(28px); } }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -80,8 +83,23 @@
 .hudBar span { display: block; height: 100%; background: var(--accent-ultra); border-radius: 2px; }
 
 .heroFoot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 24px; align-items: end; margin-top: 32px; }
-.heroLead { margin: 0; max-width: 460px; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
-.scrollHint { grid-column: 1 / -1; justify-self: center; color: var(--text-secondary); }
+.heroCta { display: flex; flex-direction: column; gap: 24px; max-width: 560px; }
+.heroLead { margin: 0; max-width: 480px; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
+/* Hero CTAs: the two strongest fills on the page — ultramarine and ink — at a size that holds against the giant title. */
+.heroBtns { display: flex; gap: 12px; flex-wrap: wrap; }
+.ctaMain, .ctaInk {
+  display: inline-flex; align-items: center; justify-content: center; gap: 14px; height: 68px; border-radius: var(--radius-pill);
+  font-size: 19px; font-weight: 500; letter-spacing: -0.02em; text-decoration: none; white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease), color var(--dur-hover) var(--ease);
+}
+.ctaMain { padding: 0 10px 0 32px; background: var(--accent-ultra); color: #fff; }
+.ctaMain:hover { background: var(--accent-ultra-ink); color: #fff; }
+.ctaIcon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #fff; color: var(--accent-ultra); font-size: 20px; transition: transform var(--dur-ui) var(--ease); }
+.ctaMain:hover .ctaIcon { transform: rotate(45deg); }
+.ctaInk { padding: 0 32px; background: var(--ink); color: var(--text-on-ink); }
+.ctaInk:hover { background: #2a2a2a; color: var(--text-on-ink); }
+.scrollHint { align-self: end; }
+.scrollHint { color: var(--text-secondary); }
 .scrollHint::after { content: ''; display: block; width: 1px; height: 28px; margin: 8px auto 0; background: currentColor; animation: hint 2s var(--ease) infinite; transform-origin: top; }
 @keyframes hint { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
@@ -246,9 +264,9 @@
 .fMail:hover, .fNav:hover { color: #9CA2FF; }
 .fLink { font-size: 16px; color: var(--text-on-ink-muted); text-decoration: none; }
 a.fLink:hover { color: var(--text-on-ink); }
-.fMark { display: flex; align-items: center; justify-content: center; margin-top: 100px; font-size: clamp(80px, 21vw, 400px); line-height: 0.8; letter-spacing: -0.07em; font-weight: 500; }
-.fO { position: relative; flex: none; width: 0.8em; height: 0.8em; margin: 0 0.01em 0 0.03em; }
-.miniOrbit { display: block; width: 100%; height: 100%; transform: scale(1.3); }
+.fMark { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 100px; font-size: clamp(80px, 21vw, 400px); line-height: 0.8; letter-spacing: -0.07em; font-weight: 500; }
+.fO { position: absolute; left: 50%; top: 50%; width: 2.6em; height: 1.3em; transform: translate(-50%, -50%); pointer-events: none; }
+.miniOrbit { display: block; width: 100%; height: 100%; }
 .fLegal { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; color: var(--text-on-ink-muted); }
 .fLegal a { color: inherit; text-decoration: none; }
 .fLegal a:hover { color: var(--text-on-ink); }
@@ -269,7 +287,8 @@ a.fLink:hover { color: var(--text-on-ink); }
   .hudValue { font-size: 36px; }
   .heroFoot { grid-template-columns: 1fr; }
   .heroLead { font-size: 17px; }
-  .btns > * { flex: 1 1 100%; }
+  .heroBtns > * { flex: 1 1 100%; }
+  .ctaMain, .ctaInk { height: 60px; font-size: 17px; }
   .scrollHint { display: none; }
 
   .statement { height: 200svh; }
@@ -327,7 +346,7 @@ a.fLink:hover { color: var(--text-on-ink); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ltr, .liveDot, .scrollHint::after, .faqItem p { animation: none; }
+  .ltr, .liveDot, .scrollHint::after, .faqItem p, .page [data-hero] { animation: none; }
   .heroTitle { transform: none; filter: none; opacity: 1; }
   .stW { filter: none; }
   .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; padding: 0 var(--margin-outer); }
