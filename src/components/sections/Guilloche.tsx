@@ -8,7 +8,9 @@ type Ptr = React.MutableRefObject<{ x: number; y: number }>;
  * Live guilloché rosette (the security pattern of guarantee documents): ~58 interfering rose curves in seal red.
  * r(θ) = base + 0.045R·sin(18θ+φ) + 0.03R·sin(7θ−1.7φ+6f) + cursor term. Phase drifts; rings bend toward the cursor.
  */
-export function Guilloche({ pointer, className }: { pointer: Ptr; className?: string }) {
+type Props = { pointer: Ptr; className?: string; /** stroke width, px */ lineWidth?: number; /** stroke opacity */ alpha?: number };
+
+export function Guilloche({ pointer, className, lineWidth = 1, alpha = 0.55 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = ref.current;
@@ -34,8 +36,8 @@ export function Guilloche({ pointer, className }: { pointer: Ptr; className?: st
       amp += ((Math.hypot(cx - 0.5, cy - 0.5) < 0.6 ? 1 : 0) - amp) * 0.03;
       const R = Math.min(W, H) * 0.48, ox = W / 2, oy = H / 2;
       const rings = mobile ? 34 : 58, SEG = mobile ? 360 : 540;
-      g.lineWidth = 1;
-      g.strokeStyle = 'rgba(255,61,20,0.55)';
+      g.lineWidth = lineWidth;
+      g.strokeStyle = `rgba(255,61,20,${alpha})`;
       for (let i = 0; i < rings; i++) {
         const f = i / (rings - 1);
         const base = R * (0.18 + 0.82 * f);
@@ -63,6 +65,6 @@ export function Guilloche({ pointer, className }: { pointer: Ptr; className?: st
     io.observe(c);
     if (RM) draw(t0); else raf = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); };
-  }, [pointer]);
+  }, [pointer, lineWidth, alpha]);
   return <canvas ref={ref} aria-hidden="true" className={className} />;
 }

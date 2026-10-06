@@ -1,0 +1,103 @@
+/*
+ * Home v3 hero (after doordennis.nl): centred composition. The live guilloché sits behind 12 «glass» columns
+ * aligned to the grid; each column blurs it by a different amount, which reads as light refracting through glass.
+ */
+.hero {
+  position: relative; min-height: max(100vh, 760px); overflow: hidden; background: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 140px var(--margin-outer) 200px; text-align: center;
+}
+
+.bg { position: absolute; inset: 0; opacity: 0; transition: opacity 1600ms var(--ease); pointer-events: none; }
+.on .bg { opacity: 1; }
+.canvas {
+  position: absolute; left: 50%; top: 50%; width: min(1500px, 125vw); aspect-ratio: 1; height: auto;
+  transform: translate(-50%, -46%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 68%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 68%);
+}
+
+.glass { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); pointer-events: none; }
+.col {
+  backdrop-filter: blur(var(--b)); -webkit-backdrop-filter: blur(var(--b));
+  background: rgba(243, 243, 241, 0.1);
+  border-left: 1px solid rgba(14, 14, 14, 0.04);
+}
+
+.inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; max-width: 1240px; }
+
+.fade { opacity: 0; transform: translateY(var(--fy, 16px)); transition: opacity var(--dur-reveal) var(--ease) var(--fd, 0ms), transform var(--dur-reveal) var(--ease) var(--fd, 0ms); }
+.on .fade { opacity: 1; transform: none; }
+
+.proof { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+.proof b { font-weight: 400; color: var(--text-secondary); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-seal); }
+
+.h1 {
+  margin: 0; font-size: clamp(52px, 6.4vw, 112px); line-height: 0.96; letter-spacing: -0.05em; font-weight: 500;
+  color: var(--text-primary); text-wrap: balance;
+}
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.word { display: inline-block; transform: translateY(105%); transition: transform var(--dur-reveal) var(--ease) var(--d, 0ms); }
+.on .word { transform: none; }
+.grey { color: var(--text-secondary); }
+.mark { display: inline-block; position: relative; vertical-align: top; }
+.underline {
+  position: absolute; left: 0.02em; right: 0.04em; bottom: 0.04em; height: 0.06em; background: var(--accent-seal);
+  transform-origin: left; transform: scaleX(0); transition: transform 700ms var(--ease) 1150ms;
+}
+.on .underline { transform: scaleX(1); }
+
+.lead { margin: 36px 0 0; max-width: 600px; font-size: var(--fs-body-l); line-height: 1.5; color: var(--text-secondary); }
+.lead b { color: var(--text-primary); font-weight: 400; }
+
+/* CTA pair: round ↗ + ink pill — they react together on hover. */
+.cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 40px; text-decoration: none; color: var(--text-primary); }
+.cta:hover { color: var(--text-primary); }
+.ctaIcon {
+  width: 52px; height: 52px; border-radius: 50%; flex: none; background: var(--surface); border: 1px solid var(--line-hairline);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  transition: transform var(--dur-ui) var(--ease), border-color var(--dur-hover) var(--ease);
+}
+.ctaPill {
+  height: 52px; padding: 0 28px; border-radius: var(--radius-pill); background: var(--ink); color: #fff;
+  display: flex; align-items: center; font-size: 15px; font-weight: 500; letter-spacing: -0.01em;
+  transition: background var(--dur-hover) var(--ease);
+}
+.cta:hover .ctaIcon { transform: rotate(45deg); border-color: var(--ink); }
+.cta:hover .ctaPill { background: var(--accent-seal); }
+.cta:focus-visible { outline: none; }
+.cta:focus-visible .ctaPill { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+
+/* Corners */
+.corner { position: absolute; bottom: 40px; z-index: 1; }
+.left { left: var(--margin-outer); display: flex; flex-direction: column; gap: 8px; align-items: flex-start; text-align: left; color: var(--text-secondary); }
+.left b { color: var(--text-primary); font-weight: 400; }
+.right { right: var(--margin-outer); width: 300px; text-align: left; }
+.latestLabel { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 12px; }
+.latestLabel span:first-child { color: var(--accent-seal); }
+.latest { display: block; background: var(--surface); border: 1px solid var(--line-hairline); padding: 8px; text-decoration: none; color: var(--text-primary); }
+.latest:hover { color: var(--text-primary); border-color: var(--ink); }
+.latestImg { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; transition: transform var(--dur-reveal) var(--ease); }
+.latestMedia { overflow: hidden; }
+.latest:hover .latestImg { transform: scale(1.04); }
+.latestCap { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 4px 2px; }
+.latestTitle { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+.latestTitle span { color: var(--text-secondary); font-weight: 400; }
+.arr { transition: transform var(--dur-ui) var(--ease); }
+.latest:hover .arr { transform: rotate(45deg); }
+
+@media (max-width: 1199px) { .right { display: none; } }
+@media (max-width: 767px) {
+  .hero { min-height: max(100svh, 700px); padding: 120px var(--margin-outer) 120px; }
+  .glass { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .glass .col:nth-child(n + 7) { display: none; }
+  .canvas { width: 170vw; }
+  .proof { margin-bottom: 24px; }
+  .h1 { font-size: 44px; }
+  .lead { margin-top: 24px; font-size: 17px; }
+  .ctaWrap { width: 100%; }
+  .cta { margin-top: 32px; width: 100%; }
+  .ctaPill { flex: 1; justify-content: center; }
+  .corner.left { bottom: 24px; }
+}
