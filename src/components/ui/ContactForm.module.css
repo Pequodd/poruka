@@ -1,5 +1,7 @@
-.form { display: flex; flex-direction: column; gap: 48px; }
-.fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px var(--gutter); align-items: start; }
+.form { display: flex; flex-direction: column; gap: 40px; }
+.fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px var(--gutter); align-items: start; }
+/* Unselected chips sit on white so they read as choices, like the fields. */
+.form button[aria-pressed='false'] { background: var(--surface); }
 .submit { display: flex; align-items: center; gap: 24px; border-top: 1px solid var(--line-hairline); padding-top: 24px; }
 .submit .consent { max-width: 360px; }
 .consent { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); line-height: 1.5; }
