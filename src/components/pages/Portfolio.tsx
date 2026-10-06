@@ -23,10 +23,10 @@ function ListRow({ p }: { p: Project }) {
   };
   return (
     <Link href={caseHref(p)} className={s.row} onMouseMove={move}>
-      <span className="mono secondary">{p.year}</span>
       <span className={s.rowTitle}>{p.title}</span>
-      <span className="mono">{p.cat}</span>
-      <span className={s.rowServices}>{p.services}</span>
+      <span className={s.rowCell}>{p.services}</span>
+      <span className={s.rowCell}>{p.cat}</span>
+      <span className={`${s.rowCell} ${s.rowYear}`}>{p.year}</span>
       <span className={s.rowArrow} aria-hidden="true">↗</span>
       <div className={s.rowPreview} aria-hidden="true">
         {p.image ? <img src={asset(p.image)} alt="" className={s.rowImg} loading="lazy" /> : <Placeholder ratio="4/3" />}
@@ -62,14 +62,17 @@ export function Portfolio() {
       <div className={`container ${s.list}`}>
         {list.length === 0 && <p className={s.empty}>В этой категории пока нет проектов.</p>}
         {view === 'list' && !mobile ? (
-          <div className={s.rows}>{list.map((p) => <ListRow key={p.slug} p={p} />)}</div>
+          <div className={s.rows}>
+            <div className={`mono ${s.rowHead}`}><span>Проект</span><span>Услуги</span><span>Категория</span><span className={s.rowYear}>Год</span><span /></div>
+            {list.map((p) => <ListRow key={p.slug} p={p} />)}
+          </div>
         ) : (
           <div className={s.grid}>
             {list.map((p, i) => {
               const [span, ratio] = PATTERN[i % PATTERN.length];
               return (
                 <div key={p.slug} className={span === 8 ? s.span8 : s.span4}>
-                  <ProjectCard title={p.title} meta={p.meta} result={p.result} image={p.image} ratio={mobile ? '4/5' : ratio} href={caseHref(p)} />
+                  <ProjectCard title={p.title} year={p.year} cat={p.cat} result={p.result} image={p.image} ratio={mobile ? '4/5' : ratio} href={caseHref(p)} />
                 </div>
               );
             })}

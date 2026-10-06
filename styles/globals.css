@@ -10,7 +10,12 @@
   --placeholder-line: #cfcfca;
   --placeholder-dark: #1e1e1e;
   --timeline-future: #4a4a48;
+  /* One size for every section heading (Работы, Услуги, Команда, Контакт, CTA). */
+  --fs-section: clamp(44px, 4.6vw, 72px);
+  --lh-section: 0.98;
+  --ls-section: -0.04em;
 }
+@media (max-width: 767px) { :root { --fs-section: 40px; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 

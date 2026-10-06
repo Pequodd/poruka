@@ -11,19 +11,24 @@
 .views { display: flex; gap: 4px; }
 
 .list { padding-top: 96px; padding-bottom: var(--section-pad); }
-.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 96px; align-items: start; }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 96px; align-items: stretch; }
 .span8 { grid-column: span 8; } .span4 { grid-column: span 4; }
 .empty { color: var(--text-secondary); }
 
 .rows { border-bottom: 1px solid var(--line-hairline); }
+/* Same columns as the home WorksTable: Проект · Услуги · Категория · Год (+ ↗). */
+.rowHead, .row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr) 64px 40px; gap: var(--gutter); }
+.rowHead { padding: 0 0 16px; color: var(--text-secondary); }
 .row {
-  position: relative; display: grid; grid-template-columns: 80px minmax(0, 4fr) minmax(0, 2fr) minmax(0, 3fr) 40px; gap: var(--gutter);
-  align-items: center; padding: 28px 0; border-top: 1px solid var(--line-hairline);
+  position: relative;
+  align-items: center; padding: 26px 0; border-top: 1px solid var(--line-hairline);
   color: var(--text-primary); text-decoration: none; background: transparent; transition: background var(--dur-hover) var(--ease);
 }
 .row:hover { background: var(--surface); color: var(--text-primary); }
-.rowTitle { font-size: var(--fs-h3); font-weight: 500; letter-spacing: -0.02em; }
-.rowServices { font-size: 17px; color: var(--text-secondary); }
+.rowTitle { font-size: var(--fs-h3); line-height: 1.15; font-weight: 500; letter-spacing: -0.02em; }
+.rowCell { font-size: 15px; color: var(--text-secondary); }
+.rowYear { text-align: right; }
+.rowArrow { justify-self: end; }
 .rowArrow { font-size: 22px; transition: transform var(--dur-ui) var(--ease); }
 .row:hover .rowArrow { transform: rotate(45deg); }
 .rowPreview {
@@ -35,7 +40,7 @@
 
 .cta { background: var(--ink); padding: var(--section-pad) 0; }
 .ctaInner { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
-.ctaH2 { margin: 0; font-size: var(--fs-h1); line-height: 0.95; letter-spacing: -0.04em; font-weight: 500; color: var(--text-on-ink); }
+.ctaH2 { margin: 0; font-size: var(--fs-section); line-height: var(--lh-section); letter-spacing: var(--ls-section); font-weight: 500; color: var(--text-on-ink); }
 
 @media (max-width: 767px) {
   .page { padding-top: 80px; }

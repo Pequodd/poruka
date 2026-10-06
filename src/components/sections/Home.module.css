@@ -15,7 +15,7 @@
 .contact { padding: var(--section-pad) 0; border-top: 1px solid var(--line-hairline); }
 .contactGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 96px; align-items: start; }
 .contactMarker { grid-column: 1 / 5; grid-row: 1; padding-top: 12px; }
-.contactHead { grid-column: 5 / 13; grid-row: 1; margin: 0; font-size: clamp(56px, 6.4vw, 120px); line-height: 0.92; letter-spacing: -0.045em; font-weight: 500; }
+.contactHead { grid-column: 5 / 13; grid-row: 1; margin: 0; font-size: var(--fs-section); line-height: var(--lh-section); letter-spacing: var(--ls-section); font-weight: 500; }
 .contactAside { grid-column: 1 / 5; grid-row: 2; position: sticky; top: 120px; display: flex; flex-direction: column; gap: 28px; align-items: flex-start; padding-right: 24px; }
 .contactForm { grid-column: 5 / 13; grid-row: 2; }
 .live { display: flex; align-items: center; gap: 10px; }
@@ -42,7 +42,6 @@
   .contactGrid { grid-template-columns: 1fr; row-gap: 32px; }
   .contactMarker, .contactHead, .contactAside, .contactForm { grid-column: auto; grid-row: auto; }
   .contactMarker { padding-top: 0; }
-  .contactHead { font-size: var(--fs-h1); }
   .contactAside { position: static; padding-right: 0; margin-bottom: 24px; }
 }
 .full { }

@@ -3,7 +3,7 @@
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
 .marker { grid-column: 1 / 4; }
 .content { grid-column: 5 / 13; min-width: 0; }
-.h2 { margin: 0; font-size: var(--fs-h2); line-height: 1; letter-spacing: -0.035em; font-weight: 500; color: var(--text-primary); text-wrap: balance; }
+.h2 { margin: 0; font-size: var(--fs-section); line-height: var(--lh-section); letter-spacing: var(--ls-section); font-weight: 500; color: var(--text-primary); text-wrap: balance; }
 .h2Ink { color: var(--text-on-ink); }
 .count { font-size: 0.3em; color: var(--accent-seal); vertical-align: top; margin-left: 6px; letter-spacing: 0; font-family: var(--font-mono); }
 .lead { margin: 0; font-size: var(--fs-lead); line-height: 1.15; letter-spacing: -0.025em; color: var(--text-secondary); text-wrap: pretty; }
