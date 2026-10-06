@@ -4,18 +4,23 @@ import { ContactForm } from '../ui/ContactForm';
 import { SectionMarker } from '../ui/SectionMarker';
 import s from './Home.module.css';
 
+/** Contact: heading across cols 5–12; sticky direct-contact column on the left, wide form on the right. */
 export function Contact() {
   return (
     <section id="contact" className={s.contact}>
       <div className="container">
         <div className={s.contactGrid}>
           <div className={s.contactMarker}><SectionMarker>Контакт</SectionMarker></div>
-          <div className={s.contactText}>
-            <h2 className={s.h1}>Расскажите<br />о задаче</h2>
-            <p className={s.bodyL}>Ответим в течение дня. Если нам не подходит проект — честно скажем.</p>
+          <h2 className={s.contactHead}>Расскажите<br />о задаче</h2>
+          <aside className={s.contactAside}>
+            <span className={`mono ${s.live}`}><span className={s.liveDot} aria-hidden="true" />На связи · ответ за день</span>
+            <p className={s.bodyL}><b>Пишите напрямую</b> — тем, кто делает проект. Если нам не подходит задача, честно скажем.</p>
             <Button variant="secondary" href={CONTACTS.telegramUrl} className={s.full}>Написать в Telegram</Button>
-            <a href={`mailto:${CONTACTS.email}`} className={`mono ${s.mail}`}>{CONTACTS.email}</a>
-          </div>
+            <div className={s.direct}>
+              <a href={`mailto:${CONTACTS.email}`} className="mono">{CONTACTS.email}</a>
+              <a href={`tel:${CONTACTS.phone.replace(/[^+\d]/g, '')}`} className="mono">{CONTACTS.phone}</a>
+            </div>
+          </aside>
           <div className={s.contactForm}><ContactForm /></div>
         </div>
       </div>

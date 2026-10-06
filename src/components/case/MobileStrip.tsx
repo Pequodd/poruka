@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PhoneFrame } from './Frames';
 import s from './Case.module.css';
 
@@ -9,9 +9,21 @@ type Item = { src?: string; label: string };
 export function MobileStrip({ items, caption, hint = 'Листайте →' }: { items: Item[]; caption: React.ReactNode; hint?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; left: number } | null>(null);
+  const [fits, setFits] = useState(false);
+
+  // When every phone fits, the row stretches to full width: no drag, no «Листайте» hint.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => setFits(el.scrollWidth <= el.clientWidth + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [items.length]);
 
   const down = (e: React.PointerEvent) => {
-    if (e.pointerType !== 'mouse' || !ref.current) return;
+    if (fits || e.pointerType !== 'mouse' || !ref.current) return;
     drag.current = { x: e.clientX, left: ref.current.scrollLeft };
     ref.current.style.scrollSnapType = 'none';
     ref.current.style.cursor = 'grabbing';
@@ -29,7 +41,7 @@ export function MobileStrip({ items, caption, hint = 'Листайте →' }: {
   return (
     <div>
       <div className={s.padX}>{caption}</div>
-      <div ref={ref} className={s.strip} tabIndex={0} role="region" aria-label="Мобильные экраны"
+      <div ref={ref} className={`${s.strip} ${fits ? s.fits : ''}`} tabIndex={fits ? undefined : 0} role="region" aria-label="Мобильные экраны"
         onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerLeave={up}>
         {items.map((it, i) => (
           <figure key={i} className={s.stripItem}>
@@ -39,7 +51,7 @@ export function MobileStrip({ items, caption, hint = 'Листайте →' }: {
         ))}
         <span aria-hidden="true" className={s.stripEnd} />
       </div>
-      {hint && <div className={`${s.mono} ${s.hint}`}>{hint}</div>}
+      {hint && !fits && <div className={`${s.mono} ${s.hint}`}>{hint}</div>}
     </div>
   );
 }

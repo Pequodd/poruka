@@ -11,14 +11,20 @@
 .team { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
 .teamLead { margin-top: 96px; max-width: 66%; margin-left: auto; }
 
-/* Контакт */
-.contact { padding: var(--section-pad) 0; border-top: 1px solid var(--line-hairline); scroll-margin-top: 0; }
-.contactGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gutter); }
-.contactMarker { grid-column: 1 / 5; }
-.contactText { grid-column: 5 / 9; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; }
-.contactForm { grid-column: 9 / 13; }
-.h1 { margin: 0; font-size: var(--fs-h1); line-height: 0.95; letter-spacing: -0.04em; font-weight: 500; }
+/* Контакт: marker | heading on top; sticky contact column (cols 1–4) | wide form (cols 5–12) */
+.contact { padding: var(--section-pad) 0; border-top: 1px solid var(--line-hairline); }
+.contactGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 96px; align-items: start; }
+.contactMarker { grid-column: 1 / 5; grid-row: 1; padding-top: 12px; }
+.contactHead { grid-column: 5 / 13; grid-row: 1; margin: 0; font-size: clamp(56px, 6.4vw, 120px); line-height: 0.92; letter-spacing: -0.045em; font-weight: 500; }
+.contactAside { grid-column: 1 / 5; grid-row: 2; position: sticky; top: 120px; display: flex; flex-direction: column; gap: 28px; align-items: flex-start; padding-right: 24px; }
+.contactForm { grid-column: 5 / 13; grid-row: 2; }
+.live { display: flex; align-items: center; gap: 10px; }
+.liveDot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-seal); }
 .bodyL { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-secondary); max-width: 420px; }
+.bodyL b { color: var(--text-primary); font-weight: 400; }
+.direct { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--line-hairline); padding-top: 16px; width: 100%; }
+.direct a { color: var(--text-primary); text-decoration: none; }
+.direct a:hover { color: var(--accent-seal); }
 .mail { color: var(--text-primary); }
 
 @media (max-width: 767px) {
@@ -34,8 +40,10 @@
   .team > * { flex: 0 0 80%; scroll-snap-align: start; }
   .teamLead { margin-top: 48px; max-width: none; }
   .contactGrid { grid-template-columns: 1fr; row-gap: 32px; }
-  .contactMarker, .contactText, .contactForm { grid-column: auto; }
-  .contactText { margin-bottom: 24px; }
+  .contactMarker, .contactHead, .contactAside, .contactForm { grid-column: auto; grid-row: auto; }
+  .contactMarker { padding-top: 0; }
+  .contactHead { font-size: var(--fs-h1); }
+  .contactAside { position: static; padding-right: 0; margin-bottom: 24px; }
 }
 .full { }
-@media (max-width: 767px) { .btns .full, .contactText .full { display: flex; width: 100%; justify-content: space-between; } }
+@media (max-width: 767px) { .btns .full, .contactAside .full { display: flex; width: 100%; justify-content: space-between; } }

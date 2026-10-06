@@ -36,9 +36,11 @@ export function ContactForm({ onSubmit }: { onSubmit?: (d: FormData) => void }) 
 
   return (
     <form onSubmit={submit} noValidate className={s.form}>
-      <TextField label="Имя" name="name" autoComplete="name" value={d.name} onChange={u('name')} />
-      <TextField label="Телефон или Telegram *" name="contact" required value={d.contact} onChange={(v) => { u('contact')(v); setErr(undefined); }} error={err} />
-      <TextField label="Компания" name="company" autoComplete="organization" value={d.company} onChange={u('company')} />
+      <div className={s.fields}>
+        <TextField label="Имя" name="name" autoComplete="name" value={d.name} onChange={u('name')} />
+        <TextField label="Телефон или Telegram *" name="contact" required value={d.contact} onChange={(v) => { u('contact')(v); setErr(undefined); }} error={err} />
+        <TextField label="Компания" name="company" autoComplete="organization" value={d.company} onChange={u('company')} />
+      </div>
       <ChipGroup label="Что нужно" options={NEEDS} value={d.need} onChange={u('need')} />
       <ChipGroup label="Бюджет" options={BUDGETS} value={d.budget} onChange={u('budget')} multi={false} />
       <TextField label="О проекте" name="about" multiline value={d.about} onChange={u('about')} />
