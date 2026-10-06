@@ -56,7 +56,8 @@ function buildLayouts(): L[][] {
   return fns.map((f) => f());
 }
 
-export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean) {
+/** muted: blocks in a dim grey so the object supports the copy instead of competing with it. */
+export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean, muted = false) {
   const LAYOUTS = buildLayouts();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(2, devicePixelRatio));
@@ -74,7 +75,7 @@ export function mountProcess(canvas: HTMLCanvasElement, reducedMotion: boolean) 
   const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.05 });
   const mesh = new THREE.InstancedMesh(geo, mat, N);
   const col = new THREE.Color();
-  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(i === 0 ? SEAL : PAPER));
+  for (let i = 0; i < N; i++) mesh.setColorAt(i, col.setHex(i === 0 ? SEAL : muted ? 0x6b6b68 : PAPER));
   const g = new THREE.Group(); g.add(mesh); scene.add(g);
 
   const cur = LAYOUTS[0].map((o) => ({

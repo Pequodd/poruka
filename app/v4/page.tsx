@@ -9,7 +9,7 @@ export default function HomeV4() {
   return (
     <>
       <HeroV4 />
-      <HomeRest />
+      <HomeRest process="apple" />
     </>
   );
 }

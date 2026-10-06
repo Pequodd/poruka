@@ -5,7 +5,7 @@ import { prefersReducedMotion } from '@/lib/hooks';
 type Api = { setStep: (i: number) => void; dispose: () => void };
 
 /** Transparent three.js canvas; three is loaded lazily so it never blocks first paint. */
-export function Process3D({ step, className, rootMargin = '400px 0px' }: { step: number; className?: string; rootMargin?: string }) {
+export function Process3D({ step, className, rootMargin = '400px 0px', muted = false }: { step: number; className?: string; rootMargin?: string; muted?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const api = useRef<Api | null>(null);
   const stepRef = useRef(step);
@@ -22,14 +22,14 @@ export function Process3D({ step, className, rootMargin = '400px 0px' }: { step:
       import('@/lib/processScene').then(({ mountProcess }) => {
         if (dead || !ref.current) return;
         try {
-          api.current = mountProcess(ref.current, prefersReducedMotion());
+          api.current = mountProcess(ref.current, prefersReducedMotion(), muted);
           api.current.setStep(stepRef.current);
         } catch { /* no WebGL — leave the slot empty */ }
       });
     }, { rootMargin });
     io.observe(el);
     return () => { dead = true; io.disconnect(); api.current?.dispose(); api.current = null; };
-  }, [rootMargin]);
+  }, [rootMargin, muted]);
 
   useEffect(() => { api.current?.setStep(step); }, [step]);
 

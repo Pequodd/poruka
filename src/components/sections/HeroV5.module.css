@@ -1,0 +1,80 @@
+/*
+ * Home v5 first screen (Apple-style product reveal): centred headline; a browser frame with the latest work
+ * peeks from the bottom and grows to fill the screen as you scroll (the copy lifts away). JS writes --p (0→1).
+ */
+.hero { position: relative; height: 230vh; background: var(--paper); --p: 0; }
+.stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+
+.copy {
+  position: absolute; left: 0; right: 0; top: 17vh; padding: 0 var(--margin-outer);
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  opacity: clamp(0, calc(1 - var(--p) * 2.2), 1); transform: translateY(calc(var(--p) * -120px));
+}
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-seal); }
+.h1 { margin: 0; font-size: clamp(56px, 7.4vw, 136px); line-height: 0.94; letter-spacing: -0.055em; font-weight: 500; }
+.line { display: block; }
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.word { display: inline-block; transform: translateY(105%); transition: transform 1000ms var(--ease) var(--d, 0ms); }
+.on .word { transform: none; }
+.grey { color: var(--text-secondary); }
+.mark { position: relative; display: inline-block; }
+.underline { position: absolute; left: 0; right: 0.04em; bottom: 0.03em; height: 0.06em; background: var(--accent-seal); transform-origin: left; transform: scaleX(0); transition: transform 700ms var(--ease) 1100ms; }
+.on .underline { transform: scaleX(1); }
+.sub { margin: 28px 0 0; max-width: 560px; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-secondary); }
+.sub b { color: var(--text-primary); font-weight: 400; }
+.btns { display: flex; gap: 12px; margin-top: 32px; }
+.fade { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-reveal) var(--ease) var(--d, 0ms), transform var(--dur-reveal) var(--ease) var(--d, 0ms); }
+.on .fade { opacity: 1; transform: none; }
+
+/* The device: full-size box, scaled down and pushed down at p = 0, natural at p = 1. */
+.deviceWrap {
+  position: absolute; left: var(--margin-outer); right: var(--margin-outer); top: 84px; bottom: var(--margin-outer);
+  transform-origin: 50% 0;
+  /* At p = 0 the frame starts below the buttons and only peeks into the first screen. */
+  transform: translateY(calc((1 - var(--p)) * 66vh)) scale(calc(0.6 + var(--p) * 0.4));
+}
+.enter { opacity: 0; transform: translateY(60px); transition: opacity 1200ms var(--ease) 500ms, transform 1200ms var(--ease) 500ms; height: 100%; }
+.on .enter { opacity: 1; transform: none; }
+.device {
+  height: 100%; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line-hairline);
+  border-radius: calc(24px * (1 - var(--p))); overflow: hidden;
+}
+.bar { position: relative; height: 32px; flex: none; display: flex; align-items: center; gap: 6px; padding: 0 14px; border-bottom: 1px solid var(--line-hairline); }
+.bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--line-hairline); }
+.url { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--text-secondary); }
+.screen { position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--ink); }
+.img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(calc(1.12 - var(--p) * 0.12)); }
+
+.caption {
+  position: absolute; left: 24px; right: 24px; bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  opacity: clamp(0, calc((var(--p) - 0.75) * 4), 1); transform: translateY(calc((1 - var(--p)) * 24px));
+  pointer-events: none;
+}
+.p1 .caption { pointer-events: auto; }
+.capLink {
+  display: inline-flex; align-items: center; gap: 14px; padding: 12px 16px 12px 20px; border-radius: var(--radius-pill);
+  background: var(--paper); color: var(--text-primary); text-decoration: none;
+}
+.capLink:hover { color: var(--text-primary); }
+.capTitle { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+.capTitle span { color: var(--text-secondary); font-weight: 400; }
+.capArr { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: transform var(--dur-ui) var(--ease), background var(--dur-hover) var(--ease); }
+.capLink:hover .capArr { transform: rotate(45deg); background: var(--accent-seal); }
+.capAll { color: #fff; text-decoration: none; padding: 8px 0; }
+.capAll:hover { color: var(--accent-seal); }
+
+
+@media (max-width: 767px) {
+  .hero { height: 200svh; }
+  .stage { height: 100svh; }
+  .copy { top: 104px; }
+  .h1 { font-size: 46px; }
+  .sub { font-size: 17px; margin-top: 20px; }
+  .btns { flex-direction: column; width: 100%; }
+  .btns > * { display: flex; width: 100%; justify-content: space-between; }
+  .deviceWrap { top: 76px; transform: translateY(calc((1 - var(--p)) * 64svh)) scale(calc(0.86 + var(--p) * 0.14)); }
+  .caption { left: 12px; right: 12px; bottom: 12px; flex-direction: column; align-items: stretch; }
+  .capAll { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .word, .fade, .enter { transform: none; opacity: 1; } }
