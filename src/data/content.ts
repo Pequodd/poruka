@@ -42,10 +42,10 @@ export const CONTACTS = {
 };
 
 export const NAV: [string, string][] = [
-  ['О нас', '/#about'],
   ['Работы', '/portfolio/'],
   ['Услуги', '/#services'],
   ['Процесс', '/#process'],
   ['Команда', '/#team'],
   ['Кейс', '/cases/smp-zapchast/'],
+  ['Контакт', '/#contact'],
 ];

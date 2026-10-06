@@ -7,7 +7,7 @@ Next.js (App Router) + TypeScript + CSS Modules. Статический эксп
 ## Страницы
 - `/` — Главная v2: Hero (гильош на canvas) → О нас → Работы (вариант B) → Marquee → Услуги → Процесс (sticky + three.js) → Команда → Контакт → Footer
 - `/portfolio/` — сетка/список с фильтрами
-- `/cases/[slug]/` — шаблон кейса, страница на каждый проект
+- `/cases/[slug]/` — кейс v2 (на скриншотах): первый экран с мета-рядом → обложка → задача → 5 экранных блоков → решения → результат → следующий проект → контакт
 
 ## Структура
 ```
@@ -19,7 +19,8 @@ src/components/ui/        Button, IconButton, Chip, SectionMarker, Stat, Marquee
 src/components/layout/    HeaderV2, Footer
 src/components/sections/  Hero (+Guilloche), About, Works (+WorksTable), Services, Process (+Process3D), Team, Contact
 src/components/pages/     Portfolio, Case
-src/data/projects.ts      данные проектов (PROJECTS) + тексты кейсов
+src/components/case/      BrowserFrame, PhoneFrame, BrowserScroll, ScreenPair, MobileStrip, ScreenDetail, BeforeAfter, NextProject
+src/data/projects.ts      данные проектов (PROJECTS) + кейсы: тексты, цифры и список экранов case.screens
 src/data/content.ts       услуги, этапы процесса, команда, контакты, меню
 src/lib/processScene.ts   three.js-сцена «Процесса» (64 блока, 8 состояний)
 public/assets/            изображения проектов и команды
@@ -39,7 +40,26 @@ Push в `main` → GitHub Actions (`.github/workflows/deploy.yml`) собира�
 В настройках репозитория: **Settings → Pages → Source: Deploy from a branch → `gh-pages` / `(root)`**.
 
 ## Что осталось от студии
-- Имена и роли команды, реальные тексты кейсов (сейчас — плейсхолдеры по Case.jsx).
+- Имена и роли команды; тексты и цифры кейсов (сейчас — черновики из прототипа Case v2).
+- Скриншоты сайтов клиентов для кейсов (см. «Скриншоты для кейсов»).
 - Изображения проектов 6–7 и оригиналы ≥2000px.
 - Отправка формы: `ContactForm` принимает `onSubmit` — подключить к CRM / Telegram-боту / CMS.
 - Ссылки на Telegram/Behance/VC.ru в `src/data/content.ts`.
+
+## Скриншоты для кейсов
+Экраны кейса задаются в `src/data/projects.ts` → `case.screens`. Пока путь пустой, в рамке показывается плейсхолдер.
+
+| type | что показывает | поля |
+|---|---|---|
+| `scroll` | длинная страница прокручивается в рамке браузера при скролле | `desktop`, `mobile` |
+| `pair` | десктоп + телефон на белой подложке | `desktop`, `mobile` |
+| `strip` | лента мобильных экранов | `mobile: []`, `labels: []` |
+| `detail` | увеличенный фрагмент ×1.5 + «почему так» | `desktop` (≥2×), `crop {x,y}`, `why` |
+| `beforeAfter` | было / стало со шторкой | `before`, `after` |
+
+Правила съёмки:
+- ширина **1440** (десктоп) и **390** (мобильный), **полная высота страницы**, PNG;
+- без cookie-баннеров, чатов и всплывающих окон, только реальный контент;
+- фрагменты для `detail` — с плотностью ≥2×;
+- до/после — тот же адрес, та же ширина и высота;
+- файлы: `public/assets/cases/<slug>/<NN-nazvanie>-desktop.png` и `-mobile.png`, например `public/assets/cases/smp-zapchast/01-glavnaya-desktop.png`; в данных путь пишется без `public`: `/assets/cases/smp-zapchast/01-glavnaya-desktop.png`.

@@ -41,7 +41,7 @@
 }
 .link:hover { color: inherit; }
 /* Text roll: the label slides up and its copy follows from below. */
-.roll { display: flex; flex-direction: column; transition: transform var(--dur-ui) var(--ease); }
+.roll { display: flex; flex-direction: column; transition: transform var(--dur-hover) var(--ease); }
 .roll > span { height: 1.3em; }
 .link:hover .roll, .link:focus-visible .roll { transform: translateY(-50%); }
 .active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; }
