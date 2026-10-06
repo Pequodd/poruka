@@ -144,3 +144,13 @@
   :global(html[data-look='glass']) .right { gap: 14px; }
 }
 @media (max-width: 420px) { :global(html[data-look='glass']) .ctaDot { display: none; } }
+
+/* Glass look layout: logo left · four links centred with equal gaps · CTA right (desktop). */
+@media (min-width: 1024px) {
+  :global(html[data-look='glass']) .row { display: flex; align-items: center; gap: 32px; }
+  :global(html[data-look='glass']) .logoWrap { order: 0; }
+  :global(html[data-look='glass']) .left { order: 1; margin-left: auto; gap: 32px; }
+  :global(html[data-look='glass']) .right { display: contents; }
+  :global(html[data-look='glass']) .right .link { order: 2; }
+  :global(html[data-look='glass']) .cta { order: 3; margin-left: auto; }
+}
