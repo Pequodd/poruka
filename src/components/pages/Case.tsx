@@ -10,19 +10,19 @@ import { MobileStrip } from '../case/MobileStrip';
 import { NextProject } from '../case/NextProject';
 import { ScreenDetail } from '../case/ScreenDetail';
 import { ScreenPair } from '../case/ScreenPair';
-import { Footer } from '../layout/Footer';
-import { Contact } from '../sections/Contact';
-import { Lead, Section } from '../sections/Section';
-import { Button } from '../ui/Button';
 import { Chip } from '../ui/Chip';
-import { SectionMarker } from '../ui/SectionMarker';
-import { Stat } from '../ui/Stat';
+import { ContactV7 } from '../v7/ContactV7';
+import { FooterV7 } from '../v7/FooterV7';
+import { Letters } from '../v7/Letters';
+import { Look } from '../v7/Look';
+import { Orbit } from '../v7/Orbit';
+import v from '../v7/V7.module.css';
 import s from '../case/Case.module.css';
 
 const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
 
-function ScreenBlock({ screen: sc, n, url }: { screen: Screen; n: number; url: string }) {
-  const cap = <CaseCaption n={n} label={sc.label} note={sc.note} />;
+function ScreenBlock({ screen: sc, n, total, url }: { screen: Screen; n: number; total: number; url: string }) {
+  const cap = <CaseCaption n={n} total={total} label={sc.label} note={sc.note} />;
   switch (sc.type) {
     case 'scroll':
       return <div className="container"><BrowserScroll url={url} src={sc.desktop} mobileSrc={first(sc.mobile)} caption={cap} /></div>;
@@ -42,8 +42,8 @@ function ScreenBlock({ screen: sc, n, url }: { screen: Screen; n: number; url: s
 }
 
 /**
- * Case v2 — screenshot-led case study (ui_kits/website/CaseV2.jsx).
- * Hero → Cover → Задача → Screens flow → Решения → Результат → Следующий проект → Контакт → Footer.
+ * Case in the v7 system (structure from Case v2): assembling uppercase title over the glass links → glass facts panel →
+ * cover → (01) Задача → (02) Экраны → (03) Решения → (04) Результат on ultramarine → next project → contact → footer.
  */
 export function Case({ project: p }: { project: Project }) {
   const c = p.case;
@@ -53,79 +53,93 @@ export function Case({ project: p }: { project: Project }) {
     ['Год', p.year],
     ['Услуги', <div key="t" className={s.tags}>{c.tags.map((t) => <Chip key={t}>{t}</Chip>)}</div>],
     ['Срок', c.duration],
-    ['Стек', c.stack.join(' · ')],
+    ['Стек', c.stack.join(', ')],
   ];
 
   return (
-    <div className={s.page}>
+    <div className={v.page}>
+      <Look />
+      <Orbit />
       <ClientFont font={c.font} />
-
-      <div className={`container ${s.intro}`}>
-        <nav aria-label="Хлебные крошки" className={`${s.mono} ${s.crumbs}`}>
-          <Link href="/portfolio/">Работы</Link> / <b>{p.title}</b>
-        </nav>
-        <h1 className={s.h1}>{p.title}</h1>
-        <p className={s.oneLiner}>{c.oneLiner}</p>
-      </div>
-
-      <div className={`container ${s.metaWrap}`}>
-        <div className={s.meta}>
-          {meta.map(([k, v]) => (
-            <div key={k} className={s.cell}>
-              <span className={`${s.mono} ${s.cellLabel}`}>{k}</span>
-              {typeof v === 'string' ? <span className={s.cellVal}>{v}</span> : v}
-            </div>
-          ))}
-          <div className={s.metaBtn}><Button variant="secondary" href={`https://${c.url}`}>Открыть сайт</Button></div>
-        </div>
-      </div>
-
-      <CaseCover key={p.slug} image={p.image} title={p.title} />
-
-      <Section marker="Задача"><Lead parts={c.task} /></Section>
-
-      <div className={s.flow}>
-        {c.screens.map((sc, i) => <ScreenBlock key={i} screen={sc} n={i + 1} url={c.url} />)}
-      </div>
-
-      <div className={`container ${s.decWrap}`}>
-        <div className={s.decisions}>
-          <div className={s.decMarker}><SectionMarker>Решения</SectionMarker></div>
-          <div className={s.decColors}>
-            <span className={`${s.mono} ${s.cellLabel}`}>Цвета клиента</span>
-            <div className={s.swatches}>
-              {c.colors.map((col) => (
-                <div key={col} className={s.swatch}>
-                  <div className={s.swatchColor} style={{ background: col }} />
-                  <span className={s.mono}>{col}</span>
-                </div>
-              ))}
-            </div>
+      <div className={v.content}>
+        <header className={s.intro} data-orbit="30 -14 0.6 0 1" data-orbit-m="24 -30 0.5 0 0.8">
+          <nav aria-label="Хлебные крошки" className={`mono ${s.crumbs}`} style={{ ['--d' as string]: '150ms' }} data-hero>
+            <Link href="/portfolio/">Работы</Link><span aria-hidden="true"> / </span><b>{p.title}</b>
+          </nav>
+          <h1 className={s.h1} aria-label={p.title}><span aria-hidden="true"><Letters text={p.title} /></span></h1>
+          <p className={s.oneLiner} style={{ ['--d' as string]: '700ms' }} data-hero>{c.oneLiner}</p>
+          <div className={`${v.glass} ${s.meta}`} style={{ ['--d' as string]: '850ms' }} data-hero>
+            {meta.map(([k, val]) => (
+              <div key={k} className={s.cell}>
+                <span className={`mono ${s.cellLabel}`}>{k}</span>
+                {typeof val === 'string' ? <span className={s.cellVal}>{val}</span> : val}
+              </div>
+            ))}
+            <a className={s.siteBtn} href={`https://${c.url}`} target="_blank" rel="noreferrer">Открыть сайт<span className={s.siteIcon} aria-hidden="true">↗</span></a>
           </div>
-          <div className={s.decFont}>
-            <span className={`${s.mono} ${s.cellLabel}`}>Шрифт клиента · {c.font}</span>
-            <span className={s.specimen} style={{ fontFamily: `'${clientFamily(c.font)}', var(--font-sans)` }}>Аа Бб 123</span>
-          </div>
-          <p className={s.decText}>{c.decision}</p>
-        </div>
-      </div>
+        </header>
 
-      <section className={s.result} data-ink>
-        <div className="container">
-          <div className={s.resultMarker}><SectionMarker onInk active>Результат</SectionMarker></div>
-          <div className={s.stats}>{c.stats.map((x) => <Stat key={x.caption} onInk {...x} />)}</div>
-          <div className={s.quoteGrid}>
-            <div className={s.quote}>
-              <Lead ink parts={c.quote} />
-              <span className={`${s.mono} ${s.muted}`}>{c.author}</span>
+        <div data-orbit="30 0 0.8 20 0">
+          <CaseCover key={p.slug} image={p.image} title={p.title} />
+        </div>
+
+        <section className={s.task}>
+          <span className={`mono ${v.eyebrow}`} data-rv>(01) Задача</span>
+          <p className={s.taskText} data-rv style={{ ['--d' as string]: '80ms' }}>
+            <span className={s.taskKey}>{c.task[0]}</span>{c.task.slice(1).join('')}
+          </p>
+        </section>
+
+        <section className={s.flow} aria-label="Экраны">
+          <div className={s.flowHead}>
+            <span className={`mono ${v.eyebrow}`} data-rv>(02) Экраны</span>
+            <span className={`mono ${v.eyebrow}`} data-rv>{c.screens.length} экранов</span>
+          </div>
+          {c.screens.map((sc, i) => <div key={i} data-rv><ScreenBlock screen={sc} n={i + 1} total={c.screens.length} url={c.url} /></div>)}
+        </section>
+
+        <section className={s.decWrap}>
+          <span className={`mono ${v.eyebrow}`} data-rv>(03) Решения</span>
+          <div className={s.decisions}>
+            <div className={`${v.glass} ${s.decCard}`} data-rv>
+              <span className={`mono ${s.cellLabel}`}>Цвета клиента</span>
+              <div className={s.swatches}>
+                {c.colors.map((col) => (
+                  <div key={col} className={s.swatch}>
+                    <div className={s.swatchColor} style={{ background: col }} />
+                    <span className="mono">{col}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+            <div className={`${v.glass} ${s.decCard}`} data-rv style={{ ['--d' as string]: '90ms' }}>
+              <span className={`mono ${s.cellLabel}`}>Шрифт клиента: {c.font}</span>
+              <span className={s.specimen} style={{ fontFamily: `'${clientFamily(c.font)}', var(--font-sans)` }}>Аа Бб 123</span>
+            </div>
+            <p className={s.decText} data-rv style={{ ['--d' as string]: '180ms' }}>{c.decision}</p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <NextProject key={next.slug} title={next.title} image={next.image} href={caseHref(next)} />
-      <Contact />
-      <Footer />
+        <section className={s.result} data-ink>
+          <span className={`mono ${s.resultEyebrow}`} data-rv>(04) Результат</span>
+          <div className={s.stats}>
+            {c.stats.map((x, i) => (
+              <div key={x.caption} className={s.stat} data-rv style={{ ['--d' as string]: `${i * 90}ms` }}>
+                <b className={s.statValue}>{x.value}{x.suffix}</b>
+                <span className={s.statCaption}>{x.caption}</span>
+              </div>
+            ))}
+          </div>
+          <blockquote className={s.quote} data-rv>
+            <p>{c.quote.join('')}</p>
+            <cite className="mono">{c.author}</cite>
+          </blockquote>
+        </section>
+
+        <NextProject key={next.slug} title={next.title} image={next.image} href={caseHref(next)} />
+        <ContactV7 eyebrow="(05) Контакт" />
+        <FooterV7 />
+      </div>
     </div>
   );
 }

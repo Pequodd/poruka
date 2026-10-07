@@ -4,16 +4,43 @@ import { useState } from 'react';
 import { caseHref, FILTERS, PROJECTS, type Project } from '@/data/projects';
 import { asset } from '@/lib/asset';
 import { useIsMobile } from '@/lib/hooks';
-import { Footer } from '../layout/Footer';
-import { Lead } from '../sections/Section';
-import { Button } from '../ui/Button';
 import { Chip } from '../ui/Chip';
-import { Placeholder } from '../ui/Placeholder';
-import { ProjectCard } from '../ui/ProjectCard';
+import { ContactV7 } from '../v7/ContactV7';
+import { FooterV7 } from '../v7/FooterV7';
+import { Letters } from '../v7/Letters';
+import { Look } from '../v7/Look';
+import { Orbit } from '../v7/Orbit';
+import v from '../v7/V7.module.css';
 import s from './Portfolio.module.css';
 
 /** Grid rhythm 8+4 / 4+4+4 / 4+8. */
 const PATTERN: [number, string][] = [[8, '16/10'], [4, '3/4'], [4, '1/1'], [4, '1/1'], [4, '1/1'], [4, '3/4'], [8, '16/10']];
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/** Case card in the v7 system: rounded media, the facts on a glass plate inside it; brand-colour tile when there is no shot. */
+function WorkCard({ p, ratio, i }: { p: Project; ratio: string; i: number }) {
+  const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`);
+  };
+  const [bg, fg] = p.case.colors;
+  return (
+    <Link href={caseHref(p)} className={s.card} style={{ aspectRatio: ratio, ['--i' as string]: i }} onMouseMove={move}>
+      <div className={s.zoom}>
+        {p.image
+          ? <img src={asset(p.image)} alt="" className={s.img} loading="lazy" />
+          : <div className={s.tile} style={{ background: bg, color: fg }}><span>{p.case.client.replace(/ \(NDA\)/, '')}</span></div>}
+      </div>
+      <div className={`${v.glass} ${s.plate}`}>
+        <span className={`mono ${s.plateMeta}`}>{p.year} · {p.cat}</span>
+        <span className={s.plateTitle}>{p.title}</span>
+        <span className={s.plateResult}>{p.result}</span>
+      </div>
+      <span className={s.cursor} aria-hidden="true">Смотреть</span>
+    </Link>
+  );
+}
 
 function ListRow({ p }: { p: Project }) {
   const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -26,66 +53,83 @@ function ListRow({ p }: { p: Project }) {
       <span className={s.rowTitle}>{p.title}</span>
       <span className={s.rowCell}>{p.services}</span>
       <span className={s.rowCell}>{p.cat}</span>
-      <span className={`${s.rowCell} ${s.rowYear}`}>{p.year}</span>
-      <span className={s.rowArrow} aria-hidden="true">↗</span>
+      <span className={s.rowResult}>{p.result}</span>
+      <span className={`mono ${s.rowYear}`}>{p.year}</span>
       <div className={s.rowPreview} aria-hidden="true">
-        {p.image ? <img src={asset(p.image)} alt="" className={s.rowImg} loading="lazy" /> : <Placeholder ratio="4/3" />}
+        {p.image ? <img src={asset(p.image)} alt="" className={s.rowImg} loading="lazy" /> : <div className={s.rowTile} style={{ background: p.case.colors[0] }} />}
       </div>
     </Link>
   );
 }
 
+/** Portfolio in the v7 system: assembling title + the glass links, glass filter capsule, rounded cards, ultramarine call. */
 export function Portfolio() {
   const [f, setF] = useState<string>('Все');
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const mobile = useIsMobile();
   const list = PROJECTS.filter((p) => f === 'Все' || p.cat === f);
   return (
-    <div className={s.page}>
-      <div className={`container ${s.intro}`}>
-        <div className={s.introGrid}>
-          <h1 className={s.h1}>Работы<sup className={s.count}>({String(PROJECTS.length).padStart(2, '0')})</sup></h1>
-          <div className={s.lead}><Lead parts={['Проекты, за которые мы ручаемся.', ' Каждый — с задачей, решением и результатом.']} /></div>
+    <div className={v.page}>
+      <Look />
+      <Orbit />
+      <div className={v.content}>
+        <header className={s.hero} data-orbit="27 -10 0.7 0 1" data-orbit-m="22 -26 0.55 0 0.9">
+          <span className={`mono ${v.eyebrow}`} style={{ ['--d' as string]: '200ms' }} data-hero>(01) Работы</span>
+          <h1 className={s.h1} aria-label={`Работы, ${PROJECTS.length} проектов`}>
+            <span aria-hidden="true"><Letters text="Работы" /></span>
+            <sup className={s.count} aria-hidden="true">({pad(PROJECTS.length)})</sup>
+          </h1>
+          <p className={s.lead} style={{ ['--d' as string]: '700ms' }} data-hero>Проекты, за которые мы ручаемся. Каждый — с задачей, решением и результатом.</p>
+        </header>
+
+        {/* Bar + list share one wrapper so the sticky filter capsule stops where the cases end. */}
+        <div className={s.works} data-orbit="30 4 0.95 22 0.4" data-orbit-m="20 0 0.8 18 0.3">
+        <div className={s.barWrap}>
+          <div className={`${v.glass} ${s.bar}`}>
+            <div className={s.filters} role="group" aria-label="Фильтр по категории">
+              {FILTERS.map((x) => <Chip key={x} size="md" active={f === x} onClick={() => setF(x)}>{x}</Chip>)}
+            </div>
+            <div className={s.views} role="group" aria-label="Вид">
+              <Chip size="md" active={view === 'grid'} onClick={() => setView('grid')}>Сетка</Chip>
+              <Chip size="md" active={view === 'list'} onClick={() => setView('list')}>Список</Chip>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className={s.bar}>
-        <div className={`container ${s.barInner}`}>
-          <div className={s.filters} role="group" aria-label="Фильтр по категории">
-            {FILTERS.map((x) => <Chip key={x} size="md" active={f === x} onClick={() => setF(x)}>{x}</Chip>)}
-          </div>
-          <div className={s.views} role="group" aria-label="Вид">
-            <Chip size="md" active={view === 'grid'} onClick={() => setView('grid')}>Сетка</Chip>
-            <Chip size="md" active={view === 'list'} onClick={() => setView('list')}>Список</Chip>
-          </div>
+
+        <div className={s.list}>
+          {list.length === 0 && <p className={s.empty}>В этой категории пока нет проектов — выберите другую.</p>}
+          {view === 'list' && !mobile ? (
+            <div className={`${v.glass} ${s.rows}`}>
+              <div className={`mono ${s.rowHead}`}><span>Проект</span><span>Услуги</span><span>Категория</span><span>Результат</span><span>Год</span></div>
+              {list.map((p) => <ListRow key={p.slug} p={p} />)}
+            </div>
+          ) : (
+            <div className={s.grid}>
+              {list.map((p, i) => {
+                const [span, ratio] = PATTERN[i % PATTERN.length];
+                return (
+                  <div key={p.slug} className={span === 8 ? s.span8 : s.span4}>
+                    <WorkCard p={p} ratio={mobile ? '4/5' : ratio} i={i} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-      </div>
-      <div className={`container ${s.list}`}>
-        {list.length === 0 && <p className={s.empty}>В этой категории пока нет проектов.</p>}
-        {view === 'list' && !mobile ? (
-          <div className={s.rows}>
-            <div className={`mono ${s.rowHead}`}><span>Проект</span><span>Услуги</span><span>Категория</span><span className={s.rowYear}>Год</span><span /></div>
-            {list.map((p) => <ListRow key={p.slug} p={p} />)}
-          </div>
-        ) : (
-          <div className={s.grid}>
-            {list.map((p, i) => {
-              const [span, ratio] = PATTERN[i % PATTERN.length];
-              return (
-                <div key={p.slug} className={span === 8 ? s.span8 : s.span4}>
-                  <ProjectCard title={p.title} year={p.year} cat={p.cat} result={p.result} image={p.image} ratio={mobile ? '4/5' : ratio} href={caseHref(p)} />
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-      <section className={s.cta} data-ink>
-        <div className={`container ${s.ctaInner}`}>
-          <h2 className={s.ctaH2}>Хотите такой же<br />результат?</h2>
-          <Button variant="inverse" href="/#contact" className={s.ctaBtn}>Обсудить проект</Button>
+
         </div>
-      </section>
-      <Footer />
+
+        <section className={s.cta} data-ink>
+          <h2 className={s.ctaH2} data-rv>Хотите такой же результат?</h2>
+          <div className={s.ctaSide} data-rv style={{ ['--d' as string]: '120ms' }}>
+            <p className={s.ctaText}>Расскажите о задаче — ответим в течение дня и честно скажем, если она не наша.</p>
+            <a className={s.ctaBtn} href="#contact">Обсудить проект<span className={s.ctaIcon} aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+
+        <ContactV7 eyebrow="(02) Контакт" />
+        <FooterV7 />
+      </div>
     </div>
   );
 }

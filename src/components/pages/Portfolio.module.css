@@ -1,62 +1,121 @@
-.page { padding-top: 80px; }
-.intro { padding-top: 96px; padding-bottom: 96px; }
-.introGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gutter); align-items: end; row-gap: 32px; }
-.h1 { grid-column: 1 / 7; margin: 0; font-size: clamp(120px, 14vw, 200px); line-height: 0.9; letter-spacing: -0.05em; font-weight: 500; }
-.count { font-size: 0.2em; color: var(--accent-seal); vertical-align: top; font-family: var(--font-mono); letter-spacing: 0; margin-left: 8px; }
-.lead { grid-column: 8 / 13; }
+/*
+ * Portfolio in the v7 system: assembling uppercase title over the glass links, a sticky liquid-glass filter capsule,
+ * rounded case cards with a glass fact plate, a list view on one glass panel, and an ultramarine call to action.
+ */
+.hero {
+  position: relative; display: flex; flex-direction: column; gap: 20px;
+  padding: 168px var(--margin-outer) 72px; min-height: 72vh; justify-content: flex-end;
+}
+.h1 {
+  margin: 0; display: flex; align-items: flex-start; gap: 0.08em;
+  font-size: clamp(88px, 15vw, 280px); line-height: 0.84; letter-spacing: -0.065em; font-weight: 500; text-transform: uppercase;
+}
+.count { font-family: var(--font-mono); font-size: 0.11em; line-height: 1; letter-spacing: 0; color: var(--accent-ultra); margin-top: 0.35em; }
+.lead { margin: 0; max-width: 520px; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
 
-.bar { position: sticky; top: 80px; z-index: 20; background: var(--paper); border-top: 1px solid var(--line-hairline); border-bottom: 1px solid var(--line-hairline); }
-.barInner { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; }
-.filters { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0; scrollbar-width: none; }
-.views { display: flex; gap: 4px; }
+/* Sticky glass capsule with the filters (same material as the header); sticks only within .works. */
+.works { position: relative; }
+.barWrap { position: sticky; top: 92px; z-index: 20; display: flex; justify-content: center; padding: 0 var(--margin-outer); }
+.bar {
+  display: flex; align-items: center; gap: 16px; max-width: 100%; padding: 8px; border-radius: 36px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95);
+}
+.filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.views { display: flex; gap: 4px; padding-left: 16px; border-left: 1px solid rgba(14, 14, 14, 0.1); }
 
-.list { padding-top: 96px; padding-bottom: var(--section-pad); }
-.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: 96px; align-items: stretch; }
+.list { padding: 72px var(--margin-outer) var(--section-pad); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; row-gap: 16px; }
 .span8 { grid-column: span 8; } .span4 { grid-column: span 4; }
-.empty { color: var(--text-secondary); }
+.empty { color: var(--text-secondary); font-size: var(--fs-body-l); }
 
-.rows { border-bottom: 1px solid var(--line-hairline); }
-/* Same columns as the home WorksTable: Проект · Услуги · Категория · Год (+ ↗). */
-.rowHead, .row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr) 64px 40px; gap: var(--gutter); }
-.rowHead { padding: 0 0 16px; color: var(--text-secondary); }
+/* Card: entrance replays on mount, so switching filters re-reveals the new set. */
+.card {
+  position: relative; display: block; height: 100%; border-radius: var(--radius-card); overflow: hidden;
+  background: var(--surface); color: var(--text-primary); text-decoration: none; cursor: none;
+  animation: cardIn 900ms var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes cardIn { from { opacity: 0; filter: blur(14px); transform: translateY(28px); } }
+.card:hover { color: var(--text-primary); }
+.zoom { position: absolute; inset: 0; transition: transform 1.2s var(--ease); }
+.card:hover .zoom { transform: scale(1.04); }
+.img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.tile { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+.tile span { font-size: clamp(32px, 4vw, 64px); line-height: 0.95; letter-spacing: -0.05em; font-weight: 500; text-transform: uppercase; }
+.plate {
+  position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px);
+  display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 16px; border-radius: 18px;
+}
+.plate.plate { background: rgba(255, 255, 255, 0.78); }
+.plateMeta { color: var(--text-secondary); }
+.plateTitle { font-size: 22px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
+.plateResult { font-size: 17px; line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; color: var(--accent-ultra); }
+.cursor {
+  position: absolute; left: var(--x, 50%); top: var(--y, 50%); width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: var(--accent-ultra); color: #fff; font-size: 14px;
+  pointer-events: none; opacity: 0; transform: scale(0.6); transition: opacity var(--dur-hover) var(--ease), transform var(--dur-ui) var(--ease);
+}
+.card:hover .cursor { opacity: 1; transform: scale(1); }
+.card:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 3px; }
+
+/* List view on one glass panel. */
+.rows { border-radius: var(--radius-card); padding: 8px 24px; }
+.rowHead, .row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 2fr) minmax(0, 2fr) 56px; gap: var(--gutter); }
+.rowHead { padding: 18px 0 14px; color: var(--text-secondary); }
+.rowHead span:last-child { text-align: right; }
 .row {
-  position: relative;
-  align-items: center; padding: 26px 0; border-top: 1px solid var(--line-hairline);
-  color: var(--text-primary); text-decoration: none; background: transparent; transition: background var(--dur-hover) var(--ease);
+  position: relative; align-items: center; padding: 22px 0; border-top: 1px solid rgba(14, 14, 14, 0.08);
+  color: var(--text-primary); text-decoration: none; transition: color var(--dur-hover) var(--ease);
 }
-.row:hover { background: var(--surface); color: var(--text-primary); }
-.rowTitle { font-size: var(--fs-h3); line-height: 1.15; font-weight: 500; letter-spacing: -0.02em; }
+.row:hover { color: var(--accent-ultra); }
+.row:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 4px; border-radius: 8px; }
+.rowTitle { font-size: 26px; line-height: 1.1; font-weight: 500; letter-spacing: -0.03em; text-transform: uppercase; }
 .rowCell { font-size: 15px; color: var(--text-secondary); }
-.rowYear { text-align: right; }
-.rowArrow { justify-self: end; }
-.rowArrow { font-size: 22px; transition: transform var(--dur-ui) var(--ease); }
-.row:hover .rowArrow { transform: rotate(45deg); }
+.rowResult { font-size: 16px; font-weight: 500; color: var(--accent-ultra); }
+.rowYear { text-align: right; color: var(--text-secondary); }
 .rowPreview {
-  position: absolute; left: calc(var(--x, 0px) + 24px); top: calc(var(--y, 0px) - 90px); width: 240px;
-  pointer-events: none; opacity: 0; z-index: 5; transition: opacity var(--dur-hover) var(--ease);
+  position: absolute; z-index: 5; left: calc(var(--x, 0px) + 24px); top: calc(var(--y, 0px) - 90px); width: 260px;
+  border-radius: 16px; overflow: hidden; pointer-events: none; opacity: 0; transform: scale(0.94);
+  transition: opacity var(--dur-hover) var(--ease), transform var(--dur-ui) var(--ease);
 }
-.row:hover .rowPreview { opacity: 1; }
-.rowImg { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.row:hover .rowPreview { opacity: 1; transform: none; }
+.rowImg, .rowTile { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; }
 
-.cta { background: var(--ink); padding: var(--section-pad) 0; }
-.ctaInner { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
-.ctaH2 { margin: 0; font-size: var(--fs-section); line-height: var(--lh-section); letter-spacing: var(--ls-section); font-weight: 500; color: var(--text-on-ink); }
+/* Ultramarine call to action. */
+.cta {
+  margin: 0 var(--margin-outer); padding: 72px clamp(24px, 4vw, 64px); border-radius: 32px;
+  background: var(--accent-ultra); color: #fff;
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 48px; align-items: end;
+}
+.ctaH2 { margin: 0; font-size: clamp(44px, 6vw, 104px); line-height: 0.92; letter-spacing: -0.055em; font-weight: 500; text-transform: uppercase; text-wrap: balance; }
+.ctaSide { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+.ctaText { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; color: rgba(255, 255, 255, 0.82); }
+.ctaBtn {
+  display: inline-flex; align-items: center; gap: 16px; height: 72px; padding: 0 12px 0 32px; border-radius: var(--radius-pill);
+  background: #fff; color: var(--accent-ultra); font-size: 20px; font-weight: 500; letter-spacing: -0.02em; text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.ctaBtn:hover { background: var(--paper); color: var(--accent-ultra); }
+.ctaBtn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.ctaIcon { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: var(--accent-ultra); color: #fff; transition: transform var(--dur-ui) var(--ease); }
+.ctaBtn:hover .ctaIcon { transform: rotate(45deg); }
 
+@media (max-width: 1023px) {
+  .span8, .span4 { grid-column: span 6; }
+  .cta { grid-template-columns: 1fr; }
+}
 @media (max-width: 767px) {
-  .page { padding-top: 80px; }
-  .intro { padding-top: 48px; padding-bottom: 48px; }
-  .introGrid { grid-template-columns: 1fr; }
-  .h1, .lead { grid-column: auto; }
-  .h1 { font-size: var(--fs-display-xl); }
-  .bar { top: 0; }
+  .hero { padding-top: 120px; padding-bottom: 40px; min-height: 0; }
+  .h1 { font-size: 22vw; }
+  .barWrap { top: 76px; justify-content: flex-start; }
+  .bar { width: 100%; }
   .views { display: none; }
-  .list { padding-top: 48px; }
-  .grid { grid-template-columns: 1fr; row-gap: 48px; }
+  .list { padding-top: 32px; }
+  .grid { grid-template-columns: 1fr; }
   .span8, .span4 { grid-column: auto; }
-  .ctaInner { flex-direction: column; align-items: stretch; }
-  .ctaInner .ctaBtn { display: flex; width: 100%; justify-content: space-between; }
+  .plateTitle { font-size: 20px; }
+  .cta { padding: 40px 20px; }
+  .ctaBtn { width: 100%; justify-content: space-between; height: 64px; font-size: 18px; }
 }
-/* Paper band behind the floating header while the filter bar is stuck. */
-@media (min-width: 768px) {
-  .bar::before { content: ''; position: absolute; left: 0; right: 0; bottom: calc(100% + 1px); height: 80px; background: var(--paper); }
-}
+@media (hover: none) { .card { cursor: pointer; } .cursor { display: none; } }
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } }

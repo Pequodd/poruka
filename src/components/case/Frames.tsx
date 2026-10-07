@@ -5,11 +5,12 @@ import s from './Case.module.css';
 export const DESKTOP_PH = 'СКРИНШОТ 1440 × ПОЛНАЯ ВЫСОТА';
 export const MOBILE_PH = 'СКРИНШОТ 390 × ПОЛНАЯ ВЫСОТА';
 
-/** Caption on a 1px hairline: mono «01 — Главная» left, one phrase right (stacked on mobile). */
-export function CaseCaption({ n, label, note }: { n: number; label: string; note?: string }) {
+/** Caption on a hairline: mono «(01/05)» with the screen name on the left, one phrase on the right (stacked on mobile). */
+export function CaseCaption({ n, total, label, note }: { n: number; total?: number; label: string; note?: string }) {
+  const pad = (x: number) => String(x).padStart(2, '0');
   return (
     <div className={s.caption}>
-      <span className={`${s.mono} ${s.capLabel}`}>{String(n).padStart(2, '0')} — {label}</span>
+      <span className={s.capLabel}><span className="mono">({pad(n)}{total ? `/${pad(total)}` : ''})</span>{label}</span>
       {note && <span className={s.capNote}>{note}</span>}
     </div>
   );
@@ -22,7 +23,7 @@ type BrowserProps = {
   viewportRef?: React.Ref<HTMLDivElement>;
 };
 
-/** Minimal browser chrome: 1px hairline, 28px bar, three 6px dots, centred mono address. No shadow, radius 0. */
+/** Browser chrome in the v7 system: rounded window, frosted 32px bar with three dots and a centred mono address. */
 export function BrowserFrame({ url, children, className, viewportRef }: BrowserProps) {
   return (
     <div className={`${s.browser} ${className || ''}`}>

@@ -46,7 +46,7 @@ export function MobileStrip({ items, caption, hint = 'Листайте →' }: {
         {items.map((it, i) => (
           <figure key={i} className={s.stripItem}>
             <PhoneFrame src={it.src} alt={it.label} />
-            <figcaption className={`${s.mono} ${s.stripCap}`}>{String(i + 1).padStart(2, '0')} · {it.label}</figcaption>
+            <figcaption className={s.stripCap}><span className="mono">({String(i + 1).padStart(2, '0')})</span> {it.label}</figcaption>
           </figure>
         ))}
         <span aria-hidden="true" className={s.stripEnd} />

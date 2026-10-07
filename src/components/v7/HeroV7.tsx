@@ -3,24 +3,9 @@ import { useEffect, useRef } from 'react';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/hooks';
 import Link from 'next/link';
+import { Letters } from './Letters';
 import { useProgress } from './useProgress';
 import s from './V7.module.css';
-
-/** Letters fly in one by one; each word is a no-wrap group so lines only break between words. */
-const Letters = ({ text, from, tail }: { text: string; from: number; tail?: React.ReactNode }) => {
-  let i = from;
-  const words = text.split(' ');
-  return (
-    <>
-      {words.map((w, wi) => (
-        <span key={wi} className={s.word}>
-          {[...w].map((ch, ci) => <span key={ci} className={s.ltr} style={{ ['--i' as string]: i++ }}>{ch}</span>)}
-          {wi === words.length - 1 && tail}
-        </span>
-      ))}
-    </>
-  );
-};
 
 /**
  * v7 hero: a looping fluted-glass video fills the screen; the giant title assembles letter by letter and is blended
