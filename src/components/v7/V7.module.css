@@ -282,7 +282,10 @@
 
 /* ---------- Footer ---------- */
 .footer { position: relative; background: var(--ink); color: var(--text-on-ink); padding: 120px var(--margin-outer) 24px; overflow: hidden; border-radius: 40px 40px 0 0; }
-.fGrid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--gutter); }
+/* On the page's 12-column grid: contact 1–6, menu 7–9, studio 10–12. */
+.fGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gutter); }
+.fGrid > :nth-child(1) { grid-column: span 6; }
+.fGrid > :nth-child(n + 2) { grid-column: span 3; }
 .fCol { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .fHead { display: block; margin-bottom: 14px; color: var(--text-on-ink-muted); }
 .fMail { font-size: clamp(28px, 3vw, 48px); letter-spacing: -0.04em; color: var(--text-on-ink); text-decoration: none; margin-bottom: 10px; }
@@ -372,6 +375,7 @@ a.fLink:hover { color: var(--text-on-ink); }
 
   .footer { padding-top: 80px; }
   .fGrid { grid-template-columns: 1fr; gap: 40px; }
+  .fGrid > * { grid-column: auto !important; }
   .fNav { font-size: 24px; }
     .fLegal { flex-direction: column; }
 }

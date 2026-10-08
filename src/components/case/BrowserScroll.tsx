@@ -61,14 +61,14 @@ export function BrowserScroll({ url, src, mobileSrc, caption }: { url?: string; 
 
   if (rm)
     return (
-      <div>
+      <div className={s.scrollWrap}>
         {caption}
         <BrowserFrame url={url} className={s.staticFrame}>{shot}</BrowserFrame>
       </div>
     );
 
   return (
-    <div>
+    <div className={s.scrollWrap}>
       {caption}
       <div ref={track} className={s.track}>
         <div className={s.stage}>
