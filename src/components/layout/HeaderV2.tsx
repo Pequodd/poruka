@@ -59,6 +59,8 @@ export function HeaderV2() {
   }, [open]);
 
   const isActive = (href: string) => href.startsWith('/portfolio') ? path.startsWith('/portfolio') || path.startsWith('/cases') : false;
+  // The admin is a tool, not a page of the site: no site header there (its preview keeps it).
+  if (path === '/admin' || path === '/admin/') return null;
   const cls = [s.header, compact && s.compact, open && s.open, onInk && s.onInk].filter(Boolean).join(' ');
 
   return (

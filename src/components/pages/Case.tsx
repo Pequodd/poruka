@@ -47,20 +47,24 @@ function ScreenBlock({ screen: sc, n, total, url }: { screen: Screen; n: number;
  */
 export function Case({ project: p }: { project: Project }) {
   const c = p.case;
-  const next = PROJECTS[(PROJECTS.indexOf(p) + 1) % PROJECTS.length];
-  const meta: [string, React.ReactNode][] = [
+  const others = PROJECTS.filter((x) => x.slug !== p.slug);
+  const at = PROJECTS.findIndex((x) => x.slug === p.slug);
+  const next = at >= 0 ? PROJECTS[(at + 1) % PROJECTS.length] : others[0];
+  // Every field can be empty while a case is being filled in the admin — empty rows and sections are skipped.
+  const meta = ([
     ['Клиент', c.client],
     ['Год', p.year],
-    ['Услуги', <div key="t" className={s.tags}>{c.tags.map((t) => <Chip key={t}>{t}</Chip>)}</div>],
+    ['Услуги', c.tags.length ? <div key="t" className={s.tags}>{c.tags.map((t) => <Chip key={t}>{t}</Chip>)}</div> : ''],
     ['Срок', c.duration],
     ['Стек', c.stack.join(', ')],
-  ];
+  ] as [string, React.ReactNode][]).filter(([, val]) => val);
+  const hasQuote = c.quote.join('').trim();
 
   return (
     <div className={v.page}>
       <Look />
       <Orbit />
-      <ClientFont font={c.font} />
+      {c.font && <ClientFont font={c.font} />}
       <div className={v.content}>
         <header className={s.intro} data-orbit="30 -14 0.6 0 1" data-orbit-m="24 -30 0.5 0 0.8">
           <nav aria-label="Хлебные крошки" className={`mono ${s.crumbs}`} style={{ ['--d' as string]: '150ms' }} data-hero>
@@ -75,7 +79,7 @@ export function Case({ project: p }: { project: Project }) {
                 {typeof val === 'string' ? <span className={s.cellVal}>{val}</span> : val}
               </div>
             ))}
-            <a className={s.siteBtn} href={`https://${c.url}`} target="_blank" rel="noreferrer">Открыть сайт<span className={s.siteIcon} aria-hidden="true">↗</span></a>
+            {c.url && <a className={s.siteBtn} href={`https://${c.url.replace(/^https?:\/\//, '')}`} target="_blank" rel="noreferrer">Открыть сайт<span className={s.siteIcon} aria-hidden="true">↗</span></a>}
           </div>
         </header>
 
@@ -83,60 +87,60 @@ export function Case({ project: p }: { project: Project }) {
           <CaseCover key={p.slug} image={p.image} title={p.title} />
         </div>
 
-        <section className={s.task}>
+        {c.task.join('').trim() && <section className={s.task}>
           <span className={`mono ${v.eyebrow}`} data-rv>(01) Задача</span>
           <p className={s.taskText} data-rv style={{ ['--d' as string]: '80ms' }}>
             <span className={s.taskKey}>{c.task[0]}</span>{c.task.slice(1).join('')}
           </p>
-        </section>
+        </section>}
 
-        <section className={s.flow} aria-label="Экраны">
+        {c.screens.length > 0 && <section className={s.flow} aria-label="Экраны">
           <div className={s.flowHead}>
             <span className={`mono ${v.eyebrow}`} data-rv>(02) Экраны</span>
             <span className={`mono ${v.eyebrow}`} data-rv>{c.screens.length} экранов</span>
           </div>
           {c.screens.map((sc, i) => <div key={i} data-rv><ScreenBlock screen={sc} n={i + 1} total={c.screens.length} url={c.url} /></div>)}
-        </section>
+        </section>}
 
-        <section className={s.decWrap}>
+        {(c.colors.length > 0 || c.font || c.decision) && <section className={s.decWrap}>
           <span className={`mono ${v.eyebrow}`} data-rv>(03) Решения</span>
           <div className={s.decisions}>
-            <div className={`${v.glass} ${s.decCard}`} data-rv>
+            {c.colors.length > 0 && <div className={`${v.glass} ${s.decCard}`} data-rv>
               <span className={`mono ${s.cellLabel}`}>Цвета клиента</span>
               <div className={s.swatches}>
-                {c.colors.map((col) => (
-                  <div key={col} className={s.swatch}>
+                {c.colors.map((col, i) => (
+                  <div key={i} className={s.swatch}>
                     <div className={s.swatchColor} style={{ background: col }} />
                     <span className="mono">{col}</span>
                   </div>
                 ))}
               </div>
-            </div>
-            <div className={`${v.glass} ${s.decCard}`} data-rv style={{ ['--d' as string]: '90ms' }}>
+            </div>}
+            {c.font && <div className={`${v.glass} ${s.decCard}`} data-rv style={{ ['--d' as string]: '90ms' }}>
               <span className={`mono ${s.cellLabel}`}>Шрифт клиента: {c.font}</span>
               <span className={s.specimen} style={{ fontFamily: `'${clientFamily(c.font)}', var(--font-sans)` }}>Аа Бб 123</span>
-            </div>
+            </div>}
             <p className={s.decText} data-rv style={{ ['--d' as string]: '180ms' }}>{c.decision}</p>
           </div>
-        </section>
+        </section>}
 
-        <section className={s.result} data-ink>
+        {(c.stats.length > 0 || hasQuote) && <section className={s.result} data-ink>
           <span className={`mono ${s.resultEyebrow}`} data-rv>(04) Результат</span>
           <div className={s.stats}>
             {c.stats.map((x, i) => (
-              <div key={x.caption} className={s.stat} data-rv style={{ ['--d' as string]: `${i * 90}ms` }}>
+              <div key={i} className={s.stat} data-rv style={{ ['--d' as string]: `${i * 90}ms` }}>
                 <b className={s.statValue}>{x.value}{x.suffix}</b>
                 <span className={s.statCaption}>{x.caption}</span>
               </div>
             ))}
           </div>
-          <blockquote className={s.quote} data-rv>
+          {hasQuote && <blockquote className={s.quote} data-rv>
             <p>{c.quote.join('')}</p>
-            <cite className="mono">{c.author}</cite>
-          </blockquote>
-        </section>
+            {c.author && <cite className="mono">{c.author}</cite>}
+          </blockquote>}
+        </section>}
 
-        <NextProject key={next.slug} title={next.title} image={next.image} href={caseHref(next)} />
+        {next && <NextProject key={next.slug} title={next.title} image={next.image} href={caseHref(next)} />}
         <ContactV7 eyebrow="(05) Контакт" />
         <FooterV7 />
       </div>

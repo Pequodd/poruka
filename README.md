@@ -21,7 +21,9 @@ src/components/v7/        секции главной (Hero, Statement, Services
 src/components/sections/  ProcessStage (+Process3D)
 src/components/pages/     Portfolio, Case
 src/components/case/      BrowserFrame, PhoneFrame, BrowserScroll, ScreenPair, MobileStrip, ScreenDetail, BeforeAfter, NextProject
-src/data/projects.ts      данные проектов (PROJECTS) + кейсы: тексты, цифры и список экранов case.screens
+src/data/projects.json    кейсы: карточка, тексты, цифры, экраны (редактируется из /admin/)
+src/data/projects.ts      типы и хелперы для projects.json
+src/components/admin/     админка кейсов (GitHub API, без сервера)
 src/data/content.ts       услуги, этапы процесса, команда, контакты, меню
 src/lib/processScene.ts   three.js-сцена «Процесса» (64 блока, 8 состояний)
 src/lib/orbitScene.ts     three.js-сцена сцепленных стеклянных звеньев
@@ -29,6 +31,16 @@ public/assets/            изображения проектов и коман�
 ```
 
 Данные отделены от вёрстки — их можно перенести в WordPress / 1С-Битрикс.
+
+## Админка кейсов
+`/admin/` — добавление, редактирование, удаление и порядок кейсов. Сервера нет: страница работает с GitHub API по токену.
+
+1. Создайте fine-grained токен: https://github.com/settings/personal-access-tokens/new → доступ только к `Pequodd/poruka` → Contents: Read and write (и по желанию Actions: Read, чтобы видеть статус сборки).
+2. Откройте `/admin/`, вставьте токен — он хранится только в этом браузере.
+3. Правки копятся локально; «Предпросмотр» открывает кейс как на сайте, включая ещё не загруженные картинки.
+4. «Опубликовать» делает один коммит в `main` (projects.json + картинки в `public/assets/cases/<slug>/`), дальше сайт пересобирается сам за 2–3 минуты.
+
+Картинки сжимаются в WebP прямо в браузере (до 2400 px по ширине). При удалении кейса удаляется и папка его картинок. Если кто-то изменил кейсы параллельно, публикация остановится и попросит обновить данные.
 
 ## Разработка
 ```bash
@@ -49,7 +61,7 @@ Push в `main` → GitHub Actions (`.github/workflows/deploy.yml`) собира�
 - Ссылки на Telegram/Behance/VC.ru в `src/data/content.ts`.
 
 ## Скриншоты для кейсов
-Экраны кейса задаются в `src/data/projects.ts` → `case.screens`. Пока путь пустой, в рамке показывается плейсхолдер.
+Экраны кейса задаются в `src/data/projects.json` → `case.screens` (удобнее — через `/admin/`). Пока путь пустой, в рамке показывается плейсхолдер.
 
 | type | что показывает | поля |
 |---|---|---|
