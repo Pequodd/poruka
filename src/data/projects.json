@@ -4,7 +4,11 @@
     "title": "СМП Запчасть",
     "image": "/assets/projects/case-1.png",
     "meta": "2026 · Сайт · WordPress",
-    "cat": "Сайты",
+    "cat": [
+      "Сайты",
+      "UI/UX",
+      "WordPress"
+    ],
     "result": "Каталог запчастей",
     "services": "Дизайн, разработка",
     "year": "2025",
