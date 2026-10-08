@@ -4,14 +4,14 @@
 
 /* ---------- About: statement + numbers ---------- */
 .about { height: 260vh; }
-.aboutFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); gap: 12px; margin: 12px 0 0; }
+.aboutFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 12px; margin: 12px 0 0; }
 .aboutFact {
   border-radius: 20px; padding: 18px 18px 16px; text-align: left;
   opacity: clamp(0, calc((var(--sp) - 0.72 - var(--k) * 0.05) * 6), 1);
   transform: translateY(calc((1 - clamp(0, calc((var(--sp) - 0.72 - var(--k) * 0.05) * 6), 1)) * 24px));
 }
 .aboutFact dd { margin: 0; display: flex; flex-direction: column; gap: 8px; }
-.aboutFact b { font-size: clamp(34px, 3.2vw, 56px); line-height: 1; letter-spacing: -0.05em; font-weight: 500; color: var(--accent-ultra); }
+.aboutFact b { font-size: clamp(26px, 2.2vw, 36px); line-height: 1; letter-spacing: -0.05em; font-weight: 500; color: var(--accent-ultra); }
 .aboutFact span { color: var(--text-secondary); }
 
 /* ---------- Works: results and the client's words on the case card ---------- */
@@ -56,10 +56,9 @@
   .planTitle { margin-top: 20px; }
 }
 @media (max-width: 767px) {
-  .aboutFacts { grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 100%; }
-  .aboutFact { padding: 12px; border-radius: 16px; }
-  .aboutFact b { font-size: 26px; }
-  .aboutFact span { font-size: 10px; }
+  .aboutFacts { grid-template-columns: 1fr; gap: 8px; width: 100%; }
+  .aboutFact { padding: 12px 14px; border-radius: 16px; }
+  .aboutFact b { font-size: 22px; }
   .wInfo.wInfo { width: auto; }
   .miniStats, .wQuote { display: none; }
   .mainStat b { font-size: 32px; }

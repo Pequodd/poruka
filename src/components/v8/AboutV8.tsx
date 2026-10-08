@@ -6,11 +6,12 @@ import s from './V8.module.css';
 
 const TEXT = 'Небольшая студия. Дизайнеры и разработчики работают с вами напрямую — от исследования до запуска и поддержки сайта.'.split(' ');
 const HI = new Set(['напрямую']);
-const FACTS: [string, string][] = [['10 лет', 'делаем сайты'], ['40+', 'проектов запустили'], ['95%', 'клиентов возвращаются']];
+// The numbers (10 лет, 40+, 95%) live in the hero, so this screen carries the three working principles.
+const FACTS: [string, string][] = [['Напрямую', 'общаетесь с теми, кто делает проект'], ['По этапам', 'цена и сроки известны после брифа'], ['После запуска', 'поддержка и развитие сайта']];
 
 /**
  * «О студии» = the former statement + «Почему мы» in one pinned screen: the words come out of blur as you scroll,
- * then the studio's numbers rise under them.
+ * then the three working principles rise under them.
  */
 export function AboutV8() {
   const ref = useRef<HTMLElement>(null);

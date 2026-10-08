@@ -3,7 +3,7 @@ import { ProcessStage } from '@/components/sections/ProcessStage';
 import { ContactV7 } from '@/components/v7/ContactV7';
 import { FaqV7 } from '@/components/v7/FaqV7';
 import { FooterV7 } from '@/components/v7/FooterV7';
-import { HeroV7 } from '@/components/v7/HeroV7';
+import { HeroFrame } from '@/components/v7/HeroFrame';
 import { Look } from '@/components/v7/Look';
 import { Orbit } from '@/components/v7/Orbit';
 import { ServicesV7 } from '@/components/v7/ServicesV7';
@@ -23,7 +23,7 @@ export default function Page() {
       <Look />
       <Orbit />
       <div className={s.content}>
-        <HeroV7 />
+        <HeroFrame />
         <AboutV8 />
         <ServicesV7 />
         <WorksV8 />
