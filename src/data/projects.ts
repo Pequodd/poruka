@@ -61,7 +61,8 @@ export interface Project {
   /** Path inside /public, or undefined → flat placeholder slot. */
   image?: string;
   meta: string;
-  cat: Category;
+  /** One category or several (older data stores a single string). */
+  cat: Category | Category[];
   result: string;
   services: string;
   year: string;
@@ -72,5 +73,7 @@ export const PROJECTS = data as unknown as Project[];
 
 export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
 export const caseHref = (p: Project) => `/cases/${p.slug}/`;
+/** All categories of a case as a list. */
+export const catsOf = (p: Pick<Project, 'cat'>): string[] => (Array.isArray(p.cat) ? p.cat : p.cat ? [p.cat] : []);
 /** Filter chips: «Все» + categories that have at least one case. */
-export const FILTERS = ['Все', ...CATEGORIES.filter((c) => PROJECTS.some((p) => p.cat === c))];
+export const FILTERS = ['Все', ...CATEGORIES.filter((c) => PROJECTS.some((p) => catsOf(p).includes(c)))];

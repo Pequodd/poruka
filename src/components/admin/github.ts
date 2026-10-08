@@ -62,7 +62,7 @@ export interface Remote { projects: Project[]; categories: string[]; shas: Recor
 export async function loadData(token: string): Promise<Remote> {
   const [p, c] = await Promise.all([readJson<Project[]>(token, DATA_PATH, REPO.branch), readJson<string[]>(token, CATS_PATH, REPO.branch)]);
   const projects = p.value || [];
-  const categories = c.value || [...new Set(projects.map((x) => x.cat))];
+  const categories = c.value || [...new Set(projects.flatMap((x) => (Array.isArray(x.cat) ? x.cat : [x.cat])))];
   return { projects, categories, shas: { [DATA_PATH]: p.sha, [CATS_PATH]: c.sha } };
 }
 

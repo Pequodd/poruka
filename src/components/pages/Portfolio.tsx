@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { caseHref, FILTERS, PROJECTS, type Project } from '@/data/projects';
+import { caseHref, catsOf, FILTERS, PROJECTS, type Project } from '@/data/projects';
 import { asset } from '@/lib/asset';
 import { useIsMobile } from '@/lib/hooks';
 import { Chip } from '../ui/Chip';
@@ -34,7 +34,7 @@ function WorkCard({ p, ratio, i }: { p: Project; ratio?: string; i: number }) {
           : <div className={s.tile} style={{ background: bg, color: fg }}><span>{p.case.client.replace(/ \(NDA\)/, '')}</span></div>}
       </div>
       <div className={`${v.glass} ${s.plate}`}>
-        <span className={`mono ${s.plateMeta}`}>{p.year} · {p.cat}</span>
+        <span className={`mono ${s.plateMeta}`}>{p.year} · {catsOf(p).join(' · ')}</span>
         <span className={s.plateTitle}>{p.title}</span>
         <span className={s.plateResult}>{p.result}</span>
       </div>
@@ -53,7 +53,7 @@ function ListRow({ p }: { p: Project }) {
     <Link href={caseHref(p)} className={s.row} onMouseMove={move}>
       <span className={s.rowTitle}>{p.title}</span>
       <span className={s.rowCell}>{p.services}</span>
-      <span className={s.rowCell}>{p.cat}</span>
+      <span className={s.rowCell}>{catsOf(p).join(', ')}</span>
       <span className={s.rowResult}>{p.result}</span>
       <span className={`mono ${s.rowYear}`}>{p.year}</span>
       <div className={s.rowPreview} aria-hidden="true">
@@ -68,7 +68,7 @@ export function Portfolio() {
   const [f, setF] = useState<string>('Все');
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const mobile = useIsMobile();
-  const list = PROJECTS.filter((p) => f === 'Все' || p.cat === f);
+  const list = PROJECTS.filter((p) => f === 'Все' || catsOf(p).includes(f));
   return (
     <div className={v.page}>
       <Look />

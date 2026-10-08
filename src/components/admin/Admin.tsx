@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Project } from '@/data/projects';
+import { catsOf, type Project } from '@/data/projects';
 import { asset, BASE } from '@/lib/asset';
 import { CaseEditor, emptyProject, type Errors } from './CaseEditor';
 import { ImagesCtx, move } from './fields';
@@ -45,7 +45,8 @@ function validate(items: Item[]) {
     if (!it.p.slug) e.slug = 'Укажите адрес';
     else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(it.p.slug)) e.slug = 'Только латиница, цифры и дефис между словами';
     else if ((seen.get(it.p.slug) || 0) > 1) e.slug = 'Такой адрес уже есть у другого кейса';
-    if (e.title || e.slug) errs[it.id] = e;
+    if (!catsOf(it.p).length) e.cat = 'Укажите хотя бы одну категорию';
+    if (e.title || e.slug || e.cat) errs[it.id] = e;
   }
   return errs;
 }
@@ -131,11 +132,11 @@ export function Admin() {
   const dirty = !!remote && (catsDirty || JSON.stringify(draft) !== JSON.stringify(remote.projects));
   const changes = items.filter((i) => status(i)).length + removed.length + (catsDirty ? 1 : 0);
   const orderChanged = dirty && changes === 0;
-  const usage = useMemo(() => draft.reduce<Record<string, number>>((m, p) => ({ ...m, [p.cat]: (m[p.cat] || 0) + 1 }), {}), [draft]);
+  const usage = useMemo(() => draft.reduce<Record<string, number>>((m, p) => { catsOf(p).forEach((c) => { m[c] = (m[c] || 0) + 1; }); return m; }, {}), [draft]);
   const changeCats = (next: string[], renamed?: { from: string; to: string }, moved?: { name: string; to: string }) => {
     setCats(next);
     const from = renamed?.from ?? moved?.name, to = renamed?.to ?? moved?.to;
-    if (from !== undefined && to !== undefined) setItems((xs) => xs.map((x) => (x.p.cat === from ? { ...x, p: { ...x.p, cat: to } } : x)));
+    if (from !== undefined && to !== undefined) setItems((xs) => xs.map((x) => (catsOf(x.p).includes(from) ? { ...x, p: { ...x.p, cat: [...new Set(catsOf(x.p).map((c) => (c === from ? to : c)))] } } : x)));
   };
 
   useEffect(() => {
@@ -176,7 +177,7 @@ export function Admin() {
   }), [current?.p.slug, compress]);
 
   const addCase = () => {
-    const it = wrap({ ...emptyProject(), cat: cats[0] || '' }, true);
+    const it = wrap({ ...emptyProject(), cat: cats[0] ? [cats[0]] : [] }, true);
     setItems((xs) => [it, ...xs]);
     setSel(it.id);
   };
@@ -246,7 +247,7 @@ export function Admin() {
     );
   }
 
-  const visible = items.filter((i) => !query || `${i.p.title} ${i.p.slug} ${i.p.cat}`.toLowerCase().includes(query.toLowerCase()));
+  const visible = items.filter((i) => !query || `${i.p.title} ${i.p.slug} ${catsOf(i.p).join(' ')}`.toLowerCase().includes(query.toLowerCase()));
   const pendingSize = [...pending.current].filter(([p]) => referenced(draft).has(p)).reduce((n, [, v]) => n + v.blob.size, 0);
 
   return (
@@ -288,7 +289,7 @@ export function Admin() {
                       </span>
                       <span className={s.liText}>
                         <b>{it.p.title || 'Без названия'}</b>
-                        <span className="mono">{it.p.cat} · {it.p.year}</span>
+                        <span className="mono">{catsOf(it.p).join(', ') || 'без категории'} · {it.p.year}</span>
                       </span>
                       {errors[it.id] ? <span className={`${s.badge} ${s.badgeErr}`}>Ошибка</span> : st && <span className={s.badge}>{st === 'new' ? 'Новый' : 'Изменён'}</span>}
                     </button>

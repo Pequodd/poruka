@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { SCREEN_TYPES, type CaseStudy, type Project, type Screen } from '@/data/projects';
+import { catsOf, SCREEN_TYPES, type CaseStudy, type Project, type Screen } from '@/data/projects';
 import { slugify } from './images';
 import { Area, Field, ImageField, ItemTools, ListField, move, Select } from './fields';
 import s from './Admin.module.css';
@@ -52,14 +52,14 @@ function Inserter({ open, onOpen, onClose, onPick, last }: { open: boolean; onOp
 }
 
 export const emptyProject = (): Project => ({
-  slug: '', title: '', meta: '', cat: 'Сайты', result: '', services: '', year: String(new Date().getFullYear()),
+  slug: '', title: '', meta: '', cat: [], result: '', services: '', year: String(new Date().getFullYear()),
   case: { oneLiner: '', client: '', duration: '', stack: [], tags: [], url: '', task: ['', ''], screens: [], colors: [], font: '', decision: '', stats: [], quote: ['', ''], author: '' },
 });
 
 /** Slug suggested from the title while a new case still follows it. */
 const autoSlug = (t: string) => (t.trim() ? slugify(t) : '');
 
-export type Errors = Partial<Record<'slug' | 'title', string>>;
+export type Errors = Partial<Record<'slug' | 'title' | 'cat', string>>;
 
 function Section({ n, title, children, note }: { n: string; title: string; note?: string; children: React.ReactNode }) {
   return (
@@ -223,7 +223,7 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
             <li key={n}>
               <button type="button" className={`${s.outItem} ${active === `sec-${n}` ? s.outActive : ''}`} onClick={() => go(`sec-${n}`)}>
                 <span className="mono">{n}</span>{t}
-                {n === '01' && (errors.title || errors.slug) && <span className={s.outErr} aria-label="есть ошибки" />}
+                {n === '01' && (errors.title || errors.slug || errors.cat) && <span className={s.outErr} aria-label="есть ошибки" />}
                 {n === '04' && <span className={s.outCount}>{c.screens.length}</span>}
               </button>
               {n === '04' && (
@@ -260,7 +260,21 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
           <Field label="Адрес страницы" required mono value={p.slug} error={errors.slug} onChange={(v) => up({ slug: v.toLowerCase().replace(/[^a-z0-9-]/g, '') })} hint={`/cases/${p.slug || '…'}/ — латиница, цифры и дефис`} />
         </div>
         <div className={s.row3}>
-          <Select label="Категория (фильтр)" value={p.cat} options={categories.includes(p.cat) || !p.cat ? categories : [...categories, p.cat]} onChange={(v) => up({ cat: v })} />
+          <div className={`${s.field} ${s.catsField}`}>
+            <span className={s.label}>Категории (фильтры)</span>
+            <div className={s.catChips} role="group" aria-label="Категории кейса">
+              {[...new Set([...categories, ...catsOf(p)])].map((c) => {
+                const on = catsOf(p).includes(c);
+                return (
+                  <button key={c} type="button" aria-pressed={on} className={`${s.catChip} ${on ? s.catChipOn : ''}`}
+                    onClick={() => up({ cat: on ? catsOf(p).filter((x) => x !== c) : categories.filter((x) => x === c || catsOf(p).includes(x)) })}>
+                    {on && <span aria-hidden="true">✓</span>}{c}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.cat ? <span className={s.error}>{errors.cat}</span> : <span className={s.hint}>Можно несколько — кейс появится в каждом фильтре</span>}
+          </div>
           <Field label="Год" mono value={p.year} onChange={(v) => up({ year: v.replace(/\D/g, '').slice(0, 4) })} />
           <Field label="Главная цифра" value={p.result} onChange={(v) => up({ result: v })} placeholder="+38% заявок" />
         </div>

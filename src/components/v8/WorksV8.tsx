@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import { caseHref, PROJECTS } from '@/data/projects';
+import { caseHref, catsOf, PROJECTS } from '@/data/projects';
 import { asset } from '@/lib/asset';
 import { useProgress } from '../v7/useProgress';
 import v from '../v7/V7.module.css';
@@ -51,7 +51,7 @@ export function WorksV8() {
                 <Link href={caseHref(p)} className={v.wShot} tabIndex={i === cur ? 0 : -1} aria-label={`Кейс «${p.title}»`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={asset(p.image!)} alt="" />
-                  <span className={v.wCap}><span>{p.cat} · {p.services}</span><span>[{pad(i + 1)}]</span></span>
+                  <span className={v.wCap}><span>{catsOf(p).join(' · ')} · {p.services}</span><span>[{pad(i + 1)}]</span></span>
                 </Link>
                 <div className={`${v.glass} ${v.wInfo} ${s.wInfo}`}>
                   <span className={`mono ${v.muted}`}>{p.meta}</span>

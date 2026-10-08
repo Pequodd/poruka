@@ -66,6 +66,18 @@
 .li:hover .liOrder, .li:focus-within .liOrder { display: flex; }
 .badge { flex: none; padding: 3px 8px; border-radius: var(--radius-pill); background: #E6E8FF; color: var(--accent-ultra-ink); font-size: 11px; font-weight: 500; }
 .badgeErr { background: #FFE9E3; color: #C42A00; }
+/* Case categories: toggle chips (several allowed) */
+.catsField { grid-column: 1 / -1; }
+.catChips { display: flex; flex-wrap: wrap; gap: 6px; }
+.catChip {
+  all: unset; box-sizing: border-box; cursor: pointer; min-height: 40px; padding: 0 16px; display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius-pill);
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-hairline); font-size: 14px; font-weight: 500; transition: background-color var(--dur-hover), color var(--dur-hover);
+}
+.catChip:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.catChipOn { background: var(--accent-ultra); color: #fff; box-shadow: none; }
+.catChipOn:hover { background: var(--accent-ultra-ink); box-shadow: none; }
+.catChip:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 2px; }
+
 /* Categories */
 .catLink {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 0 16px; border: 0; border-radius: 14px;
