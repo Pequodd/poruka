@@ -6,6 +6,7 @@ import type { Project } from '@/data/projects';
 
 export const REPO = { owner: 'Pequodd', name: 'poruka', branch: 'main' };
 export const DATA_PATH = 'src/data/projects.json';
+export const CATS_PATH = 'src/data/categories.json';
 const API = `https://api.github.com/repos/${REPO.owner}/${REPO.name}`;
 
 export class GhError extends Error {
@@ -44,10 +45,25 @@ export async function checkAccess(token: string) {
   if (!repo.permissions?.push) throw new GhError(403, 'no push');
 }
 
-/** Current cases and the blob sha they were read at (used to detect edits made elsewhere). */
-export async function loadProjects(token: string) {
-  const f = await gh<{ content: string; sha: string }>(token, `/contents/${DATA_PATH}?ref=${REPO.branch}`);
-  return { projects: JSON.parse(b64ToUtf8(f.content)) as Project[], sha: f.sha };
+/** A JSON data file at a ref and its blob sha ('' when it doesn't exist yet). */
+async function readJson<T>(token: string, path: string, ref: string): Promise<{ value: T | null; sha: string }> {
+  try {
+    const f = await gh<{ content: string; sha: string }>(token, `/contents/${path}?ref=${ref}`);
+    return { value: JSON.parse(b64ToUtf8(f.content)) as T, sha: f.sha };
+  } catch (e) {
+    if (e instanceof GhError && e.status === 404) return { value: null, sha: '' };
+    throw e;
+  }
+}
+
+export interface Remote { projects: Project[]; categories: string[]; shas: Record<string, string> }
+
+/** Current cases and categories, with the blob shas they were read at (used to detect edits made elsewhere). */
+export async function loadData(token: string): Promise<Remote> {
+  const [p, c] = await Promise.all([readJson<Project[]>(token, DATA_PATH, REPO.branch), readJson<string[]>(token, CATS_PATH, REPO.branch)]);
+  const projects = p.value || [];
+  const categories = c.value || [...new Set(projects.map((x) => x.cat))];
+  return { projects, categories, shas: { [DATA_PATH]: p.sha, [CATS_PATH]: c.sha } };
 }
 
 async function listDir(token: string, dir: string) {
@@ -69,16 +85,18 @@ const blobToB64 = (b: Blob) => new Promise<string>((res, rej) => {
 });
 
 /**
- * One commit: new projects.json + uploaded images − files of deleted cases (unless still referenced).
- * Refuses if projects.json changed on GitHub since `baseSha` was loaded.
+ * One commit: data files (projects.json, categories.json) + uploaded images − files of deleted cases (unless still referenced).
+ * Refuses if a data file changed on GitHub since it was loaded (`baseShas`).
  */
-export async function publish(token: string, opts: { projects: Project[]; baseSha: string; uploads: Upload[]; removedSlugs: string[]; keepPaths: Set<string>; message: string; onStep?: (s: string) => void }) {
+export async function publish(token: string, opts: { files: Record<string, unknown>; baseShas: Record<string, string>; uploads: Upload[]; removedSlugs: string[]; keepPaths: Set<string>; message: string; onStep?: (s: string) => void }) {
   const step = opts.onStep || (() => {});
   step('Проверяем, что данные не менялись…');
   const ref = await gh<{ object: { sha: string } }>(token, `/git/ref/heads/${REPO.branch}`);
   const head = ref.object.sha;
-  const current = await gh<{ sha: string }>(token, `/contents/${DATA_PATH}?ref=${head}`);
-  if (current.sha !== opts.baseSha) throw new GhError(409, 'stale');
+  for (const path of Object.keys(opts.files)) {
+    const current = await readJson(token, path, head);
+    if (current.sha !== (opts.baseShas[path] || '')) throw new GhError(409, 'stale');
+  }
   const commit = await gh<{ tree: { sha: string } }>(token, `/git/commits/${head}`);
 
   const tree: { path: string; mode: '100644'; type: 'blob'; sha: string | null }[] = [];
@@ -94,13 +112,17 @@ export async function publish(token: string, opts: { projects: Project[]; baseSh
     }
   }
   step('Сохраняем кейсы…');
-  const json = await gh<{ sha: string }>(token, '/git/blobs', { method: 'POST', body: JSON.stringify({ content: JSON.stringify(opts.projects, null, 2) + '\n', encoding: 'utf-8' }) });
-  tree.push({ path: DATA_PATH, mode: '100644', type: 'blob', sha: json.sha });
+  const shas: Record<string, string> = {};
+  for (const [path, value] of Object.entries(opts.files)) {
+    const b = await gh<{ sha: string }>(token, '/git/blobs', { method: 'POST', body: JSON.stringify({ content: JSON.stringify(value, null, 2) + '\n', encoding: 'utf-8' }) });
+    tree.push({ path, mode: '100644', type: 'blob', sha: b.sha });
+    shas[path] = b.sha;
+  }
 
   const newTree = await gh<{ sha: string }>(token, '/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: commit.tree.sha, tree }) });
   const newCommit = await gh<{ sha: string }>(token, '/git/commits', { method: 'POST', body: JSON.stringify({ message: opts.message, tree: newTree.sha, parents: [head] }) });
   await gh(token, `/git/refs/heads/${REPO.branch}`, { method: 'PATCH', body: JSON.stringify({ sha: newCommit.sha }) });
-  return { commit: newCommit.sha, dataSha: json.sha };
+  return { commit: newCommit.sha, shas };
 }
 
 export type DeployState = 'queued' | 'building' | 'done' | 'failed' | 'unknown';

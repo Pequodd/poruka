@@ -3,10 +3,12 @@
  * and every publish rebuilds the site. This module only types it and adds helpers.
  * Screenshot paths may be empty → frames show placeholders. Uploaded files go to /assets/cases/<slug>/.
  */
+import categories from './categories.json';
 import data from './projects.json';
 
-export const CATEGORIES = ['Сайты', 'UI/UX', 'WordPress', 'Битрикс', 'Редизайн', 'AI'] as const;
-export type Category = (typeof CATEGORIES)[number];
+/** Portfolio filter categories, in display order (categories.json, edited from /admin/). */
+export const CATEGORIES: string[] = categories;
+export type Category = string;
 
 export interface CaseStat { value: string; suffix?: string; caption: string }
 
@@ -66,4 +68,5 @@ export const PROJECTS = data as unknown as Project[];
 
 export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
 export const caseHref = (p: Project) => `/cases/${p.slug}/`;
-export const FILTERS = ['Все', ...CATEGORIES] as const;
+/** Filter chips: «Все» + categories that have at least one case. */
+export const FILTERS = ['Все', ...CATEGORIES.filter((c) => PROJECTS.some((p) => p.cat === c))];

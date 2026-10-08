@@ -22,6 +22,7 @@ src/components/sections/  ProcessStage (+Process3D)
 src/components/pages/     Portfolio, Case
 src/components/case/      BrowserFrame, PhoneFrame, BrowserScroll, ScreenPair, MobileStrip, ScreenDetail, BeforeAfter, NextProject
 src/data/projects.json    кейсы: карточка, тексты, цифры, экраны (редактируется из /admin/)
+src/data/categories.json  категории портфолио (фильтры), порядок = порядок чипсов; тоже из /admin/
 src/data/projects.ts      типы и хелперы для projects.json
 src/components/admin/     админка кейсов (GitHub API, без сервера)
 src/data/content.ts       услуги, этапы процесса, команда, контакты, меню
@@ -33,7 +34,7 @@ public/assets/            изображения проектов и коман�
 Данные отделены от вёрстки — их можно перенести в WordPress / 1С-Битрикс.
 
 ## Админка кейсов
-`/admin/` — добавление, редактирование, удаление и порядок кейсов. Сервера нет: страница работает с GitHub API по токену.
+`/admin/` — добавление, редактирование, удаление и порядок кейсов, а также категории (фильтры портфолио): переименование, порядок, добавление, удаление с переносом кейсов. Сервера нет: страница работает с GitHub API по токену.
 
 1. Создайте fine-grained токен: https://github.com/settings/personal-access-tokens/new → доступ только к `Pequodd/poruka` → Contents: Read and write (и по желанию Actions: Read, чтобы видеть статус сборки).
 2. Откройте `/admin/`, вставьте токен — он хранится только в этом браузере.

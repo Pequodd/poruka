@@ -1,5 +1,5 @@
 'use client';
-import { CATEGORIES, SCREEN_TYPES, type CaseStudy, type Project, type Screen } from '@/data/projects';
+import { SCREEN_TYPES, type CaseStudy, type Project, type Screen } from '@/data/projects';
 import { slugify } from './images';
 import { Area, Field, ImageField, ItemTools, ListField, move, Select } from './fields';
 import s from './Admin.module.css';
@@ -93,7 +93,7 @@ function ScreenEditor({ sc, set }: { sc: Screen; set: (v: Screen) => void }) {
   );
 }
 
-export function CaseEditor({ p, onChange, errors, isNew }: { p: Project; onChange: (p: Project) => void; errors: Errors; isNew: boolean }) {
+export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Project; onChange: (p: Project) => void; errors: Errors; isNew: boolean; categories: string[] }) {
   const c = p.case;
   const up = (patch: Partial<Project>) => onChange({ ...p, ...patch });
   const upCase = (patch: Partial<CaseStudy>) => onChange({ ...p, case: { ...c, ...patch } });
@@ -107,7 +107,7 @@ export function CaseEditor({ p, onChange, errors, isNew }: { p: Project; onChang
           <Field label="Адрес страницы" required mono value={p.slug} error={errors.slug} onChange={(v) => up({ slug: v.toLowerCase().replace(/[^a-z0-9-]/g, '') })} hint={`/cases/${p.slug || '…'}/ — латиница, цифры и дефис`} />
         </div>
         <div className={s.row3}>
-          <Select label="Категория (фильтр)" value={p.cat} options={CATEGORIES} onChange={(v) => up({ cat: v })} />
+          <Select label="Категория (фильтр)" value={p.cat} options={categories.includes(p.cat) || !p.cat ? categories : [...categories, p.cat]} onChange={(v) => up({ cat: v })} />
           <Field label="Год" mono value={p.year} onChange={(v) => up({ year: v.replace(/\D/g, '').slice(0, 4) })} />
           <Field label="Главная цифра" value={p.result} onChange={(v) => up({ result: v })} placeholder="+38% заявок" />
         </div>

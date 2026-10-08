@@ -4,7 +4,8 @@ import type { Project } from '@/data/projects';
 import { asset, BASE } from '@/lib/asset';
 import { CaseEditor, emptyProject, type Errors } from './CaseEditor';
 import { ImagesCtx, move } from './fields';
-import { ACTIONS_URL, checkAccess, deployState, explain, loadProjects, publish, TOKEN_URL, type DeployState } from './github';
+import { CategoryEditor } from './CategoryEditor';
+import { ACTIONS_URL, CATS_PATH, checkAccess, DATA_PATH, deployState, explain, loadData, publish, TOKEN_URL, type DeployState, type Remote } from './github';
 import { kb, prepareImage } from './images';
 import s from './Admin.module.css';
 
@@ -19,6 +20,8 @@ interface Item { id: string; p: Project; isNew: boolean }
 interface Pending { blob: Blob; url: string }
 let seq = 0;
 const wrap = (p: Project, isNew = false): Item => ({ id: `c${++seq}`, p, isNew });
+/** Sidebar «view id» of the category editor (case ids are c1, c2…). */
+const CATS = 'categories';
 
 /** Every /assets/… path a set of projects points to. */
 function referenced(projects: Project[]) {
@@ -81,7 +84,8 @@ function Login({ onToken }: { onToken: (t: string) => void }) {
 
 export function Admin() {
   const [token, setToken] = useState<string | null>(null);
-  const [remote, setRemote] = useState<{ projects: Project[]; sha: string } | null>(null);
+  const [remote, setRemote] = useState<Remote | null>(null);
+  const [cats, setCats] = useState<string[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [sel, setSel] = useState('');
   const [loadErr, setLoadErr] = useState('');
@@ -96,11 +100,12 @@ export function Admin() {
   const load = useCallback(async (t: string) => {
     setLoadErr('');
     try {
-      const r = await loadProjects(t);
+      const r = await loadData(t);
       setRemote(r);
+      setCats(r.categories);
       const next = r.projects.map((p) => wrap(p));
       setItems(next);
-      setSel((cur) => next.find((x) => x.p.slug === items.find((i) => i.id === cur)?.p.slug)?.id || next[0]?.id || '');
+      setSel((cur) => cur === CATS ? cur : next.find((x) => x.p.slug === items.find((i) => i.id === cur)?.p.slug)?.id || next[0]?.id || '');
     } catch (e) { setLoadErr(explain(e)); }
   }, [items]);
 
@@ -122,9 +127,16 @@ export function Admin() {
   const remoteBySlug = useMemo(() => new Map((remote?.projects || []).map((p) => [p.slug, JSON.stringify(p)])), [remote]);
   const status = (it: Item) => (it.isNew || !remoteBySlug.has(it.p.slug) ? 'new' : remoteBySlug.get(it.p.slug) !== JSON.stringify(it.p) ? 'edited' : '');
   const removed = useMemo(() => (remote?.projects || []).filter((p) => !draft.some((d) => d.slug === p.slug)), [remote, draft]);
-  const dirty = !!remote && JSON.stringify(draft) !== JSON.stringify(remote.projects);
-  const changes = items.filter((i) => status(i)).length + removed.length;
+  const catsDirty = !!remote && JSON.stringify(cats) !== JSON.stringify(remote.categories);
+  const dirty = !!remote && (catsDirty || JSON.stringify(draft) !== JSON.stringify(remote.projects));
+  const changes = items.filter((i) => status(i)).length + removed.length + (catsDirty ? 1 : 0);
   const orderChanged = dirty && changes === 0;
+  const usage = useMemo(() => draft.reduce<Record<string, number>>((m, p) => ({ ...m, [p.cat]: (m[p.cat] || 0) + 1 }), {}), [draft]);
+  const changeCats = (next: string[], renamed?: { from: string; to: string }, moved?: { name: string; to: string }) => {
+    setCats(next);
+    const from = renamed?.from ?? moved?.name, to = renamed?.to ?? moved?.to;
+    if (from !== undefined && to !== undefined) setItems((xs) => xs.map((x) => (x.p.cat === from ? { ...x, p: { ...x.p, cat: to } } : x)));
+  };
 
   useEffect(() => {
     if (!dirty) return;
@@ -164,7 +176,7 @@ export function Admin() {
   }), [current?.p.slug, compress]);
 
   const addCase = () => {
-    const it = wrap(emptyProject(), true);
+    const it = wrap({ ...emptyProject(), cat: cats[0] || '' }, true);
     setItems((xs) => [it, ...xs]);
     setSel(it.id);
   };
@@ -179,7 +191,7 @@ export function Admin() {
   const discard = () => {
     if (!remote || !confirm('Отменить все неопубликованные изменения?')) return;
     const next = remote.projects.map((p) => wrap(p));
-    setItems(next); setSel(next[0]?.id || '');
+    setItems(next); setCats(remote.categories); setSel(next[0]?.id || '');
   };
 
   const doPublish = async () => {
@@ -194,10 +206,10 @@ export function Admin() {
     const edited = items.filter((i) => status(i) === 'edited').map((i) => i.p.title);
     const message = ['Кейсы: правки из админки', '',
       added.length ? `Добавлены: ${names(added)}` : '', edited.length ? `Изменены: ${names(edited)}` : '',
-      removed.length ? `Удалены: ${names(removed.map((p) => p.title))}` : '', orderChanged ? 'Изменён порядок' : ''].filter((l, i) => i < 2 || l).join('\n');
+      removed.length ? `Удалены: ${names(removed.map((p) => p.title))}` : '', catsDirty ? `Категории: ${cats.join(', ')}` : '', orderChanged ? 'Изменён порядок' : ''].filter((l, i) => i < 2 || l).join('\n');
     try {
-      const r = await publish(token, { projects: draft, baseSha: remote.sha, uploads, removedSlugs: removed.map((p) => p.slug), keepPaths: refs, message, onStep: (step) => setPub({ step }) });
-      setRemote({ projects: JSON.parse(JSON.stringify(draft)), sha: r.dataSha });
+      const r = await publish(token, { files: { [DATA_PATH]: draft, [CATS_PATH]: cats }, baseShas: remote.shas, uploads, removedSlugs: removed.map((p) => p.slug), keepPaths: refs, message, onStep: (step) => setPub({ step }) });
+      setRemote({ projects: JSON.parse(JSON.stringify(draft)), categories: [...cats], shas: r.shas });
       setItems((xs) => xs.map((x) => ({ ...x, isNew: false })));
       setPub({ sha: r.commit, deploy: 'queued' });
     } catch (e) {
@@ -219,7 +231,7 @@ export function Admin() {
 
   const logout = () => {
     if (dirty && !confirm('Есть неопубликованные изменения. Выйти и потерять их?')) return;
-    store.set(TOKEN_KEY, ''); setToken(''); setRemote(null); setItems([]);
+    store.set(TOKEN_KEY, ''); setToken(''); setRemote(null); setItems([]); setCats([]);
   };
 
   if (token === null) return null;
@@ -291,11 +303,25 @@ export function Admin() {
               })}
             </ul>
             {removed.length > 0 && <p className={s.hint}>Будут удалены: {removed.map((p) => p.title).join(', ')}</p>}
+            <button type="button" className={`${s.catLink} ${sel === CATS ? s.liActive : ''}`} onClick={() => setSel(CATS)} aria-current={sel === CATS}>
+              <span>Категории</span>
+              <span className="mono">{cats.length}{catsDirty ? ' · изменены' : ''}</span>
+            </button>
             <label className={s.check}><input type="checkbox" checked={compress} onChange={(e) => setCompress(e.target.checked)} /> Сжимать картинки в WebP</label>
           </aside>
 
           <main className={s.main}>
-            {current ? (
+            {sel === CATS ? (
+              <>
+                <div className={s.mainHead}>
+                  <div>
+                    <span className={`mono ${s.eyebrow}`}>Фильтры портфолио</span>
+                    <h1 className={s.mainTitle}>Категории</h1>
+                  </div>
+                </div>
+                <CategoryEditor categories={cats} usage={usage} onChange={changeCats} />
+              </>
+            ) : current ? (
               <>
                 <div className={s.mainHead}>
                   <div>
@@ -308,7 +334,7 @@ export function Admin() {
                     <button type="button" className={`${s.btnSm} ${s.btnDanger}`} onClick={() => removeCase(current)}>Удалить</button>
                   </div>
                 </div>
-                <CaseEditor key={current.id} p={current.p} onChange={setCurrent} errors={errors[current.id] || {}} isNew={current.isNew} />
+                <CaseEditor key={current.id} p={current.p} onChange={setCurrent} errors={errors[current.id] || {}} isNew={current.isNew} categories={cats} />
               </>
             ) : (
               <div className={s.emptyMain}><p>Кейсов нет.</p><button type="button" className={s.btnPrimary} onClick={addCase}>+ Новый кейс</button></div>
