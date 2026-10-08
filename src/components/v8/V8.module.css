@@ -1,0 +1,68 @@
+/*
+ * /v2/ blocks on top of the v7 system (V7.module.css): same paper, glass, ultramarine and type scale.
+ */
+
+/* ---------- About: statement + numbers ---------- */
+.about { height: 260vh; }
+.aboutFacts { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); gap: 12px; margin: 12px 0 0; }
+.aboutFact {
+  border-radius: 20px; padding: 18px 18px 16px; text-align: left;
+  opacity: clamp(0, calc((var(--sp) - 0.72 - var(--k) * 0.05) * 6), 1);
+  transform: translateY(calc((1 - clamp(0, calc((var(--sp) - 0.72 - var(--k) * 0.05) * 6), 1)) * 24px));
+}
+.aboutFact dd { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.aboutFact b { font-size: clamp(34px, 3.2vw, 56px); line-height: 1; letter-spacing: -0.05em; font-weight: 500; color: var(--accent-ultra); }
+.aboutFact span { color: var(--text-secondary); }
+
+/* ---------- Works: results and the client's words on the case card ---------- */
+.wInfo.wInfo { width: 380px; gap: 10px; }
+.mainStat { display: flex; align-items: baseline; gap: 12px; }
+.mainStat b { font-size: 48px; line-height: 1; letter-spacing: -0.05em; font-weight: 500; color: var(--accent-ultra); }
+.mainStat span { font-size: 15px; line-height: 1.25; color: var(--text-secondary); }
+.miniStats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.miniStats div { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.7); }
+.miniStats b { font-size: 22px; line-height: 1; letter-spacing: -0.04em; font-weight: 500; }
+.miniStats span { font-size: 12px; line-height: 1.25; color: var(--text-secondary); }
+.wQuote { margin: 2px 0 0; padding-left: 12px; border-left: 2px solid var(--accent-ultra); font-size: 14px; line-height: 1.4; display: flex; flex-direction: column; gap: 6px; }
+.wQuote cite { font-style: normal; color: var(--text-secondary); }
+
+/* ---------- Pricing ---------- */
+.pricing { position: relative; padding: var(--section-pad) var(--margin-outer); }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; max-width: 1320px; margin: 0 auto; align-items: stretch; }
+.plan { position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 480px; padding: 24px; border-radius: var(--radius-card); }
+.planAccent { background: var(--accent-ultra); color: #fff; }
+.planNum { color: var(--text-secondary); }
+.planAccent .planNum, .planAccent .planTerm { color: rgba(255, 255, 255, 0.72); }
+.planTitle { margin: 40px 0 0; font-size: 28px; line-height: 1.02; letter-spacing: -0.035em; font-weight: 500; }
+.planPrice { margin: 8px 0 0; font-size: clamp(32px, 3vw, 48px); line-height: 1; letter-spacing: -0.05em; font-weight: 500; }
+.planTerm { color: var(--text-secondary); }
+.planList { list-style: none; margin: 16px 0 0; padding: 16px 0 0; border-top: 1px solid rgba(14, 14, 14, 0.1); display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.35; }
+.planAccent .planList { border-top-color: rgba(255, 255, 255, 0.24); }
+.planList li::before { content: '— '; opacity: 0.5; }
+.planCta {
+  margin-top: auto; display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; padding: 0 22px; border-radius: var(--radius-pill);
+  background: var(--ink); color: var(--text-on-ink); font-weight: 500; text-decoration: none; transition: background-color var(--dur-hover) var(--ease);
+}
+.planCta:hover { background: #2a2a2a; color: var(--text-on-ink); }
+.planAccent .planCta { background: #fff; color: var(--accent-ultra); }
+.planAccent .planCta:hover { background: rgba(255, 255, 255, 0.86); color: var(--accent-ultra-ink); }
+.planCta span { transition: transform var(--dur-ui) var(--ease); }
+.planCta:hover span { transform: translateX(6px); }
+.planCta:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 3px; }
+
+@media (max-width: 1023px) {
+  .plans { grid-template-columns: 1fr; max-width: 560px; }
+  .plan { min-height: 0; }
+  .planTitle { margin-top: 20px; }
+}
+@media (max-width: 767px) {
+  .aboutFacts { grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 100%; }
+  .aboutFact { padding: 12px; border-radius: 16px; }
+  .aboutFact b { font-size: 26px; }
+  .aboutFact span { font-size: 10px; }
+  .wInfo.wInfo { width: auto; }
+  .miniStats, .wQuote { display: none; }
+  .mainStat b { font-size: 32px; }
+  .pricing { padding-top: 96px; padding-bottom: 96px; }
+}
+@media (prefers-reduced-motion: reduce) { .aboutFact { opacity: 1; transform: none; } }

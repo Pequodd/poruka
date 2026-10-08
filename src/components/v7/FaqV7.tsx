@@ -13,7 +13,7 @@ const FAQ: [string, string][] = [
 ];
 
 /** FAQ: the glass links park on the left in focus; a giant background word slides with scroll; answers expand in place. */
-export function FaqV7() {
+export function FaqV7({ eyebrow = '(07) Вопросы' }: { eyebrow?: string }) {
   const ref = useRef<HTMLElement>(null);
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--fq', p.toFixed(4)));
   return (
@@ -21,7 +21,7 @@ export function FaqV7() {
       <div className={s.faqBg} aria-hidden="true">вопросы · вопросы · вопросы · вопросы</div>
       <div className={s.faqGrid}>
         <div className={s.faqSide}>
-          <span className={`mono ${s.eyebrow}`} data-rv>(07) Вопросы</span>
+          <span className={`mono ${s.eyebrow}`} data-rv>{eyebrow}</span>
         </div>
         <div className={s.faqMain}>
           <h2 className={s.h2} data-rv>Частые вопросы</h2>
