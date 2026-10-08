@@ -10,6 +10,10 @@ const SCREEN_LABELS: Record<Screen['type'], string> = {
   strip: 'Лента телефонов',
   detail: 'Деталь крупно + пояснение',
   beforeAfter: 'До / после',
+  wide: 'Крупный экран в браузере',
+  stage: 'Крупный экран на цветном фоне',
+  grid: 'Сетка из трёх экранов',
+  text: 'Текстовая вставка',
 };
 
 export const emptyProject = (): Project => ({
@@ -51,10 +55,20 @@ function ScreenEditor({ sc, set }: { sc: Screen; set: (v: Screen) => void }) {
 
   return (
     <>
+      {sc.type === 'text' ? (
+        <>
+          <Area label="Фраза" rows={2} value={sc.label} onChange={(v) => up({ label: v })} placeholder="Главный вопрос покупателя — подойдёт ли деталь" />
+          <div className={s.row2}>
+            <Field label="Надпись над фразой" value={sc.note || ''} onChange={(v) => up({ note: v || undefined })} placeholder="Инсайт из интервью" />
+            <Area label="Абзац под фразой" value={sc.why || ''} onChange={(v) => up({ why: v || undefined })} />
+          </div>
+        </>
+      ) : (
       <div className={s.row2}>
         <Field label="Название экрана" value={sc.label} onChange={(v) => up({ label: v })} placeholder="Главная" hint="В подписи станет «01 — Главная»" />
         <Field label="Короткая подпись справа" value={sc.note || ''} onChange={(v) => up({ note: v || undefined })} placeholder="Оффер и подбор в один клик" />
       </div>
+      )}
       {(sc.type === 'scroll' || sc.type === 'pair') && (
         <div className={s.row2}>
           <ImageField label="Десктоп" tall={sc.type === 'scroll'} hint={sc.type === 'scroll' ? 'Скриншот всей страницы шириной 1440 — прокручивается в рамке браузера' : 'Первый экран, 1440 × 900'} value={sc.desktop} onChange={(v) => up({ desktop: v })} />
@@ -70,6 +84,26 @@ function ScreenEditor({ sc, set }: { sc: Screen; set: (v: Screen) => void }) {
           </div>
           <Area label="Почему так" value={sc.why || ''} onChange={(v) => up({ why: v || undefined })} hint="2–3 предложения о решении" />
         </>
+      )}
+      {(sc.type === 'wide' || sc.type === 'stage') && (
+        <ImageField label="Скриншот" hint="Первый экран сайта, 1440 × 900 или больше — займёт всю ширину" value={sc.desktop} onChange={(v) => up({ desktop: v })} />
+      )}
+      {sc.type === 'stage' && (
+        <div className={s.field}>
+          <span className={s.label}>Цвет фона</span>
+          <div className={s.swatches}>
+            <input type="color" className={s.colorInput} value={/^#[0-9a-f]{6}$/i.test(sc.bg || '') ? sc.bg : '#2F3BFF'} onChange={(e) => up({ bg: e.target.value.toUpperCase() })} aria-label="Цвет фона" />
+            {sc.bg ? <button type="button" className={`${s.btnSm} ${s.btnGhost}`} onClick={() => up({ bg: undefined })}>Взять первый цвет клиента</button> : <span className={s.hint}>Сейчас — первый из «Цветов клиента»</span>}
+          </div>
+        </div>
+      )}
+      {sc.type === 'grid' && (
+        <div className={s.row3}>
+          {[0, 1, 2].map((j) => (
+            <ImageField key={j} label={j === 0 ? 'Большой экран' : `Малый экран ${j}`} value={sc.images?.[j] || undefined}
+              onChange={(v) => up({ images: [0, 1, 2].map((k) => (k === j ? v || '' : sc.images?.[k] || '')) })} />
+          ))}
+        </div>
       )}
       {sc.type === 'beforeAfter' && (
         <div className={s.row2}>
@@ -149,7 +183,7 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
         ))}
         <div className={s.addRow}>
           {SCREEN_TYPES.map((t) => (
-            <button key={t} type="button" className={s.btnSm} onClick={() => upCase({ screens: [...c.screens, { type: t, label: '', ...(t === 'strip' ? { mobile: ['', '', '', ''], labels: ['', '', '', ''] } : {}), ...(t === 'detail' ? { crop: { x: 0, y: 0 } } : {}) }] })}>+ {SCREEN_LABELS[t]}</button>
+            <button key={t} type="button" className={s.btnSm} onClick={() => upCase({ screens: [...c.screens, { type: t, label: '', ...(t === 'strip' ? { mobile: ['', '', '', ''], labels: ['', '', '', ''] } : {}), ...(t === 'detail' ? { crop: { x: 0, y: 0 } } : {}), ...(t === 'grid' ? { images: ['', '', ''] } : {}) }] })}>+ {SCREEN_LABELS[t]}</button>
           ))}
         </div>
       </Section>

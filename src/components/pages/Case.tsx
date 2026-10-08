@@ -9,6 +9,7 @@ import { CaseCaption } from '../case/Frames';
 import { MobileStrip } from '../case/MobileStrip';
 import { NextProject } from '../case/NextProject';
 import { ScreenDetail } from '../case/ScreenDetail';
+import { ScreenGrid, ScreenStage, ScreenText, ScreenWide } from '../case/ScreenBig';
 import { ScreenPair } from '../case/ScreenPair';
 import { Chip } from '../ui/Chip';
 import { ContactV7 } from '../v7/ContactV7';
@@ -19,9 +20,10 @@ import { Orbit } from '../v7/Orbit';
 import v from '../v7/V7.module.css';
 import s from '../case/Case.module.css';
 
+const plural = (n: number) => (n % 10 === 1 && n % 100 !== 11 ? 'экран' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 'экрана' : 'экранов');
 const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
 
-function ScreenBlock({ screen: sc, n, total, url }: { screen: Screen; n: number; total: number; url: string }) {
+function ScreenBlock({ screen: sc, n, total, url, accent }: { screen: Screen; n: number; total: number; url: string; accent?: string }) {
   const cap = <CaseCaption n={n} total={total} label={sc.label} note={sc.note} />;
   switch (sc.type) {
     case 'scroll':
@@ -36,6 +38,14 @@ function ScreenBlock({ screen: sc, n, total, url }: { screen: Screen; n: number;
     }
     case 'detail':
       return <div className="container"><ScreenDetail src={sc.desktop} crop={sc.crop} why={sc.why} caption={cap} /></div>;
+    case 'wide':
+      return <ScreenWide url={url} src={sc.desktop} caption={cap} />;
+    case 'stage':
+      return <ScreenStage src={sc.desktop} bg={sc.bg || accent} caption={cap} />;
+    case 'grid':
+      return <ScreenGrid images={sc.images} caption={cap} />;
+    case 'text':
+      return <ScreenText title={sc.label} eyebrow={sc.note} body={sc.why} />;
     case 'beforeAfter':
       return <div className="container"><BeforeAfter before={sc.before} after={sc.after} caption={cap} /></div>;
   }
@@ -59,6 +69,8 @@ export function Case({ project: p }: { project: Project }) {
     ['Стек', c.stack.join(', ')],
   ] as [string, React.ReactNode][]).filter(([, val]) => val);
   const hasQuote = c.quote.join('').trim();
+  // Text inserts sit between screens but aren't numbered as screens.
+  const shots = c.screens.filter((sc) => sc.type !== 'text');
 
   return (
     <div className={v.page}>
@@ -97,9 +109,9 @@ export function Case({ project: p }: { project: Project }) {
         {c.screens.length > 0 && <section className={s.flow} aria-label="Экраны">
           <div className={s.flowHead}>
             <span className={`mono ${v.eyebrow}`} data-rv>(02) Экраны</span>
-            <span className={`mono ${v.eyebrow}`} data-rv>{c.screens.length} экранов</span>
+            <span className={`mono ${v.eyebrow}`} data-rv>{shots.length} {plural(shots.length)}</span>
           </div>
-          {c.screens.map((sc, i) => <div key={i} data-rv><ScreenBlock screen={sc} n={i + 1} total={c.screens.length} url={c.url} /></div>)}
+          {c.screens.map((sc, i) => <div key={i} data-rv><ScreenBlock screen={sc} n={shots.indexOf(sc) + 1} total={shots.length} url={c.url} accent={c.colors[0]} /></div>)}
         </section>}
 
         {(c.colors.length > 0 || c.font || c.decision) && <section className={s.decWrap}>

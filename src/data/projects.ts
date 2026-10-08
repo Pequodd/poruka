@@ -12,7 +12,7 @@ export type Category = string;
 
 export interface CaseStat { value: string; suffix?: string; caption: string }
 
-export const SCREEN_TYPES = ['scroll', 'pair', 'strip', 'detail', 'beforeAfter'] as const;
+export const SCREEN_TYPES = ['scroll', 'pair', 'strip', 'detail', 'beforeAfter', 'wide', 'stage', 'grid', 'text'] as const;
 
 export interface Screen {
   type: (typeof SCREEN_TYPES)[number];
@@ -28,6 +28,10 @@ export interface Screen {
   labels?: string[];
   before?: string;
   after?: string;
+  /** grid: three screenshots, the first one large */
+  images?: string[];
+  /** stage: band colour (defaults to the client's first colour) */
+  bg?: string;
   /** detail: offset in % of the image */
   crop?: { x: number; y: number };
   /** detail: 2–3 lines «почему так» */
