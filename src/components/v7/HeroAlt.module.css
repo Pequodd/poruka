@@ -12,7 +12,7 @@
 .frameText { display: flex; flex-direction: column; justify-content: flex-end; gap: 28px; padding: 0 24px 12px 0; }
 .frameTitle {
   margin: 0; display: flex; flex-direction: column; font-weight: 500; text-transform: uppercase;
-  font-size: clamp(52px, 6.9vw, 132px); line-height: 0.88; letter-spacing: -0.06em;
+  font-size: clamp(48px, 6.6vw, 126px); line-height: 1; letter-spacing: -0.06em;
 }
 .frameTitle > span { display: flex; flex-wrap: wrap; column-gap: 0.24em; }
 .frameLead { margin: 0; max-width: 480px; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
@@ -108,7 +108,7 @@
   .frameText > :first-child { order: -2; }
   .frameTitle { order: -1; }
   .window { order: -1; }
-  .frameTitle { font-size: 13.4vw; }
+  .frameTitle { font-size: 12.4vw; }
   .frameLead, .typeLead { font-size: 17px; }
   .facts b { font-size: 28px; }
   .facts span { font-size: 12px; }
