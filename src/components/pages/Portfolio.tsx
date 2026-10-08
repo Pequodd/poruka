@@ -14,11 +14,12 @@ import v from '../v7/V7.module.css';
 import s from './Portfolio.module.css';
 
 /** Grid rhythm 8+4 / 4+4+4 / 4+8. */
-const PATTERN: [number, string][] = [[8, '16/10'], [4, '3/4'], [4, '1/1'], [4, '1/1'], [4, '1/1'], [4, '3/4'], [8, '16/10']];
+// Column spans per row (8+4, 4+4+4, 4+8); every card in a row has the same height (grid-auto-rows), so neighbours never stretch.
+const PATTERN: [number][] = [[8], [4], [4], [4], [4], [4], [8]];
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /** Case card in the v7 system: rounded media, the facts on a glass plate inside it; brand-colour tile when there is no shot. */
-function WorkCard({ p, ratio, i }: { p: Project; ratio: string; i: number }) {
+function WorkCard({ p, ratio, i }: { p: Project; ratio?: string; i: number }) {
   const move = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty('--x', `${e.clientX - r.left}px`);
@@ -106,10 +107,10 @@ export function Portfolio() {
           ) : (
             <div className={s.grid}>
               {list.map((p, i) => {
-                const [span, ratio] = PATTERN[i % PATTERN.length];
+                const [span] = PATTERN[i % PATTERN.length];
                 return (
                   <div key={p.slug} className={span === 8 ? s.span8 : s.span4}>
-                    <WorkCard p={p} ratio={mobile ? '4/5' : ratio} i={i} />
+                    <WorkCard p={p} ratio={mobile ? '4/5' : undefined} i={i} />
                   </div>
                 );
               })}

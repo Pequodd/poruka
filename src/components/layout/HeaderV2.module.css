@@ -44,7 +44,11 @@
 /* Text roll: the label slides up and its copy follows from below. */
 .roll { display: flex; flex-direction: column; transition: transform var(--dur-hover) var(--ease); }
 .roll > span { height: 1.3em; }
-.link:hover .roll, .link:focus-visible .roll { transform: translateY(-50%); }
+.link:hover .roll { transform: translateY(-50%); }
+/* Keyboard focus: a soft ring around the label instead of the browser box; the roll stays put so the text never doubles. */
+.link:focus { outline: none; }
+.link:focus-visible { overflow: visible; }
+.link:focus-visible::before { content: ''; position: absolute; inset: -6px -10px; border-radius: 999px; box-shadow: 0 0 0 2px var(--accent-ultra); }
 .active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; }
 
 .logo { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 500; letter-spacing: -0.03em; color: inherit; text-decoration: none; }
