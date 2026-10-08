@@ -11,7 +11,7 @@ const N = STEPS.length;
 const pad = (n: number) => String(n).padStart(2, '0');
 // Scroll budget in viewport heights: intro (title zoom / statement) → intro out, object in → 8 steps.
 const B = 0.6, STEP = 0.7;
-const STATEMENT = 'Восемь этапов. Один результат, за который мы ручаемся.'.split(' ');
+const STATEMENT = 'Восемь этапов. На каждом понятно, что вы получите и когда.'.split(' ');
 
 /**
  * Process v6 — «product on stage»: the muted object rises with the copy centred under it.
@@ -70,7 +70,7 @@ export function ProcessStage({ intro = 'zoom', eyebrow, look = 'ink' }: {
           <div className={s.statement} aria-hidden={on}>
             <h2 className={s.statementText}>
               {STATEMENT.map((w, i) => (
-                <span key={i} className={`${s.w} ${w.startsWith('ручаемся') ? s.sealWord : ''}`} style={{ ['--i' as string]: i, ['--n' as string]: STATEMENT.length }}>{w} </span>
+                <span key={i} className={`${s.w} ${i === STATEMENT.length - 1 ? s.sealWord : ''}`} style={{ ['--i' as string]: i, ['--n' as string]: STATEMENT.length }}>{w} </span>
               ))}
             </h2>
           </div>

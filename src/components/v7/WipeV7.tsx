@@ -21,14 +21,14 @@ export function WipeV7() {
           <div className={s.wipeInner}>
             <span className={`mono ${s.wipeEyebrow}`}>(03) Почему мы</span>
             <p className={s.wipeTitle}>
-              <span>Три человека.</span>
+              <span>10 лет в вебе.</span>
               <span>40+ проектов.</span>
-              <span>Одна подпись<i className={s.sealDot} aria-hidden="true" /></span>
+              <span>95% возвращаются<i className={s.sealDot} aria-hidden="true" /></span>
             </p>
             <div className={s.wipeStats}>
-              <div><b>10+</b><span className="mono">лет опыта</span></div>
-              <div><b>95%</b><span className="mono">клиентов возвращаются</span></div>
-              <div><b>0</b><span className="mono">менеджеров‑посредников</span></div>
+              <div><b>Напрямую</b><span className="mono">общаетесь с теми, кто делает проект</span></div>
+              <div><b>По этапам</b><span className="mono">цена и сроки известны после брифа</span></div>
+              <div><b>После запуска</b><span className="mono">поддержка и развитие сайта</span></div>
             </div>
           </div>
         </div>

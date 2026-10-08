@@ -25,7 +25,7 @@ export function FooterV7() {
         </div>
       </div>
       <div className={s.fLegal}>
-        <span className="mono">© {C.year} Порука. Ручаемся за результат.</span>
+        <span className="mono">© {C.year} Студия «Порука»</span>
         <a href="#top" className="mono" onClick={(e) => { e.preventDefault(); scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' }); }}>Наверх ↑</a>
       </div>
     </footer>

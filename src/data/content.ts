@@ -36,7 +36,7 @@ export const CONTACTS = {
   telegram: '@poruka',
   telegramUrl: 'https://t.me/poruka',
   phone: '+7 000 000-00-00',
-  city: 'Челябинск → мир',
+  city: 'Челябинск · работаем удалённо',
   socials: ['Telegram', 'Behance', 'VC.ru'],
   year: '2026',
 };

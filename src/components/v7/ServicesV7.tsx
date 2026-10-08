@@ -15,7 +15,7 @@ export function ServicesV7() {
       <div className={s.secHead}>
         <span className={`mono ${s.eyebrow}`} data-rv>(01) Услуги</span>
         <h2 className={s.h2} data-rv style={{ ['--d' as string]: '80ms' }}>Что мы делаем</h2>
-        <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>Семь направлений — от одного лендинга до поддержки большого сайта. Берём только то, за что готовы поручиться.</p>
+        <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>От лендинга до поддержки большого сайта. Если задача не наша — скажем сразу и подскажем, к кому обратиться.</p>
       </div>
       <div className={s.cards}>
         {SERVICES.map((sv, i) => (
@@ -36,7 +36,7 @@ export function ServicesV7() {
           <a href="#contact" className={s.cardUltra} data-rv style={{ ['--d' as string]: '270ms' }}>
             <span className="mono">(08)</span>
             <span className={s.cardUltraTitle}>Не нашли свою задачу?</span>
-            <span className={s.cardUltraText}>Расскажите — предложим решение и честно скажем, если оно не наше.</span>
+            <span className={s.cardUltraText}>Опишите её — предложим решение или подскажем, кто сделает лучше.</span>
             <span className={s.arrow} aria-hidden="true">→</span>
           </a>
         </div>

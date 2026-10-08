@@ -7,7 +7,7 @@ import { HeaderV2 } from '@/components/layout/HeaderV2';
 
 export const metadata: Metadata = {
   title: 'ПОРУКА — цифровая студия',
-  description: 'Проектируем и запускаем сайты, за которые ручаемся. UI/UX-дизайн, WordPress, 1С-Битрикс, разработка с AI.',
+  description: 'Студия «Порука»: проектируем, разрабатываем и поддерживаем сайты для малого и среднего бизнеса. UI/UX‑дизайн, WordPress, 1С‑Битрикс, разработка с AI.',
 };
 
 export const viewport: Viewport = { themeColor: '#F3F3F1', width: 'device-width', initialScale: 1 };

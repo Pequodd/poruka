@@ -342,7 +342,7 @@ a.fLink:hover { color: var(--text-on-ink); }
   .wipe { height: 240svh; }
   .wipeStage { height: 100svh; }
   .wipeInner { padding: 84px var(--margin-outer) 24px; }
-  .wipeTitle { font-size: 13.6vw; }
+  .wipeTitle { font-size: 10.4vw; }
   .wipeTitle span:nth-child(2), .wipeTitle span:nth-child(3) { align-self: flex-start; }
   .wipeStats { grid-template-columns: 1fr; gap: 12px; }
   .wipeStats b { font-size: 34px; }

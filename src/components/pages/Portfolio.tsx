@@ -79,7 +79,7 @@ export function Portfolio() {
             <span aria-hidden="true"><Letters text="Работы" /></span>
             <sup className={s.count} aria-hidden="true">({pad(PROJECTS.length)})</sup>
           </h1>
-          <p className={s.lead} style={{ ['--d' as string]: '700ms' }} data-hero>Проекты, за которые мы ручаемся. Каждый — с задачей, решением и результатом.</p>
+          <p className={s.lead} style={{ ['--d' as string]: '700ms' }} data-hero>Сайты, интерфейсы и редизайны. В каждом кейсе — задача, решение и цифры после запуска.</p>
         </header>
 
         {/* Bar + list share one wrapper so the sticky filter capsule stops where the cases end. */}

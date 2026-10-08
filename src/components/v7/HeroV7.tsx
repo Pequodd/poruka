@@ -33,13 +33,13 @@ export function HeroV7() {
       <div className={s.heroMedia} aria-hidden="true">
         <video ref={video} muted loop playsInline preload="auto" poster={asset('/assets/v7/hero-poster.jpg')} />
       </div>
-      <h1 className={s.heroTitle} aria-label="Ручаемся за результат">
-        <span className={s.heroL1} aria-hidden="true"><Letters text="Ручаемся" from={0} /></span>
-        <span className={s.heroL2} aria-hidden="true"><Letters text="за результат" from={8} tail={<span className={`${s.ltr} ${s.seal}`} style={{ ['--i' as string]: 20 }}>.</span>} /></span>
+      <h1 className={s.heroTitle} aria-label="Сайты под ключ">
+        <span className={s.heroL1} aria-hidden="true"><Letters text="Сайты" from={0} /></span>
+        <span className={s.heroL2} aria-hidden="true"><Letters text="под ключ" from={5} tail={<span className={`${s.ltr} ${s.seal}`} style={{ ['--i' as string]: 12 }}>.</span>} /></span>
       </h1>
 
       <div className={s.heroFoot}>
-        <p className={s.heroLead} style={{ ['--d' as string]: '1300ms' }} data-hero>Цифровая студия «Порука». Проектируем и запускаем сайты для малого и среднего бизнеса — от исследования до поддержки.</p>
+        <p className={s.heroLead} style={{ ['--d' as string]: '1300ms' }} data-hero>Студия «Порука» проектирует, разрабатывает и поддерживает сайты для малого и среднего бизнеса: на WordPress, 1С‑Битрикс и Next.js.</p>
         <div className={s.heroCta} style={{ ['--d' as string]: '1450ms' }} data-hero>
           <div className={s.heroBtns}>
             <a className={s.ctaMain} href="#contact">Обсудить проект<span className={s.ctaIcon} aria-hidden="true">↗</span></a>

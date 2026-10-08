@@ -31,7 +31,7 @@ export function ContactV7({ eyebrow = '(08) Контакт' }: { eyebrow?: strin
       <div className={s.ctaInner}>
         <span className={`mono ${s.ctaEyebrow}`} data-rv>{eyebrow}</span>
         <h2 id="contact-title" className={s.ctaTitle} data-rv style={{ ['--d' as string]: '80ms' }}>Начнём с&nbsp;короткого разговора</h2>
-        <p className={s.ctaLead} data-rv style={{ ['--d' as string]: '160ms' }}>Напишите, что есть сейчас и что нужно. Ответим в течение дня и честно скажем, если задача не наша.</p>
+        <p className={s.ctaLead} data-rv style={{ ['--d' as string]: '160ms' }}>Напишите, что есть сейчас и что нужно. Ответим в течение рабочего дня с вопросами или первой оценкой.</p>
         <a className={s.ctaTg} href={CONTACTS.telegramUrl} target="_blank" rel="noreferrer" data-rv style={{ ['--d' as string]: '240ms' }}>
           <span>Написать в Telegram</span>
           <span className={s.ctaTgIcon} aria-hidden="true">

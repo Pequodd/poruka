@@ -3,8 +3,8 @@ import { useRef } from 'react';
 import { useProgress } from './useProgress';
 import s from './V7.module.css';
 
-const TEXT = 'Мы — команда из трёх человек. Проектируем и запускаем сайты от исследования до поддержки и отвечаем за результат своим именем.'.split(' ');
-const HI = new Set(['своим', 'именем.']);
+const TEXT = 'Небольшая студия. Дизайнеры и разработчики работают с вами напрямую — от исследования до запуска и поддержки сайта.'.split(' ');
+const HI = new Set(['напрямую']);
 
 /** Pinned statement: words come out of blur one by one as you scroll; the glass links drift past, out of focus. */
 export function StatementV7() {
