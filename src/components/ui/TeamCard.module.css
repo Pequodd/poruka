@@ -18,21 +18,5 @@
 .role { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; }
 .about { font-size: 17px; line-height: 1.55; color: var(--text-secondary); }
 
-/* «Neural» portrait for a teammate nobody has seen: halftone silhouette, scanlines, a glitch slice now and then. */
-.neural { position: absolute; inset: 0; background: #0e0e0e; overflow: hidden; }
-.neuralSvg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.slice1 { clip-path: inset(30% 0 62% 0); animation: glitch1 4.2s steps(1) infinite; }
-.slice2 { clip-path: inset(58% 0 33% 0); animation: glitch2 5.6s steps(1) infinite; }
-@keyframes glitch1 { 0%, 86%, 100% { transform: none; opacity: 0; } 87% { transform: translateX(14px); opacity: 1; } 90% { transform: translateX(-9px); opacity: 1; } 93% { transform: translateX(5px); opacity: 1; } }
-@keyframes glitch2 { 0%, 70%, 100% { transform: none; opacity: 0; } 71% { transform: translateX(-16px); opacity: 1; } 74% { transform: translateX(8px); opacity: 1; } }
-.card:hover .slice1 { animation-duration: 0.9s; }
-.card:hover .slice2 { animation-duration: 1.2s; }
-.scan { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
-.neuralTag {
-  position: absolute; top: 14px; right: 14px; padding: 5px 10px; border-radius: 999px; font-size: 11px; letter-spacing: 0.08em;
-  background: var(--accent-ultra); color: #fff;
-}
-@media (prefers-reduced-motion: reduce) { .slice1, .slice2 { animation: none; opacity: 0; } }
-
 /* v7 «glass» look: rounded portraits like every other card on the page. */
 :global(html[data-look='glass']) .photo { border-radius: 20px; }
