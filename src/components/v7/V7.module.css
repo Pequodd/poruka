@@ -67,6 +67,7 @@
 .hero { isolation: isolate; }
 /* Lightened in CSS (no re-encode): the beige base is pushed up to the page's paper tone, the colour light stays saturated. */
 .heroMedia { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #f3f3f1; filter: brightness(1.4) saturate(1.25); }
+.heroMedia::after { content: ""; position: absolute; inset: 0; background: #fff; opacity: 0.16; }
 .heroMedia video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
 .heroTitle {
   mix-blend-mode: difference; color: #fff;
