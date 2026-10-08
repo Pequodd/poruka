@@ -6,8 +6,10 @@ import { CONTACTS, NAV } from '@/data/content';
 import { Button } from '../ui/Button';
 import s from './HeaderV2.module.css';
 
+// Bar links (contact is the CTA button, so it isn't repeated here); the burger menu and footer use the full NAV.
 const LEFT: [string, string][] = [['Работы', '/portfolio/'], ['Услуги', '/#services']];
-const RIGHT: [string, string][] = [['Процесс', '/#process'], ['Контакт', '/#contact']];
+const RIGHT: [string, string][] = [['Процесс', '/#process'], ['Команда', '/#team']];
+const SPY = ['works', 'services', 'process', 'team', 'faq', 'contact'];
 
 function NavLink({ label, href, active }: { label: string; href: string; active?: boolean }) {
   return (
@@ -31,6 +33,23 @@ export function HeaderV2() {
   const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setOpen(false), [path]);
+
+  // Home: the link of the section on screen is marked active (works counts as «Работы»).
+  const [section, setSection] = useState('');
+  useEffect(() => {
+    if (path !== '/') { setSection(''); return; }
+    let raf = 0;
+    const f = () => {
+      raf = 0;
+      let cur = '';
+      for (const id of SPY) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < innerHeight * 0.4) cur = id; }
+      setSection(cur);
+    };
+    const q = () => { if (!raf) raf = requestAnimationFrame(f); };
+    f();
+    addEventListener('scroll', q, { passive: true });
+    return () => { removeEventListener('scroll', q); cancelAnimationFrame(raf); };
+  }, [path]);
 
   useEffect(() => {
     let raf = 0;
@@ -58,7 +77,9 @@ export function HeaderV2() {
     return () => { window.removeEventListener('keydown', k); window.removeEventListener('mousedown', out); };
   }, [open]);
 
-  const isActive = (href: string) => href.startsWith('/portfolio') ? path.startsWith('/portfolio') || path.startsWith('/cases') : false;
+  const isActive = (href: string) => href.startsWith('/portfolio')
+    ? path.startsWith('/portfolio') || path.startsWith('/cases') || section === 'works'
+    : href.startsWith('/#') && section === href.slice(2);
   // The admin is a tool, not a page of the site: no site header there (its preview keeps it).
   if (path === '/admin' || path === '/admin/') return null;
   const cls = [s.header, compact && s.compact, open && s.open, onInk && s.onInk].filter(Boolean).join(' ');
@@ -74,7 +95,7 @@ export function HeaderV2() {
             <Link href="/" className={s.logo} onClick={() => setOpen(false)}>Порука<span className={s.dot} aria-hidden="true" /></Link>
           </div>
           <div className={`${s.side} ${s.right}`}>
-            {RIGHT.map(([l, h]) => <NavLink key={l} label={l} href={h} />)}
+            {RIGHT.map(([l, h]) => <NavLink key={l} label={l} href={h} active={isActive(h)} />)}
             {/* Shown only in the v7 glass look (see the html[data-look] rules). */}
             <Link href="#contact" className={s.cta}><span className={s.ctaDot} aria-hidden="true" />Обсудить проект</Link>
             <button type="button" className={s.burger} aria-label={open ? 'Закрыть меню' : 'Меню'} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(!open)}>

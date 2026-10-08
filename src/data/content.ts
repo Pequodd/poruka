@@ -46,7 +46,7 @@ export const NAV: [string, string][] = [
   ['Услуги', '/#services'],
   ['Процесс', '/#process'],
   ['Команда', '/#team'],
-  ['Кейс', '/cases/smp-zapchast/'],
+  ['Вопросы', '/#faq'],
   ['Контакт', '/#contact'],
 ];
 
