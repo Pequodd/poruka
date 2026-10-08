@@ -1,6 +1,3 @@
-'use client';
-import { useRef } from 'react';
-import { useProgress } from './useProgress';
 import s from './V7.module.css';
 
 /** Placeholder answers written from the site's own facts (services, case timings) — confirm with the studio. */
@@ -12,27 +9,31 @@ const FAQ: [string, string][] = [
   ['Как вы используете AI?', 'Для концепций и черновиков контента — это экономит до трети бюджета. Решения, детали и финальное качество остаются за людьми.'],
 ];
 
-/** FAQ: the glass links park on the left in focus; a giant background word slides with scroll; answers expand in place. */
+/**
+ * FAQ on the site's section rule: centred head (eyebrow, title, lead) and the questions in one column on the 12-col grid
+ * (cols 3–10). Each row: number, question, a «+» that turns into «×» when open. The glass links rest out of focus aside.
+ */
 export function FaqV7({ eyebrow = '(07) Вопросы' }: { eyebrow?: string }) {
-  const ref = useRef<HTMLElement>(null);
-  useProgress(ref, 'pass', (p, el) => el.style.setProperty('--fq', p.toFixed(4)));
   return (
-    <section ref={ref} id="faq" className={s.faq} data-orbit="-27 0 0.82 0 1" data-orbit-m="0 -30 0.55 0 0.9">
-      <div className={s.faqBg} aria-hidden="true">вопросы · вопросы · вопросы · вопросы</div>
+    <section id="faq" className={s.faq} data-orbit="-36 6 0.9 18 0.45" data-orbit-m="0 -34 0.5 14 0.35">
+      <div className={s.secHead}>
+        <span className={`mono ${s.eyebrow}`} data-rv>{eyebrow}</span>
+        <h2 className={s.h2} data-rv style={{ ['--d' as string]: '80ms' }}>Частые вопросы</h2>
+        <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>Коротко о цене, сроках и том, что будет после запуска.</p>
+      </div>
       <div className={s.faqGrid}>
-        <div className={s.faqSide}>
-          <span className={`mono ${s.eyebrow}`} data-rv>{eyebrow}</span>
-        </div>
-        <div className={s.faqMain}>
-          <h2 className={s.h2} data-rv>Частые вопросы</h2>
-          <div className={s.faqList}>
-            {FAQ.map(([q, a], i) => (
-              <details key={q} className={s.faqItem} data-rv style={{ ['--d' as string]: `${i * 80}ms` }}>
-                <summary><span>{q}</span><span className="mono">({i + 1})</span></summary>
-                <p>{a}</p>
-              </details>
-            ))}
-          </div>
+        <div className={s.faqList}>
+          {FAQ.map(([q, a], i) => (
+            <details key={q} className={s.faqItem} data-rv style={{ ['--d' as string]: `${i * 80}ms` }}>
+              <summary>
+                <span className={`mono ${s.faqNum}`}>{String(i + 1).padStart(2, '0')}</span>
+                <span className={s.faqQ}>{q}</span>
+                <span className={s.faqIcon} aria-hidden="true" />
+              </summary>
+              <p>{a}</p>
+            </details>
+          ))}
+          <a href="#contact" className={s.faqMore} data-rv>Не нашли ответ? Спросите напрямую <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
