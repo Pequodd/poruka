@@ -62,7 +62,7 @@ function ListRow({ p }: { p: Project }) {
   );
 }
 
-/** Portfolio in the v7 system: assembling title + the glass links, glass filter capsule, rounded cards, ultramarine call. */
+/** Portfolio in the v7 system: assembling title + the glass links, glass filter capsule, rounded cards, closing call. */
 export function Portfolio() {
   const [f, setF] = useState<string>('Все');
   const [view, setView] = useState<'grid' | 'list'>('grid');
@@ -118,14 +118,6 @@ export function Portfolio() {
         </div>
 
         </div>
-
-        <section className={s.cta} data-ink>
-          <h2 className={s.ctaH2} data-rv>Хотите такой же результат?</h2>
-          <div className={s.ctaSide} data-rv style={{ ['--d' as string]: '120ms' }}>
-            <p className={s.ctaText}>Расскажите о задаче — ответим в течение дня и честно скажем, если она не наша.</p>
-            <a className={s.ctaBtn} href="#contact">Обсудить проект<span className={s.ctaIcon} aria-hidden="true">↗</span></a>
-          </div>
-        </section>
 
         <ContactV7 eyebrow="(02) Контакт" />
         <FooterV7 />

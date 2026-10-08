@@ -223,16 +223,41 @@
 .team { position: relative; padding: var(--section-pad) var(--margin-outer); }
 .teamGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); max-width: 1320px; margin: 0 auto; }
 
-/* ---------- Contact ---------- */
-.contactV7 { position: relative; padding: var(--section-pad) var(--margin-outer); }
-.cGrid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 16px; max-width: 1320px; margin: 0 auto; align-items: start; }
-.cAside { position: sticky; top: 104px; border-radius: var(--radius-card); padding: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
-.cText { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
-.cAside .ctaInk { height: 60px; font-size: 17px; padding: 0 28px; }
-.cDirect { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 18px; border-top: 1px solid rgba(14, 14, 14, 0.1); }
-.cDirect a { color: var(--text-primary); text-decoration: none; font-size: 17px; }
-.cDirect a:hover { color: var(--accent-ultra); }
-.cForm { border-radius: var(--radius-card); padding: 32px; }
+/* ---------- Contact: closing call to action ---------- */
+.cta {
+  position: relative; isolation: isolate; overflow: hidden; margin-top: var(--section-pad);
+  min-height: 88vh; display: flex; align-items: center; justify-content: center;
+  padding: 160px var(--margin-outer) 144px; border-radius: 40px 40px 0 0;
+  background: var(--ink); color: #fff; text-align: center;
+}
+/* The hero's glass loop, dimmed: colour light glowing through ribbed glass in the dark. */
+.ctaMedia { position: absolute; inset: 0; z-index: -1; background: var(--ink); }
+.ctaMedia video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; filter: brightness(0.8) saturate(1.7) contrast(1.15); }
+/* Cool ink multiply: the warm beige base turns graphite-blue, the ultramarine light survives. */
+.ctaMedia::after { content: ''; position: absolute; inset: 0; background: #262a52; mix-blend-mode: multiply; }
+.ctaInner { display: flex; flex-direction: column; align-items: center; gap: 28px; max-width: 1080px; }
+.ctaEyebrow { color: #A9AEFF; }
+.ctaTitle { margin: 0; font-size: clamp(48px, 7.4vw, 136px); line-height: 0.9; letter-spacing: -0.055em; font-weight: 500; text-transform: uppercase; text-wrap: balance; }
+.ctaLead { margin: 0; max-width: 540px; font-size: var(--fs-body-l); line-height: 1.45; color: rgba(255, 255, 255, 0.8); text-wrap: pretty; }
+.ctaTg {
+  margin-top: 16px; display: inline-flex; align-items: center; gap: 28px; height: 92px; padding: 0 12px 0 44px; border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; text-decoration: none;
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  font-size: 26px; font-weight: 500; letter-spacing: -0.02em; white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease), border-color var(--dur-hover) var(--ease);
+}
+.ctaTg:hover { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+.ctaTg:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.ctaTgIcon { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--accent-ultra); color: #fff; transition: transform var(--dur-ui) var(--ease); }
+.ctaTg:hover .ctaTgIcon { transform: translate(3px, -3px) rotate(-8deg); }
+.ctaDirect { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 20px; margin-top: 4px; font-size: 17px; color: rgba(255, 255, 255, 0.72); }
+.ctaDirect a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.35); text-underline-offset: 4px; }
+.ctaDirect a:hover { color: #fff; text-decoration-color: #fff; }
+.ctaDirect a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+/* The call flows straight into the footer: one dark mass, rounded only at the top. */
+.cta + .footer { border-radius: 0; padding-top: 72px; }
+.cta + .footer::before { content: ''; position: absolute; left: var(--margin-outer); right: var(--margin-outer); top: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
 
 /* ---------- Clients ---------- */
 .clients { position: relative; padding: 120px 0; display: flex; flex-direction: column; gap: 32px; }
@@ -283,8 +308,6 @@ a.fLink:hover { color: var(--text-on-ink); }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 1023px) {
-  .cGrid { grid-template-columns: 1fr; }
-  .cAside { position: static; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -346,9 +369,12 @@ a.fLink:hover { color: var(--text-on-ink); }
   .statChip b { font-size: 28px; }
 
   .teamGrid { grid-template-columns: 1fr; gap: 32px; }
-  .cGrid { grid-template-columns: 1fr; }
-  .cAside { position: static; padding: 20px; }
-  .cForm { padding: 16px; }
+  .cta { min-height: 0; padding: 112px var(--margin-outer) 96px; border-radius: 28px 28px 0 0; }
+  .ctaTitle { font-size: 13vw; }
+  .ctaLead { font-size: 17px; }
+  .ctaTg { width: 100%; justify-content: space-between; height: 76px; padding: 0 8px 0 24px; font-size: 19px; gap: 12px; }
+  .ctaTgIcon { width: 60px; height: 60px; }
+  .ctaDirect { flex-direction: column; gap: 8px; }
   .clients { padding: 80px 0; }
   .logo { height: 84px; padding: 0 24px; font-size: 26px; }
 

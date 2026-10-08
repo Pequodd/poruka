@@ -1,6 +1,6 @@
 /*
  * Portfolio in the v7 system: assembling uppercase title over the glass links, a sticky liquid-glass filter capsule,
- * rounded case cards with a glass fact plate, a list view on one glass panel, and an ultramarine call to action.
+ * rounded case cards with a glass fact plate and a list view on one glass panel.
  */
 .hero {
   position: relative; display: flex; flex-direction: column; gap: 20px;
@@ -81,28 +81,8 @@
 .row:hover .rowPreview { opacity: 1; transform: none; }
 .rowImg, .rowTile { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; }
 
-/* Ultramarine call to action. */
-.cta {
-  margin: 0 var(--margin-outer); padding: 72px clamp(24px, 4vw, 64px); border-radius: 32px;
-  background: var(--accent-ultra); color: #fff;
-  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 48px; align-items: end;
-}
-.ctaH2 { margin: 0; font-size: clamp(44px, 6vw, 104px); line-height: 0.92; letter-spacing: -0.055em; font-weight: 500; text-transform: uppercase; text-wrap: balance; }
-.ctaSide { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
-.ctaText { margin: 0; font-size: var(--fs-body-l); line-height: 1.45; color: rgba(255, 255, 255, 0.82); }
-.ctaBtn {
-  display: inline-flex; align-items: center; gap: 16px; height: 72px; padding: 0 12px 0 32px; border-radius: var(--radius-pill);
-  background: #fff; color: var(--accent-ultra); font-size: 20px; font-weight: 500; letter-spacing: -0.02em; text-decoration: none;
-  transition: background-color var(--dur-hover) var(--ease);
-}
-.ctaBtn:hover { background: var(--paper); color: var(--accent-ultra); }
-.ctaBtn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.ctaIcon { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: var(--accent-ultra); color: #fff; transition: transform var(--dur-ui) var(--ease); }
-.ctaBtn:hover .ctaIcon { transform: rotate(45deg); }
-
 @media (max-width: 1023px) {
   .span8, .span4 { grid-column: span 6; }
-  .cta { grid-template-columns: 1fr; }
 }
 @media (max-width: 767px) {
   .hero { padding-top: 120px; padding-bottom: 40px; min-height: 0; }
@@ -114,8 +94,6 @@
   .grid { grid-template-columns: 1fr; }
   .span8, .span4 { grid-column: auto; }
   .plateTitle { font-size: 20px; }
-  .cta { padding: 40px 20px; }
-  .ctaBtn { width: 100%; justify-content: space-between; height: 64px; font-size: 18px; }
 }
 @media (hover: none) { .card { cursor: pointer; } .cursor { display: none; } }
 @media (prefers-reduced-motion: reduce) { .card { animation: none; } }
