@@ -1,9 +1,9 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { asset } from '@/lib/asset';
-import { prefersReducedMotion } from '@/lib/hooks';
 import Link from 'next/link';
 import { Letters } from './Letters';
+import { useLoopVideo } from './useLoopVideo';
 import { useProgress } from './useProgress';
 import s from './V7.module.css';
 
@@ -17,17 +17,7 @@ export function HeroV7() {
   useProgress(ref, 'pass', (p, el) => el.style.setProperty('--hp', Math.max(0, p * 2 - 1).toFixed(3)));
 
   // Background loop: vertical crop on phones; with reduced motion only the poster is shown. Paused off-screen.
-  useEffect(() => {
-    const v = video.current;
-    if (!v) return;
-    const m = matchMedia('(max-width: 767px)').matches;
-    v.poster = asset(m ? '/assets/v7/hero-poster-m.jpg' : '/assets/v7/hero-poster.jpg');
-    if (prefersReducedMotion()) return;
-    v.src = asset(m ? '/assets/v7/hero-m.mp4' : '/assets/v7/hero.mp4');
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); });
-    io.observe(v);
-    return () => io.disconnect();
-  }, []);
+  useLoopVideo(video);
   return (
     <section ref={ref} className={s.hero} data-orbit="0 -4 1.02 0 0" data-orbit-m="0 -10 1.05 0 0">
       <div className={s.heroMedia} aria-hidden="true">
