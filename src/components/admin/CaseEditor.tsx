@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import { SCREEN_TYPES, type CaseStudy, type Project, type Screen } from '@/data/projects';
 import { slugify } from './images';
 import { Area, Field, ImageField, ItemTools, ListField, move, Select } from './fields';
@@ -16,6 +17,40 @@ const SCREEN_LABELS: Record<Screen['type'], string> = {
   text: 'Текстовая вставка',
 };
 
+/** Short names for the structure panel. */
+const SCREEN_SHORT: Record<Screen['type'], string> = {
+  scroll: 'Прокрутка', pair: 'Десктоп + телефон', strip: 'Телефоны', detail: 'Деталь', beforeAfter: 'До / после',
+  wide: 'Крупный экран', stage: 'Экран на фоне', grid: 'Сетка', text: 'Текст',
+};
+
+const newScreen = (t: Screen['type']): Screen => ({
+  type: t, label: '',
+  ...(t === 'strip' ? { mobile: ['', '', '', ''], labels: ['', '', '', ''] } : {}),
+  ...(t === 'detail' ? { crop: { x: 0, y: 0 } } : {}),
+  ...(t === 'grid' ? { images: ['', '', ''] } : {}),
+});
+
+const SECTIONS: [string, string][] = [['01', 'Карточка'], ['02', 'Шапка кейса'], ['03', 'Задача'], ['04', 'Экраны'], ['05', 'Решения'], ['06', 'Результат']];
+
+/** Thin divider between screens; «+» opens the block types and inserts the chosen one exactly here. */
+function Inserter({ open, onOpen, onClose, onPick, last }: { open: boolean; onOpen: () => void; onClose: () => void; onPick: (t: Screen['type']) => void; last?: boolean }) {
+  if (!open)
+    return (
+      <div className={`${s.inserter} ${last ? s.inserterLast : ''}`}>
+        <button type="button" className={s.insertBtn} onClick={onOpen}>{last ? '+ Добавить блок в конец' : '+ Вставить блок сюда'}</button>
+      </div>
+    );
+  return (
+    <div className={s.insertMenu} role="group" aria-label="Тип нового блока">
+      <span className={`mono ${s.eyebrow}`}>Какой блок вставить?</span>
+      <div className={s.addRow}>
+        {SCREEN_TYPES.map((t) => <button key={t} type="button" className={s.btnSm} onClick={() => onPick(t)}>{SCREEN_LABELS[t]}</button>)}
+        <button type="button" className={`${s.btnSm} ${s.btnGhost}`} onClick={onClose}>Отмена</button>
+      </div>
+    </div>
+  );
+}
+
 export const emptyProject = (): Project => ({
   slug: '', title: '', meta: '', cat: 'Сайты', result: '', services: '', year: String(new Date().getFullYear()),
   case: { oneLiner: '', client: '', duration: '', stack: [], tags: [], url: '', task: ['', ''], screens: [], colors: [], font: '', decision: '', stats: [], quote: ['', ''], author: '' },
@@ -28,7 +63,7 @@ export type Errors = Partial<Record<'slug' | 'title', string>>;
 
 function Section({ n, title, children, note }: { n: string; title: string; note?: string; children: React.ReactNode }) {
   return (
-    <section className={s.section}>
+    <section id={`sec-${n}`} className={s.section} data-outline={`sec-${n}`}>
       <header className={s.sectionHead}>
         <span className={`mono ${s.eyebrow}`}>({n})</span>
         <h2 className={s.sectionTitle}>{title}</h2>
@@ -133,7 +168,91 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
   const upCase = (patch: Partial<CaseStudy>) => onChange({ ...p, case: { ...c, ...patch } });
   const setScreen = (i: number, sc: Screen) => upCase({ screens: c.screens.map((x, k) => (k === i ? sc : x)) });
 
+  // Stable React keys for screens (the data has no ids): kept in step with every insert / move / remove.
+  const seq = useRef(0);
+  const keys = useRef<string[]>([]);
+  if (keys.current.length !== c.screens.length) keys.current = c.screens.map(() => `s${++seq.current}`);
+  const [insertAt, setInsertAt] = useState<number | null>(null);
+  const [justAdded, setJustAdded] = useState<string | null>(null);
+  const insert = (i: number, t: Screen['type']) => {
+    const k = `s${++seq.current}`;
+    keys.current = [...keys.current.slice(0, i), k, ...keys.current.slice(i)];
+    upCase({ screens: [...c.screens.slice(0, i), newScreen(t), ...c.screens.slice(i)] });
+    setInsertAt(null); setJustAdded(k);
+  };
+  const moveScreen = (from: number, to: number) => {
+    if (to < 0 || to >= c.screens.length || from === to) return;
+    keys.current = move(keys.current, from, to);
+    upCase({ screens: move(c.screens, from, to) });
+  };
+  const removeScreen = (i: number) => {
+    keys.current = keys.current.filter((_, k) => k !== i);
+    upCase({ screens: c.screens.filter((_, k) => k !== i) });
+  };
+  useEffect(() => {
+    if (!justAdded) return;
+    document.getElementById(`scr-${justAdded}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setJustAdded(null);
+  }, [justAdded]);
+
+  // Structure panel: highlight the block the editor is scrolled to.
+  const [active, setActive] = useState('sec-01');
+  useEffect(() => {
+    let raf = 0;
+    const f = () => {
+      raf = 0;
+      let cur = 'sec-01';
+      document.querySelectorAll<HTMLElement>('[data-outline]').forEach((el) => { if (el.getBoundingClientRect().top < 160) cur = el.dataset.outline!; });
+      setActive(cur);
+    };
+    const q = () => { if (!raf) raf = requestAnimationFrame(f); };
+    f();
+    addEventListener('scroll', q, { passive: true });
+    return () => { removeEventListener('scroll', q); cancelAnimationFrame(raf); };
+  }, [c.screens.length]);
+  const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const [drag, setDrag] = useState<number | null>(null);
+  const [over, setOver] = useState<number | null>(null);
+
   return (
+    <div className={s.editorWrap}>
+      <nav className={s.outline} aria-label="Структура кейса">
+        <span className={`mono ${s.eyebrow}`}>Структура</span>
+        <ol className={s.outList}>
+          {SECTIONS.map(([n, t]) => (
+            <li key={n}>
+              <button type="button" className={`${s.outItem} ${active === `sec-${n}` ? s.outActive : ''}`} onClick={() => go(`sec-${n}`)}>
+                <span className="mono">{n}</span>{t}
+                {n === '01' && (errors.title || errors.slug) && <span className={s.outErr} aria-label="есть ошибки" />}
+                {n === '04' && <span className={s.outCount}>{c.screens.length}</span>}
+              </button>
+              {n === '04' && (
+                <ol className={s.outScreens}>
+                  {c.screens.map((sc, i) => {
+                    const id = `scr-${keys.current[i]}`;
+                    return (
+                      <li key={keys.current[i]} draggable
+                        onDragStart={(e) => { setDrag(i); e.dataTransfer.effectAllowed = 'move'; }}
+                        onDragOver={(e) => { e.preventDefault(); setOver(i); }}
+                        onDragLeave={() => setOver((o) => (o === i ? null : o))}
+                        onDrop={(e) => { e.preventDefault(); if (drag !== null) moveScreen(drag, i); setDrag(null); setOver(null); }}
+                        onDragEnd={() => { setDrag(null); setOver(null); }}
+                        className={`${drag === i ? s.outDragging : ''} ${over === i && drag !== null && drag !== i ? (drag < i ? s.outDropAfter : s.outDropBefore) : ''}`}>
+                        <button type="button" className={`${s.outScreen} ${active === id ? s.outActive : ''}`} onClick={() => go(id)} title="Перетащите, чтобы поменять порядок">
+                          <span className={s.outGrip} aria-hidden="true">⋮⋮</span>
+                          <span className="mono">{String(i + 1).padStart(2, '0')}</span>
+                          <span className={s.outText}><b>{SCREEN_SHORT[sc.type]}</b>{sc.label && <span>{sc.label}</span>}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                  <li><button type="button" className={s.outAdd} onClick={() => { setInsertAt(c.screens.length); setTimeout(() => go('sec-04-end'), 50); }}>+ Блок</button></li>
+                </ol>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
     <div className={s.editor}>
       <Section n="01" title="Карточка в портфолио" note="Так кейс выглядит в списке работ и на главной.">
         <div className={s.row2}>
@@ -172,20 +291,19 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
 
       <Section n="04" title="Экраны" note="Идут по порядку. Без картинки экран показывается серой заглушкой.">
         {c.screens.map((sc, i) => (
-          <div key={i} className={s.card}>
-            <div className={s.cardHead}>
-              <span className={`mono ${s.eyebrow}`}>{String(i + 1).padStart(2, '0')}</span>
-              <Select label="Тип" value={sc.type} options={SCREEN_TYPES.map((t) => [t, SCREEN_LABELS[t]] as [Screen['type'], string])} onChange={(t) => setScreen(i, { type: t, label: sc.label, note: sc.note })} />
-              <ItemTools i={i} n={c.screens.length} what={`Экран ${i + 1}`} onMove={(to) => upCase({ screens: move(c.screens, i, to) })} onRemove={() => confirm(`Удалить экран «${sc.label || i + 1}»?`) && upCase({ screens: c.screens.filter((_, k) => k !== i) })} />
+          <div key={keys.current[i]}>
+            <Inserter open={insertAt === i} onOpen={() => setInsertAt(i)} onClose={() => setInsertAt(null)} onPick={(t) => insert(i, t)} />
+            <div id={`scr-${keys.current[i]}`} className={`${s.card} ${s.scrCard}`} data-outline={`scr-${keys.current[i]}`}>
+              <div className={s.cardHead}>
+                <span className={`mono ${s.eyebrow}`}>{String(i + 1).padStart(2, '0')}</span>
+                <Select label="Тип" value={sc.type} options={SCREEN_TYPES.map((t) => [t, SCREEN_LABELS[t]] as [Screen['type'], string])} onChange={(t) => setScreen(i, { type: t, label: sc.label, note: sc.note })} />
+                <ItemTools i={i} n={c.screens.length} what={`Экран ${i + 1}`} onMove={(to) => moveScreen(i, to)} onRemove={() => confirm(`Удалить блок «${sc.label || i + 1}»?`) && removeScreen(i)} />
+              </div>
+              <ScreenEditor sc={sc} set={(v) => setScreen(i, v)} />
             </div>
-            <ScreenEditor sc={sc} set={(v) => setScreen(i, v)} />
           </div>
         ))}
-        <div className={s.addRow}>
-          {SCREEN_TYPES.map((t) => (
-            <button key={t} type="button" className={s.btnSm} onClick={() => upCase({ screens: [...c.screens, { type: t, label: '', ...(t === 'strip' ? { mobile: ['', '', '', ''], labels: ['', '', '', ''] } : {}), ...(t === 'detail' ? { crop: { x: 0, y: 0 } } : {}), ...(t === 'grid' ? { images: ['', '', ''] } : {}) }] })}>+ {SCREEN_LABELS[t]}</button>
-          ))}
-        </div>
+        <div id="sec-04-end"><Inserter last open={insertAt === c.screens.length} onOpen={() => setInsertAt(c.screens.length)} onClose={() => setInsertAt(null)} onPick={(t) => insert(c.screens.length, t)} /></div>
       </Section>
 
       <Section n="05" title="Решения">
@@ -219,6 +337,7 @@ export function CaseEditor({ p, onChange, errors, isNew, categories }: { p: Proj
         <Area label="Отзыв" rows={3} value={c.quote.join('')} onChange={(v) => upCase({ quote: [v, ''] })} placeholder="«Менеджеры перестали отвечать на вопрос „подойдёт ли“. Теперь звонят уже с номером детали.»" />
         <Field label="Автор отзыва" value={c.author} onChange={(v) => upCase({ author: v })} placeholder="Руководитель отдела продаж · СМП Запчасть" />
       </Section>
+    </div>
     </div>
   );
 }
