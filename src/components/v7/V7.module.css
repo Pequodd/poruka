@@ -299,10 +299,7 @@
 .fMail:hover, .fNav:hover { color: #9CA2FF; }
 .fLink { font-size: 16px; color: var(--text-on-ink-muted); text-decoration: none; }
 a.fLink:hover { color: var(--text-on-ink); }
-.fMark { position: relative; display: flex; align-items: center; justify-content: center; margin-top: 100px; font-size: clamp(80px, 21vw, 400px); line-height: 0.8; letter-spacing: -0.07em; font-weight: 500; }
-.fO { position: absolute; left: 50%; top: 50%; width: 2.6em; height: 1.3em; transform: translate(-50%, -50%); pointer-events: none; }
-.miniOrbit { display: block; width: 100%; height: 100%; }
-.fLegal { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; color: var(--text-on-ink-muted); }
+.fLegal { display: flex; justify-content: space-between; gap: 16px; margin-top: 96px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-on-ink-muted); }
 .fLegal a { color: inherit; text-decoration: none; }
 .fLegal a:hover { color: var(--text-on-ink); }
 
@@ -387,8 +384,7 @@ a.fLink:hover { color: var(--text-on-ink); }
   .footer { padding-top: 80px; }
   .fGrid { grid-template-columns: 1fr; gap: 40px; }
   .fNav { font-size: 24px; }
-  .fMark { margin-top: 64px; }
-  .fLegal { flex-direction: column; }
+    .fLegal { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
