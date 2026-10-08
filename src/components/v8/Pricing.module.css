@@ -1,0 +1,128 @@
+/*
+ * Price block variants B–D (variant A is PricingV8 in V8.module.css). Same system: uppercase Onest, glass, ultramarine.
+ */
+
+/* ---------- B «Строки» ---------- */
+.rows { position: relative; padding: var(--section-pad) var(--margin-outer); }
+.rowsHead { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); align-items: end; gap: 16px 40px; margin-bottom: 48px; }
+.rowsHead > :first-child { grid-column: 1 / -1; }
+.rowList { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.row { border-bottom: 1px solid var(--line-hairline); transition: background-color var(--dur-ui) var(--ease); }
+.row:hover, .rowOn { background: rgba(255, 255, 255, 0.5); }
+.rowBtn {
+  all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
+  display: grid; grid-template-columns: 56px minmax(0, 1fr) 160px auto 48px; align-items: center; gap: 24px; padding: 28px 12px;
+}
+.rowBtn:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: -2px; border-radius: 12px; }
+.rowNum { color: var(--text-secondary); }
+.rowName { font-size: clamp(36px, 5.4vw, 96px); line-height: 0.92; letter-spacing: -0.055em; font-weight: 500; text-transform: uppercase; transition: color var(--dur-ui) var(--ease); }
+.rowOn .rowName, .rowBtn:hover .rowName { color: var(--accent-ultra); }
+.rowTerm { color: var(--text-secondary); }
+.rowPrice { font-size: clamp(22px, 2.2vw, 36px); letter-spacing: -0.04em; font-weight: 500; white-space: nowrap; text-align: right; }
+.rowIcon { position: relative; width: 48px; height: 48px; border-radius: 50%; background: var(--ink); transition: background-color var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease); }
+.rowIcon::before, .rowIcon::after { content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px; background: #fff; border-radius: 2px; }
+.rowIcon::after { transform: rotate(90deg); transition: transform var(--dur-ui) var(--ease); }
+.rowOn .rowIcon { background: var(--accent-ultra); }
+.rowOn .rowIcon::after { transform: rotate(0deg); }
+/* Height animates through the grid-rows trick, no measuring. */
+.rowBody { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-ui) var(--ease); }
+.rowOn .rowBody { grid-template-rows: 1fr; }
+.rowInner { overflow: hidden; display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) auto; gap: 24px; align-items: start; padding: 0 12px; }
+.rowOn .rowInner { padding-bottom: 32px; }
+.rowFor { grid-column: 2; margin: 0; max-width: 420px; font-size: var(--fs-body-l); line-height: 1.45; color: var(--text-secondary); }
+.rowItems { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 17px; }
+.rowItems li::before { content: '— '; color: var(--text-tertiary); }
+
+/* ---------- C «Переключатель» ---------- */
+.tabs { position: relative; padding: var(--section-pad) var(--margin-outer); display: flex; flex-direction: column; align-items: center; }
+.seg {
+  position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); padding: 6px; border-radius: var(--radius-pill); margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.55); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 10px 30px -18px rgba(14, 14, 14, 0.3);
+}
+.segThumb {
+  position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 12px) / var(--n)); border-radius: var(--radius-pill); background: var(--ink);
+  transform: translateX(calc(var(--i) * 100%)); transition: transform 500ms var(--ease);
+}
+.segBtn {
+  all: unset; position: relative; z-index: 1; cursor: pointer; padding: 0 28px; height: 52px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-pill); font-weight: 500; white-space: nowrap; color: var(--text-primary); transition: color 300ms var(--ease);
+}
+.segOn { color: var(--text-on-ink); }
+.segBtn:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 2px; }
+.panel {
+  width: 100%; max-width: 1180px; border-radius: 32px; padding: 40px; min-height: 420px;
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px;
+}
+.panelLeft, .panelRight { display: flex; flex-direction: column; gap: 14px; animation: panelIn 600ms var(--ease) both; }
+.panelRight { animation-delay: 80ms; padding-left: 40px; border-left: 1px solid rgba(14, 14, 14, 0.1); }
+@keyframes panelIn { from { opacity: 0; filter: blur(10px); transform: translateY(14px); } }
+.panelPrice { margin: auto 0 0; white-space: nowrap; font-size: clamp(40px, 4.8vw, 88px); line-height: 0.9; letter-spacing: -0.06em; font-weight: 500; text-transform: uppercase; color: var(--accent-ultra); }
+.panelTerm { color: var(--text-secondary); }
+.panelFor { margin: 8px 0 0; max-width: 420px; font-size: var(--fs-body-l); line-height: 1.45; }
+.panelItems { list-style: none; margin: 0 0 auto; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 19px; }
+.panelItems li { display: flex; align-items: center; gap: 12px; animation: panelIn 600ms var(--ease) both; animation-delay: calc(140ms + var(--k) * 60ms); }
+.check { display: grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 50%; background: var(--accent-ultra); color: #fff; font-size: 14px; }
+.panelRight > a { align-self: flex-start; margin-top: 24px; }
+.tabsNote { margin-top: 24px; text-align: center; }
+
+/* ---------- D «Сравнение» ---------- */
+.table { position: relative; padding: var(--section-pad) var(--margin-outer); }
+.tableWrap { max-width: 1240px; margin: 0 auto; border-radius: 28px; padding: 12px; overflow-x: auto; }
+.grid { width: 100%; min-width: 760px; border-collapse: separate; border-spacing: 0; font-size: 16px; }
+.grid th, .grid td { padding: 16px 20px; text-align: left; vertical-align: middle; border-bottom: 1px solid rgba(14, 14, 14, 0.08); }
+.grid tbody th { font-weight: 400; color: var(--text-secondary); width: 28%; }
+.grid thead th { width: 24%; }
+.grid thead th { vertical-align: top; padding-top: 24px; padding-bottom: 24px; }
+.grid tbody tr:last-child td, .grid tbody tr:last-child th { border-bottom: 0; }
+.thName { display: block; font-size: 22px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
+.thPrice { display: block; margin-top: 18px; font-size: clamp(26px, 2.4vw, 38px); line-height: 1; letter-spacing: -0.045em; font-weight: 500; }
+.thTerm { display: block; margin-top: 8px; color: var(--text-secondary); font-weight: 400; }
+/* The accent column: one ultramarine strip from the header to the CTA. */
+.colAccent { background: var(--accent-ultra); color: #fff; border-bottom-color: rgba(255, 255, 255, 0.16) !important; }
+thead .colAccent { border-radius: 20px 20px 0 0; }
+.ctaRow .colAccent { border-radius: 0 0 20px 20px; }
+.colAccent .thTerm { color: rgba(255, 255, 255, 0.72); }
+.yes { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-ultra); color: #fff; font-size: 13px; }
+.colAccent .yes { background: #fff; color: var(--accent-ultra); }
+.no { color: var(--text-tertiary); }
+.colAccent .no { color: rgba(255, 255, 255, 0.5); }
+.tableCta {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; height: 52px; padding: 0 20px; border-radius: var(--radius-pill);
+  background: var(--ink); color: var(--text-on-ink); font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color var(--dur-hover) var(--ease);
+}
+.tableCta:hover { background: #2a2a2a; color: var(--text-on-ink); }
+.colAccent .tableCta { background: #fff; color: var(--accent-ultra); }
+.swipeHint { display: none; margin: 12px 0 0; text-align: center; color: var(--text-secondary); }
+.tableCta:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 3px; }
+
+@media (max-width: 1023px) {
+  .rowBtn { grid-template-columns: 40px minmax(0, 1fr) auto 44px; }
+  .rowTerm { display: none; }
+  .rowInner { grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr); }
+  .rowInner > a { grid-column: 2 / -1; justify-self: start; }
+  .panel { grid-template-columns: 1fr; padding: 28px; }
+  .panelRight { padding-left: 0; padding-top: 24px; border-left: 0; border-top: 1px solid rgba(14, 14, 14, 0.1); }
+}
+@media (max-width: 767px) {
+  .rows, .tabs, .table { padding-top: 96px; padding-bottom: 96px; }
+  .rowsHead { grid-template-columns: 1fr; }
+  .rowBtn { grid-template-columns: minmax(0, 1fr) 40px; grid-template-areas: 'name icon' 'price icon'; gap: 6px 12px; padding: 20px 4px; }
+  .rowNum { display: none; }
+  .rowName { grid-area: name; font-size: 30px; }
+  .rowPrice { grid-area: price; text-align: left; font-size: 20px; color: var(--text-secondary); }
+  .rowIcon { grid-area: icon; width: 40px; height: 40px; }
+  .rowInner { grid-template-columns: 1fr; gap: 16px; padding: 0 4px; }
+  .rowFor, .rowInner > a { grid-column: 1; }
+  .seg { width: 100%; }
+  .segBtn { padding: 0 8px; font-size: 14px; height: 48px; white-space: normal; text-align: center; line-height: 1.1; }
+  .panel { padding: 22px; border-radius: 24px; min-height: 0; }
+  .panelItems { font-size: 17px; }
+  .panelPrice { font-size: 11vw; white-space: normal; }
+  .tableWrap { padding: 6px; border-radius: 22px; }
+  .swipeHint { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panelLeft, .panelRight, .panelItems li { animation: none; }
+  .segThumb, .rowBody { transition: none; }
+}

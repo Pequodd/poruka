@@ -65,3 +65,15 @@
   .pricing { padding-top: 96px; padding-bottom: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { .aboutFact { opacity: 1; transform: none; } }
+
+/* ---------- Comparison page (/v2/prices/) ---------- */
+.variantsIntro { padding: 160px var(--margin-outer) 24px; display: flex; flex-direction: column; gap: 12px; }
+.variantsIntro .mono { color: var(--text-secondary); }
+.variantsIntro h1 { margin: 0; font-size: clamp(56px, 9vw, 160px); line-height: 0.88; letter-spacing: -0.06em; font-weight: 500; text-transform: uppercase; }
+.variantLabel {
+  position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 0 var(--margin-outer); padding: 16px 20px;
+  border-radius: 16px; background: var(--ink); color: var(--text-on-ink);
+}
+.variantLabel b { font-weight: 500; color: #8F98FF; }
+.variantLabel span:nth-child(2) { font-size: 20px; letter-spacing: -0.02em; font-weight: 500; }
+.variantLabel .mono { color: var(--text-on-ink-muted); }
