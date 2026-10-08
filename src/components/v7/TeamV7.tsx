@@ -13,7 +13,7 @@ export function TeamV7({ eyebrow = '(06) Команда' }: { eyebrow?: string }
       </div>
       <div className={s.teamGrid}>
         {TEAM.map((m, i) => (
-          <div key={m.role} data-rv style={{ ['--d' as string]: `${i * 90}ms` }}><TeamCard {...m} /></div>
+          <div key={m.name} data-rv style={{ ['--d' as string]: `${i * 90}ms` }}><TeamCard {...m} /></div>
         ))}
       </div>
     </section>
