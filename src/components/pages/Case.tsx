@@ -78,6 +78,8 @@ export function Case({ project: p }: { project: Project }) {
       <Orbit />
       {c.font && <ClientFont font={c.font} />}
       <div className={v.content}>
+        {/* Everything from the title to the next project shares one width: the 1440px browser frame. */}
+        <div className={s.frame}>
         <header className={s.intro} data-orbit="30 -14 0.6 0 1" data-orbit-m="24 -30 0.5 0 0.8">
           <nav aria-label="Хлебные крошки" className={`mono ${s.crumbs}`} style={{ ['--d' as string]: '150ms' }} data-hero>
             <Link href="/portfolio/">Работы</Link><span aria-hidden="true"> / </span><b>{p.title}</b>
@@ -153,6 +155,7 @@ export function Case({ project: p }: { project: Project }) {
         </section>}
 
         {next && <NextProject key={next.slug} title={next.title} image={next.image} href={caseHref(next)} />}
+        </div>
         <ContactV7 eyebrow="(05) Контакт" />
         <FooterV7 />
       </div>

@@ -16,11 +16,10 @@ function useSettle() {
   return ref;
 }
 
-/** «Крупный экран»: one browser window across the full content width, 16:10; grows from 0.9 to full size as it enters. */
+/** «Крупный экран»: one browser window across the full content width, 16:10 — same width as every other screen block. */
 export function ScreenWide({ url, src, caption }: { url?: string; src?: string; caption: React.ReactNode }) {
-  const ref = useSettle();
   return (
-    <div ref={ref} className={s.wide}>
+    <div className={s.wide}>
       <div className="container">{caption}</div>
       <div className={s.wideStage}>
         <BrowserFrame url={url} className={s.wideBrowser}><Shot src={src} label="СКРИНШОТ 1440 × 900 · ПЕРВЫЙ ЭКРАН" /></BrowserFrame>
