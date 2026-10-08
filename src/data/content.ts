@@ -26,9 +26,9 @@ export const STEPS: Step[] = ([
 
 /** Names and role mapping are placeholders — confirm with the studio. Focus = face frame in % of the photo. */
 export const TEAM = [
-  { name: 'Эльдар', role: 'Стратегия и маркетинг', about: 'Позиционирование, аналитика и продвижение.', image: '/assets/team/member-1.jpg', objectPosition: '50% 50%', focus: { x: 30, y: 6, w: 40, h: 38 } },
-  { name: 'Дарья', role: 'UX/UI‑дизайнер', about: 'Исследования, сценарии и прототипы.', image: '/assets/team/member-2.jpg', objectPosition: '50% 50%', focus: { x: 28, y: 11, w: 42, h: 38 } },
-  { name: 'Кирилл', role: 'UX/UI‑дизайнер', about: 'Интерфейсы и визуальные концепции.', image: '/assets/team/member-3.jpg', objectPosition: '50% 35%', focus: { x: 24, y: 28, w: 38, h: 34 } },
+  { name: 'Эльдар', role: 'Коммуникация и стратегия', about: 'Ведёт проект и общение с клиентом, отвечает за стратегию.', image: '/assets/team/member-1.jpg', objectPosition: '50% 50%', focus: { x: 30, y: 6, w: 40, h: 38 } },
+  { name: 'Дарья', role: 'UX/UI‑дизайнер', about: 'Исследования, прототипы и дизайн интерфейсов.', image: '/assets/team/member-2.jpg', objectPosition: '50% 50%', focus: { x: 28, y: 11, w: 42, h: 38 } },
+  { name: 'Кирилл', role: 'UX/UI‑дизайнер', about: 'Исследования, прототипы и дизайн интерфейсов.', image: '/assets/team/member-3.jpg', objectPosition: '50% 35%', focus: { x: 24, y: 28, w: 38, h: 34 } },
 ];
 
 export const CONTACTS = {
