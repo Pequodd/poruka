@@ -21,7 +21,7 @@ export function FaqV7() {
       <div className={s.faqBg} aria-hidden="true">вопросы · вопросы · вопросы · вопросы</div>
       <div className={s.faqGrid}>
         <div className={s.faqSide}>
-          <span className={`mono ${s.eyebrow}`} data-rv>(08) Вопросы</span>
+          <span className={`mono ${s.eyebrow}`} data-rv>(07) Вопросы</span>
         </div>
         <div className={s.faqMain}>
           <h2 className={s.h2} data-rv>Частые вопросы</h2>

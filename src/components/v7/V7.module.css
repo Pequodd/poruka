@@ -259,16 +259,6 @@
 .cta + .footer { border-radius: 0; padding-top: 72px; }
 .cta + .footer::before { content: ''; position: absolute; left: var(--margin-outer); right: var(--margin-outer); top: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
 
-/* ---------- Clients ---------- */
-.clients { position: relative; padding: 120px 0; display: flex; flex-direction: column; gap: 32px; }
-.clientsHead { text-align: center; padding: 0 var(--margin-outer); }
-.marq { overflow: hidden; }
-.track { list-style: none; margin: 0; padding: 0 0 0 16px; display: flex; gap: 16px; width: max-content; animation: marq 46s linear infinite; }
-.marq:hover .track { animation-play-state: paused; }
-@keyframes marq { to { transform: translateX(-50%); } }
-.logo { display: flex; align-items: center; gap: 14px; height: 120px; padding: 0 40px; border-radius: 20px; font-size: 40px; font-weight: 500; letter-spacing: -0.045em; white-space: nowrap; }
-.logoMark { width: 26px; height: 26px; border-radius: 8px; flex: none; }
-
 /* ---------- FAQ ---------- */
 .faq { position: relative; padding: var(--section-pad) var(--margin-outer); overflow: hidden; --fq: 0; }
 .faqBg {
@@ -372,8 +362,6 @@ a.fLink:hover { color: var(--text-on-ink); }
   .ctaTg { width: 100%; justify-content: space-between; height: 76px; padding: 0 8px 0 24px; font-size: 19px; gap: 12px; }
   .ctaTgIcon { width: 60px; height: 60px; }
   .ctaDirect { flex-direction: column; gap: 8px; }
-  .clients { padding: 80px 0; }
-  .logo { height: 84px; padding: 0 24px; font-size: 26px; }
 
   .faqGrid { grid-template-columns: 1fr; }
   .faqSide, .faqMain { grid-column: 1 / -1; }
@@ -391,8 +379,6 @@ a.fLink:hover { color: var(--text-on-ink); }
   .ltr, .liveDot, .scrollHint::after, .faqItem p, .page [data-hero] { animation: none; }
   .heroTitle { transform: none; filter: none; opacity: 1; }
   .stW { filter: none; }
-  .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; padding: 0 var(--margin-outer); }
-  .track li[aria-hidden='true'] { display: none; }
   .wInfo { transform: none; }
   .wipeInner { transform: none; }
   :global(html[data-rv]) .page [data-rv] { transform: none; filter: none; transition: opacity 0.01s; }

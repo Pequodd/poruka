@@ -9,7 +9,7 @@ import s from './V7.module.css';
  * Closing call to action: a dark rounded panel that flows into the footer, the first-screen glass video dimmed
  * behind it (the site opens and closes on the same material), one big Telegram button, mail and phone under it.
  */
-export function ContactV7({ eyebrow = '(09) Контакт' }: { eyebrow?: string }) {
+export function ContactV7({ eyebrow = '(08) Контакт' }: { eyebrow?: string }) {
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = video.current;

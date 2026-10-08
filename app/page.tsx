@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { ProcessStage } from '@/components/sections/ProcessStage';
-import { ClientsV7 } from '@/components/v7/ClientsV7';
 import { ContactV7 } from '@/components/v7/ContactV7';
 import { FaqV7 } from '@/components/v7/FaqV7';
 import { FooterV7 } from '@/components/v7/FooterV7';
@@ -34,8 +33,7 @@ export default function Home() {
         <WorksV7 />
         <WipeV7 />
         <StoriesV7 />
-        <ClientsV7 />
-        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" eyebrow="(06) Процесс" look="glass" /></div>
+        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" eyebrow="(05) Процесс" look="glass" /></div>
         <TeamV7 />
         <FaqV7 />
         <ContactV7 />
