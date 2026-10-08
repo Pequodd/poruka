@@ -4,13 +4,13 @@
  */
 .hero {
   position: relative; display: flex; flex-direction: column; gap: 20px;
-  padding: 168px var(--margin-outer) 72px; min-height: 72vh; justify-content: flex-end;
+  padding: 168px var(--margin-outer) 56px;
 }
 .h1 {
   margin: 0; display: flex; align-items: flex-start; gap: 0.08em;
-  font-size: clamp(88px, 15vw, 280px); line-height: 0.84; letter-spacing: -0.065em; font-weight: 500; text-transform: uppercase;
+  font-size: clamp(48px, 5.6vw, 104px); line-height: 0.92; letter-spacing: -0.05em; font-weight: 500; text-transform: uppercase;
 }
-.count { font-family: var(--font-mono); font-size: 0.11em; line-height: 1; letter-spacing: 0; color: var(--accent-ultra); margin-top: 0.35em; }
+.count { font-family: var(--font-mono); font-size: max(14px, 0.22em); line-height: 1; letter-spacing: 0; color: var(--accent-ultra); margin-top: 0.35em; }
 .lead { margin: 0; max-width: 520px; font-size: var(--fs-body-l); line-height: 1.45; text-wrap: pretty; }
 
 /* Sticky glass capsule with the filters (same material as the header); sticks only within .works. */
@@ -86,7 +86,7 @@
 }
 @media (max-width: 767px) {
   .hero { padding-top: 120px; padding-bottom: 40px; min-height: 0; }
-  .h1 { font-size: 22vw; }
+  .h1 { font-size: 12vw; }
   .barWrap { top: 76px; justify-content: flex-start; }
   .bar { width: 100%; }
   .views { display: none; }
