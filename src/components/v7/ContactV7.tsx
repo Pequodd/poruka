@@ -9,7 +9,7 @@ import s from './V7.module.css';
  * Closing call to action: a dark rounded panel that flows into the footer, the first-screen glass video dimmed
  * behind it (the site opens and closes on the same material), one big Telegram button, mail and phone under it.
  */
-export function ContactV7({ eyebrow = '(08) Контакт' }: { eyebrow?: string }) {
+export function ContactV7({ eyebrow = '' }: { eyebrow?: string }) {
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = video.current;
@@ -29,7 +29,7 @@ export function ContactV7({ eyebrow = '(08) Контакт' }: { eyebrow?: strin
     <section id="contact" className={s.cta} data-ink data-orbit="0 10 0.9 8 0" aria-labelledby="contact-title">
       <div className={s.ctaMedia} aria-hidden="true"><video ref={video} muted loop playsInline preload="none" /></div>
       <div className={s.ctaInner}>
-        <span className={`mono ${s.ctaEyebrow}`} data-rv>{eyebrow}</span>
+        {eyebrow && <span className={`mono ${s.ctaEyebrow}`} data-rv>{eyebrow}</span>}
         <h2 id="contact-title" className={s.ctaTitle} data-rv style={{ ['--d' as string]: '80ms' }}>Начнём с&nbsp;короткого разговора</h2>
         <p className={s.ctaLead} data-rv style={{ ['--d' as string]: '160ms' }}>Напишите, что есть сейчас и что нужно. Ответим в течение рабочего дня с вопросами или первой оценкой.</p>
         <a className={s.ctaTg} href={CONTACTS.telegramUrl} target="_blank" rel="noreferrer" data-rv style={{ ['--d' as string]: '240ms' }}>

@@ -31,31 +31,33 @@
 .windowMedia { position: absolute; inset: 0; filter: brightness(1.3) saturate(1.3); animation: settle 2.2s var(--ease) 200ms both; }
 @keyframes settle { from { transform: scale(1.12); } }
 .windowMedia video { width: 100%; height: 100%; object-fit: cover; display: block; }
-.windowChip {
-  position: absolute; top: 16px; right: 16px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.6); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
-  animation: chipIn 1s var(--ease) 1.2s both;
+/* Timing estimator: a glass panel at the bottom of the window; the video keeps playing above it. */
+.window { display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; }
+.est {
+  position: relative; display: flex; flex-direction: column; gap: 14px; padding: 22px; border-radius: 24px;
+  background: rgba(255, 255, 255, 0.66); -webkit-backdrop-filter: blur(22px) saturate(1.4); backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 24px 48px -28px rgba(14, 14, 14, 0.4);
+  animation: chipIn 1s var(--ease) 1.3s both;
 }
-.latest {
-  position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 16px; padding: 10px 20px 10px 10px;
-  border-radius: 22px; color: var(--text-primary); text-decoration: none;
-  background: rgba(255, 255, 255, 0.62); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 20px 40px -24px rgba(14, 14, 14, 0.35);
-  animation: chipIn 1s var(--ease) 1.5s both; transition: background-color var(--dur-hover) var(--ease);
-}
-.latest:hover { background: rgba(255, 255, 255, 0.82); color: var(--text-primary); }
-.latest:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 3px; }
 @keyframes chipIn { from { opacity: 0; filter: blur(10px); transform: translateY(16px); } }
-.latestImg { width: 112px; height: 72px; flex: none; border-radius: 14px; object-fit: cover; object-position: top; }
-.latestText { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.latestText .mono { color: var(--text-secondary); }
-.latestText b { font-size: 22px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
-.latestResult { font-size: 15px; font-weight: 500; color: var(--accent-ultra); }
-.latestArrow {
-  display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--accent-ultra); color: #fff; font-size: 20px;
-  transition: transform var(--dur-ui) var(--ease);
+.estTitle { margin: 0 0 2px; font-size: 24px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
+.estRow { display: flex; flex-direction: column; gap: 8px; }
+.estLabel { color: var(--text-secondary); }
+.estOpts { display: flex; flex-wrap: wrap; gap: 6px; }
+.estOpt {
+  all: unset; box-sizing: border-box; cursor: pointer; min-height: 40px; padding: 0 16px; display: inline-flex; align-items: center; border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.7); box-shadow: inset 0 0 0 1px rgba(14, 14, 14, 0.1); font-size: 15px; font-weight: 500; color: var(--text-primary);
+  transition: background-color var(--dur-hover) var(--ease), color var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease);
 }
-.latest:hover .latestArrow { transform: rotate(45deg); }
+.estOpt:hover { box-shadow: inset 0 0 0 1px var(--ink); }
+.estOn, .estOn:hover { background: var(--ink); color: var(--text-on-ink); box-shadow: none; }
+.estOpt:focus-visible { outline: 2px solid var(--accent-ultra); outline-offset: 2px; }
+.estResult { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4px 16px; margin-top: 4px; padding-top: 16px; border-top: 1px solid rgba(14, 14, 14, 0.1); }
+.estResult .estLabel { grid-column: 1 / -1; }
+.estValue { font-size: clamp(30px, 2.8vw, 44px); line-height: 1; letter-spacing: -0.045em; font-weight: 500; color: var(--accent-ultra); animation: estIn 500ms var(--ease) both; }
+@keyframes estIn { from { opacity: 0; filter: blur(8px); transform: translateY(8px); } }
+.estCta { padding-bottom: 4px; color: var(--text-primary); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; white-space: nowrap; }
+.estCta:hover { color: var(--accent-ultra); }
 
 /* ---------- Variant 3 «Буквы» ---------- */
 .typeHero {
@@ -99,23 +101,24 @@
   .frameHero { grid-template-columns: 1fr; padding-top: 96px; }
   .frameText { padding: 0; }
   .frameTitle { font-size: clamp(52px, 11vw, 110px); }
-  .window { min-height: 0; aspect-ratio: 4 / 5; max-height: 80svh; }
+  .window { min-height: 0; padding-top: 220px; }
 }
 @media (max-width: 767px) {
   .frameHero { gap: 16px; padding-bottom: 16px; }
   /* Phones: the window moves up under the title so the first screen has its visual. */
   .frameText { display: contents; }
   .frameTitle { order: -1; }
-  .window { order: -1; }
   .frameTitle { font-size: 12.4vw; }
   .frameLead, .typeLead { font-size: 17px; }
   .facts b { font-size: 28px; }
   .facts span { font-size: 12px; }
-  .window { aspect-ratio: 16 / 12; border-radius: 24px; }
-  .windowChip { display: none; }
-  .latestImg { width: 72px; height: 56px; }
-  .latestText b { font-size: 18px; }
-  .latestArrow { display: none; }
+  .window { order: 1; padding: 120px 10px 10px; border-radius: 24px; }
+  .est { padding: 18px 16px; gap: 12px; border-radius: 18px; }
+  .estTitle { font-size: 20px; }
+  .estOpt { min-height: 38px; padding: 0 14px; font-size: 14px; }
+  .estResult { grid-template-columns: 1fr; }
+  .estValue { white-space: nowrap; font-size: 30px; }
+  .estCta { justify-self: start; margin-top: 8px; }
 
   .typeHero { padding-top: 104px; gap: 24px; }
   .typeTitle { font-size: 14.2vw; line-height: 0.9; }
@@ -124,7 +127,7 @@
   .tile { width: 220px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .window, .windowMedia, .windowChip, .latest { animation: none; clip-path: none; }
+  .window, .windowMedia, .est, .estValue { animation: none; clip-path: none; }
   .ribbonTrack { animation: none; }
   .ribbon { overflow-x: auto; }
   .frameTitle, .typeTitle, .window { transform: none; }

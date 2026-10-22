@@ -16,10 +16,8 @@ export function WipeV7() {
   return (
     <section ref={ref} className={s.wipe} data-orbit="-34 4 0.62 0 1" data-orbit-m="0 26 0.6 0 1" aria-label="Почему мы">
       <div className={s.wipeStage}>
-        <span className={`mono ${s.eyebrow} ${s.wipeBehind}`}>(03) Почему мы</span>
         <div className={s.wipePanel} data-ink>
           <div className={s.wipeInner}>
-            <span className={`mono ${s.wipeEyebrow}`}>(03) Почему мы</span>
             <p className={s.wipeTitle}>
               <span>10 лет в вебе.</span>
               <span>40+ проектов.</span>

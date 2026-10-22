@@ -35,7 +35,7 @@ export function WorksV7() {
     <section ref={ref} id="works" className={s.works} style={{ height: `${N * 90 + 100}vh` }} data-orbit="0 6 1.5 0 1" data-orbit-m="0 -4 1.25 0 1" aria-label="Работы">
       <div className={s.wStage}>
         <div className={s.wTop}>
-          <span className={`mono ${s.eyebrow}`}>(02) Работы</span>
+          <span />
           <span className={s.wTopRight}>
             <span key={cur} className={s.wNow} aria-live="polite">{ITEMS[cur].title}<span className="mono">{pad(cur + 1)}/{pad(N)}</span></span>
             <Link href="/portfolio/" className={s.wAll}>Все работы →</Link>

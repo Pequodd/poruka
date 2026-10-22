@@ -13,7 +13,6 @@ export function ServicesV7() {
   return (
     <section ref={ref} id="services" className={s.services} data-orbit="0 6 1.45 0 1" data-orbit-m="0 0 1.2 0 1">
       <div className={s.secHead}>
-        <span className={`mono ${s.eyebrow}`} data-rv>(01) Услуги</span>
         <h2 className={s.h2} data-rv style={{ ['--d' as string]: '80ms' }}>Что мы делаем</h2>
         <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>От лендинга до поддержки большого сайта. Если задача не наша — скажем сразу и подскажем, к кому обратиться.</p>
       </div>

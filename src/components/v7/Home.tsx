@@ -30,7 +30,7 @@ export function Home({ hero }: { hero: React.ReactNode }) {
         <WorksV7 />
         <WipeV7 />
         <StoriesV7 />
-        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" eyebrow="(05) Процесс" look="glass" /></div>
+        <div data-orbit="0 0 1 0 0" className={s.solid}><ProcessStage intro="statement" eyebrow="" look="glass" /></div>
         <TeamV7 />
         <FaqV7 />
         <ContactV7 />

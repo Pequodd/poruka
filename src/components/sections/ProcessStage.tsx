@@ -98,7 +98,7 @@ export function ProcessStage({ intro = 'zoom', eyebrow, look = 'ink', steps = ST
 
         <div className={s.layer} aria-hidden={!on}>
           <div className={`mono ${s.top}`}>
-            {eyebrow ? <span className={s.muted}>{eyebrow}</span> : <SectionMarker onInk active>Процесс</SectionMarker>}
+            {eyebrow !== undefined ? (eyebrow ? <span className={s.muted}>{eyebrow}</span> : <span />) : <SectionMarker onInk active>Процесс</SectionMarker>}
             <span className={s.muted} aria-live="polite">({pad(step + 1)}/{pad(N)})</span>
           </div>
           <div className={s.dots} role="group" aria-label="Этапы">

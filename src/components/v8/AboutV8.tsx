@@ -4,8 +4,8 @@ import { useProgress } from '../v7/useProgress';
 import v from '../v7/V7.module.css';
 import s from './V8.module.css';
 
-const TEXT = 'Небольшая студия. Дизайнеры и разработчики работают с вами напрямую — от исследования до запуска и поддержки сайта.'.split(' ');
-const HI = new Set(['напрямую']);
+const TEXT = 'Мы не агентство на стороне. Мы — гибридная команда: встраиваемся в ваш коллектив на время проекта и делаем результат изнутри.'.split(' ');
+const HI = new Set(['гибридная']);
 // The numbers (10 лет, 40+, 95%) live in the hero, so this screen carries the three working principles.
 const FACTS: [string, string][] = [['Напрямую', 'общаетесь с теми, кто делает проект'], ['По этапам', 'цена и сроки известны после брифа'], ['После запуска', 'поддержка и развитие сайта']];
 

@@ -10,7 +10,6 @@ export function StoriesV7() {
   return (
     <section className={s.stories} data-orbit="12 0 1.5 26 0.6" data-orbit-m="0 0 1.3 20 0.5">
       <div className={s.secHead}>
-        <span className={`mono ${s.eyebrow}`} data-rv>(04) Истории</span>
         <h2 className={s.h2} data-rv style={{ ['--d' as string]: '80ms' }}>Что изменилось у клиентов</h2>
       </div>
       {ITEMS.map((p, i) => {

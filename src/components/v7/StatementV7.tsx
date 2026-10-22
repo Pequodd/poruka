@@ -3,8 +3,8 @@ import { useRef } from 'react';
 import { useProgress } from './useProgress';
 import s from './V7.module.css';
 
-const TEXT = 'Небольшая студия. Дизайнеры и разработчики работают с вами напрямую — от исследования до запуска и поддержки сайта.'.split(' ');
-const HI = new Set(['напрямую']);
+const TEXT = 'Мы не агентство на стороне. Мы — гибридная команда: встраиваемся в ваш коллектив на время проекта и делаем результат изнутри.'.split(' ');
+const HI = new Set(['гибридная']);
 
 /** Pinned statement: words come out of blur one by one as you scroll; the glass links drift past, out of focus. */
 export function StatementV7() {
@@ -13,7 +13,6 @@ export function StatementV7() {
   return (
     <section ref={ref} className={s.statement} data-orbit="30 -26 0.42 10 0.9" data-orbit-m="28 -30 0.5 8 0.9" aria-label="О студии">
       <div className={s.stStage}>
-        <span className={`mono ${s.eyebrow}`}>(00) О нас</span>
         <p className={s.stText}>
           {TEXT.map((w, i) => (
             <span key={i} className={`${s.stW} ${HI.has(w) ? s.ultra : ''}`} style={{ ['--i' as string]: i, ['--n' as string]: TEXT.length }}>{w}</span>
