@@ -10,48 +10,38 @@ import s from './HeroAlt.module.css';
 
 const FACTS: [string, string][] = [['10', 'лет в вебе'], ['40+', 'проектов'], ['7 дней', 'от брифа до готового лендинга']];
 
-/** Short facts about sites, each with its source; rotate on their own, pause on hover/focus. */
-const WEB_FACTS: { n: string; text: string; src: string }[] = [
-  { n: '50 мс', text: 'хватает посетителю, чтобы составить первое впечатление о сайте', src: 'Lindgaard и др., 2006' },
-  { n: '94%', text: 'первых впечатлений о сайте связаны с дизайном', src: 'Sillence и др., 2004' },
-  { n: '53%', text: 'мобильных посетителей уходят, если страница грузится дольше 3 секунд', src: 'Google' },
-  { n: '75%', text: 'людей судят о надёжности компании по её сайту', src: 'Stanford Web Credibility' },
-];
-const ROTATE = 6000;
-
-function WebFacts() {
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
+/** The «Порука» glass links, large in the window: they follow the pointer and spin when dragged. three.js loads only near the viewport. */
+function Links3D() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const [hint, setHint] = useState(true);
   useEffect(() => {
-    if (paused || prefersReducedMotion()) return;
-    const t = setTimeout(() => setI((x) => (x + 1) % WEB_FACTS.length), ROTATE);
-    return () => clearTimeout(t);
-  }, [i, paused]);
-  const f = WEB_FACTS[i];
+    const el = ref.current;
+    if (!el) return;
+    let api: { setActive: (on: boolean) => void; onFirstDrag: (cb: () => void) => void; dispose: () => void } | null = null;
+    let dead = false;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !api) {
+        import('@/lib/linksScene').then(({ mountLinks }) => {
+          if (dead || !ref.current) return;
+          try { api = mountLinks(ref.current, prefersReducedMotion()); api.onFirstDrag(() => setHint(false)); } catch { /* no WebGL — the video stays on its own */ }
+        });
+      }
+      api?.setActive(e.isIntersecting);
+    }, { rootMargin: '200px 0px' });
+    io.observe(el);
+    return () => { dead = true; io.disconnect(); api?.dispose(); };
+  }, []);
   return (
-    <div className={`${s.facts2} ${paused ? s.f2Paused : ''}`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
-      <span className={`mono ${s.f2Label}`}>Факт о сайтах · {String(i + 1).padStart(2, '0')}/{String(WEB_FACTS.length).padStart(2, '0')}</span>
-      <div key={i} className={s.f2Body} aria-live="polite">
-        <b className={s.f2Num}>{f.n}</b>
-        <p className={s.f2Text}>{f.text}</p>
-        <span className={`mono ${s.f2Src}`}>{f.src}</span>
-      </div>
-      <div className={s.f2Bars} role="tablist" aria-label="Факты">
-        {WEB_FACTS.map((x, k) => (
-          <button key={x.n} type="button" role="tab" aria-selected={k === i} aria-label={`Факт ${k + 1}`} className={`${s.f2Bar} ${k === i ? s.f2On : ''} ${k < i ? s.f2Done : ''}`}
-            style={{ ['--t' as string]: `${ROTATE}ms` }} onClick={() => setI(k)}>
-            {/* the running bar restarts after a pause, in step with the timer */}
-            <span key={k === i ? `${i}-${paused}` : k} />
-          </button>
-        ))}
-      </div>
-    </div>
+    <>
+      <canvas ref={ref} className={s.links} aria-label="Стеклянные звенья «Поруки» — их можно покрутить" role="img" />
+      <span className={`mono ${s.linksHint} ${hint ? '' : s.linksHintOff}`} aria-hidden="true">Покрутите ↻</span>
+    </>
   );
 }
 
 /**
  * Hero, variant 2 «Окно»: editorial split. Ink title, lead, CTAs and the studio's numbers on paper at the left;
- * the glass loop in a tall rounded window at the right that wipes open on load, with rotating facts about sites on glass.
+ * the glass loop in a tall rounded window at the right that wipes open on load, with the glass links on top that you can spin.
  */
 export function HeroFrame() {
   const ref = useRef<HTMLElement>(null);
@@ -81,7 +71,7 @@ export function HeroFrame() {
         <div className={s.windowMedia} aria-hidden="true">
           <video ref={video} muted loop playsInline preload="auto" />
         </div>
-        <WebFacts />
+        <Links3D />
       </div>
     </section>
   );
