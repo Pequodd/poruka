@@ -8,7 +8,7 @@ export const SERVICES: Service[] = [
   { num: '04', title: '1С‑Битрикс', description: 'Корпоративные сайты и магазины с интеграциями.', deliverables: ['Шаблон', 'Интеграция 1С'], stack: ['Битрикс', '1С'] },
   { num: '05', title: 'Редизайн', description: 'Обновляем без потери SEO и данных.', deliverables: ['Аудит', 'Новый дизайн', 'Перенос'], stack: ['SEO'] },
   { num: '06', title: 'Поддержка и развитие', description: 'Правки, обновления, новые разделы.', deliverables: ['SLA', 'Ежемесячный отчёт'], stack: ['Поддержка'] },
-  { num: '07', title: 'Дизайн и разработка с AI', tag: 'New', description: 'Быстрее и дешевле без потери качества.', deliverables: ['AI-концепции', 'Генерация контента'], stack: ['AI'] },
+  { num: '07', title: 'Дизайн и разработка с AI', tag: 'New', description: 'Всё умеем руками — и делаем. AI усиливает команду: быстрее и при этом глубже по смыслу и вовлечению.', deliverables: ['Больше вариантов за то же время', 'Глубже тексты и сценарии', 'Решения и качество — за людьми'], stack: ['AI'] },
 ];
 
 export interface Step { title: string; description: string; duration: string; deliverables: string[] }

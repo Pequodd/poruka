@@ -7,7 +7,7 @@ import s from './V8.module.css';
 const TEXT = 'Мы не агентство на стороне. Мы — гибридная команда: встраиваемся в ваш коллектив на время проекта и делаем результат изнутри.'.split(' ');
 const HI = new Set(['гибридная']);
 // The numbers (10 лет, 40+, 95%) live in the hero, so this screen carries the three working principles.
-const FACTS: [string, string][] = [['Напрямую', 'общаетесь с теми, кто делает проект'], ['По этапам', 'цена и сроки известны после брифа'], ['После запуска', 'поддержка и развитие сайта']];
+const FACTS: [string, string][] = [['Напрямую', 'общаетесь с теми, кто делает всю работу'], ['По этапам', 'цена и сроки известны после брифа'], ['После запуска', 'поддержка и развитие сайта']];
 
 /**
  * «О студии» = the former statement + «Почему мы» in one pinned screen: the words come out of blur as you scroll,

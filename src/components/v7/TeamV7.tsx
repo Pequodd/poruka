@@ -9,7 +9,7 @@ export function TeamV7({ eyebrow = '' }: { eyebrow?: string }) {
       <div className={s.secHead}>
         {eyebrow && <span className={`mono ${s.eyebrow}`} data-rv>{eyebrow}</span>}
         <h2 className={s.h2} data-rv style={{ ['--d' as string]: '80ms' }}>Кто делает ваш проект</h2>
-        <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>Без менеджеров‑посредников. Вы общаетесь напрямую с теми, кто делает проект.</p>
+        <p className={s.secLead} data-rv style={{ ['--d' as string]: '160ms' }}>Без менеджеров‑посредников. Вы общаетесь напрямую с теми, кто делает всю работу.</p>
       </div>
       <div className={s.teamGrid}>
         {TEAM.map((m, i) => (

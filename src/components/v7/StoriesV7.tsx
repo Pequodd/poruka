@@ -24,7 +24,6 @@ export function StoriesV7() {
               <p className={s.storyTask} data-rv style={{ ['--d' as string]: '120ms' }}>{p.case.task.join('')}</p>
             </div>
             <div className={s.storyText}>
-              <span className={`mono ${s.eyebrow}`} data-rv>{p.meta}</span>
               <h3 className={s.storyTitle} data-rv style={{ ['--d' as string]: '80ms' }}>{p.case.oneLiner}</h3>
               <div className={s.storyStats} data-rv style={{ ['--d' as string]: '160ms' }}>
                 {p.case.stats.map((x) => (

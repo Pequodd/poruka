@@ -24,7 +24,7 @@ export function WipeV7() {
               <span>95% возвращаются<i className={s.sealDot} aria-hidden="true" /></span>
             </p>
             <div className={s.wipeStats}>
-              <div><b>Напрямую</b><span className="mono">общаетесь с теми, кто делает проект</span></div>
+              <div><b>Напрямую</b><span className="mono">общаетесь с теми, кто делает всю работу</span></div>
               <div><b>По этапам</b><span className="mono">цена и сроки известны после брифа</span></div>
               <div><b>После запуска</b><span className="mono">поддержка и развитие сайта</span></div>
             </div>
