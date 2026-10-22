@@ -36,7 +36,7 @@ export function HeroType() {
         <p className={s.typeLead} style={{ ['--d' as string]: '1100ms' }} data-hero>Сайты для малого и среднего бизнеса — от исследования и прототипа до запуска и поддержки. WordPress, 1С‑Битрикс, Next.js.</p>
         <div className={v.heroBtns} style={{ ['--d' as string]: '1250ms' }} data-hero>
           <a className={v.ctaMain} href="#contact">Обсудить проект<span className={v.ctaIcon} aria-hidden="true">↗</span></a>
-          <Link className={v.ctaInk} href="/portfolio/">Смотреть работы</Link>
+          <Link className={v.ctaInk} href="/portfolio/">Смотреть кейсы</Link>
         </div>
       </div>
 

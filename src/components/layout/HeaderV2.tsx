@@ -97,7 +97,7 @@ export function HeaderV2() {
           <div className={`${s.side} ${s.right}`}>
             {RIGHT.map(([l, h]) => <NavLink key={l} label={l} href={h} active={isActive(h)} />)}
             {/* Shown only in the v7 glass look (see the html[data-look] rules). */}
-            <Link href="#contact" className={s.cta}><span className={s.ctaDot} aria-hidden="true" />Обсудить проект</Link>
+            <Link href="#contact" className={s.cta}><span className={s.ctaDot} aria-hidden="true" />Написать нам</Link>
             <button type="button" className={s.burger} aria-label={open ? 'Закрыть меню' : 'Меню'} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(!open)}>
               <span className={s.line} /><span className={s.line} />
             </button>
@@ -117,7 +117,7 @@ export function HeaderV2() {
                 <a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a>
                 <a href={CONTACTS.telegramUrl} target="_blank" rel="noreferrer">Telegram ↗</a>
               </div>
-              <Button variant={onInk ? 'primary' : 'inverse'} href="/#contact" onClick={() => setOpen(false)}>Обсудить проект</Button>
+              <Button variant={onInk ? 'primary' : 'inverse'} href="/#contact" onClick={() => setOpen(false)}>Написать нам</Button>
             </div>
           </div>
         </div>

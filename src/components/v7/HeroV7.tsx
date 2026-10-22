@@ -33,9 +33,8 @@ export function HeroV7() {
         <div className={s.heroCta} style={{ ['--d' as string]: '1450ms' }} data-hero>
           <div className={s.heroBtns}>
             <a className={s.ctaMain} href="#contact">Обсудить проект<span className={s.ctaIcon} aria-hidden="true">↗</span></a>
-            <Link className={s.ctaInk} href="/portfolio/">Смотреть работы</Link>
+            <Link className={s.ctaInk} href="/portfolio/">Смотреть кейсы</Link>
           </div>
-          <span className={`mono ${s.ctaNote}`}><span className={s.liveDot} aria-hidden="true" />На связи · ответ за день</span>
         </div>
       </div>
       <span className={`mono ${s.scrollHint}`} style={{ ['--d' as string]: '1700ms' }} data-hero>Листайте</span>

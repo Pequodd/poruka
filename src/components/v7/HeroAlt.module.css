@@ -105,7 +105,6 @@
   .frameHero { gap: 16px; padding-bottom: 16px; }
   /* Phones: the window moves up under the title so the first screen has its visual. */
   .frameText { display: contents; }
-  .frameText > :first-child { order: -2; }
   .frameTitle { order: -1; }
   .window { order: -1; }
   .frameTitle { font-size: 12.4vw; }
