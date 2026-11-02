@@ -246,3 +246,10 @@ select.input { appearance: none; padding-right: 36px; background-image: linear-g
   .login { padding: 24px 20px; }
   .loginTitle { font-size: 44px; }
 }
+
+/* Access (logins) */
+.accRow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; border-radius: 16px; background: var(--paper); }
+.accForm { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: end; gap: 12px; margin-top: 16px; }
+@media (max-width: 900px) { .accForm { grid-template-columns: 1fr; } }
+.linkBtn { align-self: flex-start; padding: 0; border: 0; background: none; font: inherit; font-size: 13px; color: var(--text-secondary); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.linkBtn:hover { color: var(--ink); }

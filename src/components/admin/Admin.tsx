@@ -5,11 +5,13 @@ import { asset, BASE } from '@/lib/asset';
 import { CaseEditor, emptyProject, type Errors } from './CaseEditor';
 import { ImagesCtx, move } from './fields';
 import { CategoryEditor } from './CategoryEditor';
-import { ACTIONS_URL, CATS_PATH, checkAccess, DATA_PATH, deployState, explain, loadData, publish, TOKEN_URL, type DeployState, type Remote } from './github';
+import { AccessEditor } from './AccessEditor';
+import { ACCESS_PATH, ACTIONS_URL, CATS_PATH, checkAccess, DATA_PATH, decryptToken, deployState, explain, fetchAccess, loadData, normLogin, publish, TOKEN_URL, type AccessEntry, type DeployState, type Remote } from './github';
 import { kb, prepareImage } from './images';
 import s from './Admin.module.css';
 
 const TOKEN_KEY = 'poruka-admin-token';
+const LOGIN_KEY = 'poruka-admin-login';
 export const PREVIEW_KEY = 'poruka-admin-preview';
 const store = {
   get: (k: string) => { try { return localStorage.getItem(k) || ''; } catch { return ''; } },
@@ -22,6 +24,7 @@ let seq = 0;
 const wrap = (p: Project, isNew = false): Item => ({ id: `c${++seq}`, p, isNew });
 /** Sidebar «view id» of the category editor (case ids are c1, c2…). */
 const CATS = 'categories';
+const ACCESS = 'access';
 
 /** Every /assets/… path a set of projects points to. */
 function referenced(projects: Project[]) {
@@ -51,33 +54,63 @@ function validate(items: Item[]) {
   return errs;
 }
 
-function Login({ onToken }: { onToken: (t: string) => void }) {
+function Login({ onToken }: { onToken: (t: string, login: string) => void }) {
+  const [mode, setMode] = useState<'password' | 'token'>('password');
+  const [login, setLogin] = useState('');
+  const [pw, setPw] = useState('');
   const [t, setT] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true); setErr('');
-    try { await checkAccess(t.trim()); onToken(t.trim()); } catch (x) { setErr(explain(x)); }
+    try {
+      if (mode === 'token') { await checkAccess(t.trim()); onToken(t.trim(), ''); }
+      else {
+        const l = normLogin(login);
+        const entry = (await fetchAccess(BASE)).find((u: AccessEntry) => u.login === l);
+        const token = entry && (await decryptToken(entry, pw));
+        if (!token) setErr('Неверный логин или пароль.');
+        else {
+          try { await checkAccess(token); onToken(token, l); }
+          catch (x) { setErr(`Логин и пароль верные, но GitHub не принял сохранённый токен: ${explain(x)} Войдите по новому токену и пересоздайте логины в разделе «Доступ».`); }
+        }
+      }
+    } catch (x) { setErr(explain(x)); }
     setBusy(false);
   };
+  const swap = () => { setMode((m) => (m === 'token' ? 'password' : 'token')); setErr(''); };
   return (
     <div className={s.loginWrap}>
       <form className={s.login} onSubmit={submit}>
         <span className={`mono ${s.eyebrow}`}>Порука · админка</span>
         <h1 className={s.loginTitle}>Кейсы</h1>
-        <p className={s.loginLead}>Вход по токену GitHub. Изменения сохраняются в репозиторий, а сайт пересобирается сам за 2–3 минуты.</p>
-        <ol className={s.steps}>
-          <li>Откройте <a href={TOKEN_URL} target="_blank" rel="noreferrer">создание токена</a> (Fine‑grained).</li>
-          <li>Repository access → Only select repositories → <b>Pequodd/poruka</b>.</li>
-          <li>Permissions → Contents: <b>Read and write</b>. По желанию Actions: Read — чтобы видеть статус сборки.</li>
-          <li>Скопируйте токен и вставьте сюда.</li>
-        </ol>
-        <label htmlFor="tok" className={s.label}>Токен</label>
-        <input id="tok" className={`${s.input} ${s.monoInput}`} type="password" autoComplete="off" value={t} onChange={(e) => setT(e.target.value)} placeholder="github_pat_…" aria-invalid={!!err} />
-        {err && <p className={s.error} role="alert">{err}</p>}
-        <button className={s.btnPrimary} disabled={!t.trim() || busy}>{busy ? 'Проверяем…' : 'Войти'}</button>
-        <p className={s.hint}>Токен хранится только в этом браузере.</p>
+        {mode === 'password' ? (
+          <>
+            <label htmlFor="login" className={s.label}>Логин</label>
+            <input id="login" className={s.input} autoComplete="username" autoCapitalize="none" value={login} onChange={(e) => { setLogin(e.target.value); setErr(''); }} aria-invalid={!!err} />
+            <label htmlFor="pw" className={s.label}>Пароль</label>
+            <input id="pw" className={s.input} type="password" autoComplete="current-password" value={pw} onChange={(e) => { setPw(e.target.value); setErr(''); }} aria-invalid={!!err} />
+            {err && <p className={s.error} role="alert">{err}</p>}
+            <button className={s.btnPrimary} disabled={!login.trim() || !pw || busy}>{busy ? 'Проверяем…' : 'Войти'}</button>
+            <button type="button" className={s.linkBtn} onClick={swap}>Войти по токену GitHub</button>
+          </>
+        ) : (
+          <>
+            <p className={s.loginLead}>Нужно один раз, чтобы завести логины в разделе «Доступ». Изменения сохраняются в репозиторий, сайт пересобирается сам за 2–3 минуты.</p>
+            <ol className={s.steps}>
+              <li>Откройте <a href={TOKEN_URL} target="_blank" rel="noreferrer">создание токена</a> (Fine‑grained).</li>
+              <li>Repository access → Only select repositories → <b>Pequodd/poruka</b>.</li>
+              <li>Permissions → Contents: <b>Read and write</b>. По желанию Actions: Read — чтобы видеть статус сборки.</li>
+              <li>Скопируйте токен и вставьте сюда.</li>
+            </ol>
+            <label htmlFor="tok" className={s.label}>Токен</label>
+            <input id="tok" className={`${s.input} ${s.monoInput}`} type="password" autoComplete="off" value={t} onChange={(e) => setT(e.target.value)} placeholder="github_pat_…" aria-invalid={!!err} />
+            {err && <p className={s.error} role="alert">{err}</p>}
+            <button className={s.btnPrimary} disabled={!t.trim() || busy}>{busy ? 'Проверяем…' : 'Войти'}</button>
+            <button type="button" className={s.linkBtn} onClick={swap}>← Войти по логину и паролю</button>
+          </>
+        )}
       </form>
     </div>
   );
@@ -87,6 +120,8 @@ export function Admin() {
   const [token, setToken] = useState<string | null>(null);
   const [remote, setRemote] = useState<Remote | null>(null);
   const [cats, setCats] = useState<string[]>([]);
+  const [users, setUsers] = useState<AccessEntry[]>([]);
+  const [me, setMe] = useState('');
   const [items, setItems] = useState<Item[]>([]);
   const [sel, setSel] = useState('');
   const [loadErr, setLoadErr] = useState('');
@@ -96,7 +131,7 @@ export function Admin() {
   const [pub, setPub] = useState<{ step?: string; error?: string; sha?: string; deploy?: DeployState } | null>(null);
   const [query, setQuery] = useState('');
 
-  useEffect(() => setToken(store.get(TOKEN_KEY)), []);
+  useEffect(() => { setMe(store.get(LOGIN_KEY)); setToken(store.get(TOKEN_KEY)); }, []);
 
   const load = useCallback(async (t: string) => {
     setLoadErr('');
@@ -104,9 +139,10 @@ export function Admin() {
       const r = await loadData(t);
       setRemote(r);
       setCats(r.categories);
+      setUsers(r.users);
       const next = r.projects.map((p) => wrap(p));
       setItems(next);
-      setSel((cur) => cur === CATS ? cur : next.find((x) => x.p.slug === items.find((i) => i.id === cur)?.p.slug)?.id || next[0]?.id || '');
+      setSel((cur) => cur === CATS || cur === ACCESS ? cur : next.find((x) => x.p.slug === items.find((i) => i.id === cur)?.p.slug)?.id || next[0]?.id || '');
     } catch (e) { setLoadErr(explain(e)); }
   }, [items]);
 
@@ -129,8 +165,9 @@ export function Admin() {
   const status = (it: Item) => (it.isNew || !remoteBySlug.has(it.p.slug) ? 'new' : remoteBySlug.get(it.p.slug) !== JSON.stringify(it.p) ? 'edited' : '');
   const removed = useMemo(() => (remote?.projects || []).filter((p) => !draft.some((d) => d.slug === p.slug)), [remote, draft]);
   const catsDirty = !!remote && JSON.stringify(cats) !== JSON.stringify(remote.categories);
-  const dirty = !!remote && (catsDirty || JSON.stringify(draft) !== JSON.stringify(remote.projects));
-  const changes = items.filter((i) => status(i)).length + removed.length + (catsDirty ? 1 : 0);
+  const usersDirty = !!remote && JSON.stringify(users) !== JSON.stringify(remote.users);
+  const dirty = !!remote && (catsDirty || usersDirty || JSON.stringify(draft) !== JSON.stringify(remote.projects));
+  const changes = items.filter((i) => status(i)).length + removed.length + (catsDirty ? 1 : 0) + (usersDirty ? 1 : 0);
   const orderChanged = dirty && changes === 0;
   const usage = useMemo(() => draft.reduce<Record<string, number>>((m, p) => { catsOf(p).forEach((c) => { m[c] = (m[c] || 0) + 1; }); return m; }, {}), [draft]);
   const changeCats = (next: string[], renamed?: { from: string; to: string }, moved?: { name: string; to: string }) => {
@@ -192,7 +229,7 @@ export function Admin() {
   const discard = () => {
     if (!remote || !confirm('Отменить все неопубликованные изменения?')) return;
     const next = remote.projects.map((p) => wrap(p));
-    setItems(next); setCats(remote.categories); setSel(next[0]?.id || '');
+    setItems(next); setCats(remote.categories); setUsers(remote.users); setSel(next[0]?.id || '');
   };
 
   const doPublish = async () => {
@@ -207,10 +244,10 @@ export function Admin() {
     const edited = items.filter((i) => status(i) === 'edited').map((i) => i.p.title);
     const message = ['Кейсы: правки из админки', '',
       added.length ? `Добавлены: ${names(added)}` : '', edited.length ? `Изменены: ${names(edited)}` : '',
-      removed.length ? `Удалены: ${names(removed.map((p) => p.title))}` : '', catsDirty ? `Категории: ${cats.join(', ')}` : '', orderChanged ? 'Изменён порядок' : ''].filter((l, i) => i < 2 || l).join('\n');
+      removed.length ? `Удалены: ${names(removed.map((p) => p.title))}` : '', catsDirty ? `Категории: ${cats.join(', ')}` : '', usersDirty ? `Доступ: ${users.map((u) => u.login).join(', ') || 'нет логинов'}` : '', orderChanged ? 'Изменён порядок' : ''].filter((l, i) => i < 2 || l).join('\n');
     try {
-      const r = await publish(token, { files: { [DATA_PATH]: draft, [CATS_PATH]: cats }, baseShas: remote.shas, uploads, removedSlugs: removed.map((p) => p.slug), keepPaths: refs, message, onStep: (step) => setPub({ step }) });
-      setRemote({ projects: JSON.parse(JSON.stringify(draft)), categories: [...cats], shas: r.shas });
+      const r = await publish(token, { files: { [DATA_PATH]: draft, [CATS_PATH]: cats, ...(usersDirty ? { [ACCESS_PATH]: users } : {}) }, baseShas: remote.shas, uploads, removedSlugs: removed.map((p) => p.slug), keepPaths: refs, message, onStep: (step) => setPub({ step }) });
+      setRemote({ projects: JSON.parse(JSON.stringify(draft)), categories: [...cats], users: [...users], shas: { ...remote.shas, ...r.shas } });
       setItems((xs) => xs.map((x) => ({ ...x, isNew: false })));
       setPub({ sha: r.commit, deploy: 'queued' });
     } catch (e) {
@@ -232,16 +269,16 @@ export function Admin() {
 
   const logout = () => {
     if (dirty && !confirm('Есть неопубликованные изменения. Выйти и потерять их?')) return;
-    store.set(TOKEN_KEY, ''); setToken(''); setRemote(null); setItems([]); setCats([]);
+    store.set(TOKEN_KEY, ''); store.set(LOGIN_KEY, ''); setMe(''); setToken(''); setRemote(null); setItems([]); setCats([]); setUsers([]);
   };
 
   if (token === null) return null;
-  if (!token) return <Login onToken={(t) => { store.set(TOKEN_KEY, t); setToken(t); }} />;
+  if (!token) return <Login onToken={(t, l) => { store.set(TOKEN_KEY, t); store.set(LOGIN_KEY, l); setMe(l); setToken(t); }} />;
   if (!remote) {
     return (
       <div className={s.loginWrap}>
         <div className={s.login}>
-          {loadErr ? <><p className={s.error} role="alert">{loadErr}</p><div className={s.addRow}><button className={s.btnPrimary} onClick={() => load(token)}>Повторить</button><button className={`${s.btnSm} ${s.btnGhost}`} onClick={logout}>Сменить токен</button></div></> : <p className={s.hint}>Загружаем кейсы…</p>}
+          {loadErr ? <><p className={s.error} role="alert">{loadErr}</p><div className={s.addRow}><button className={s.btnPrimary} onClick={() => load(token)}>Повторить</button><button className={`${s.btnSm} ${s.btnGhost}`} onClick={logout}>Выйти</button></div></> : <p className={s.hint}>Загружаем кейсы…</p>}
         </div>
       </div>
     );
@@ -308,11 +345,25 @@ export function Admin() {
               <span>Категории</span>
               <span className="mono">{cats.length}{catsDirty ? ' · изменены' : ''}</span>
             </button>
+            <button type="button" className={`${s.catLink} ${sel === ACCESS ? s.liActive : ''}`} onClick={() => setSel(ACCESS)} aria-current={sel === ACCESS}>
+              <span>Доступ</span>
+              <span className="mono">{users.length}{usersDirty ? ' · изменён' : ''}</span>
+            </button>
             <label className={s.check}><input type="checkbox" checked={compress} onChange={(e) => setCompress(e.target.checked)} /> Сжимать картинки в WebP</label>
           </aside>
 
           <main className={s.main}>
-            {sel === CATS ? (
+            {sel === ACCESS ? (
+              <>
+                <div className={s.mainHead}>
+                  <div>
+                    <span className={`mono ${s.eyebrow}`}>Вход в админку</span>
+                    <h1 className={s.mainTitle}>Доступ</h1>
+                  </div>
+                </div>
+                <AccessEditor users={users} token={token} me={me} onChange={setUsers} />
+              </>
+            ) : sel === CATS ? (
               <>
                 <div className={s.mainHead}>
                   <div>

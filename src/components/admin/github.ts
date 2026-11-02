@@ -7,6 +7,8 @@ import type { Project } from '@/data/projects';
 export const REPO = { owner: 'Pequodd', name: 'poruka', branch: 'main' };
 export const DATA_PATH = 'src/data/projects.json';
 export const CATS_PATH = 'src/data/categories.json';
+/** Logins of the admin: the GitHub token encrypted with each user's password. Public file, served at /admin-access.json. */
+export const ACCESS_PATH = 'public/admin-access.json';
 const API = `https://api.github.com/repos/${REPO.owner}/${REPO.name}`;
 
 export class GhError extends Error {
@@ -56,14 +58,59 @@ async function readJson<T>(token: string, path: string, ref: string): Promise<{ 
   }
 }
 
-export interface Remote { projects: Project[]; categories: string[]; shas: Record<string, string> }
+export interface AccessEntry { login: string; salt: string; iv: string; data: string; iter: number }
+export interface Remote { projects: Project[]; categories: string[]; users: AccessEntry[]; shas: Record<string, string> }
 
 /** Current cases and categories, with the blob shas they were read at (used to detect edits made elsewhere). */
 export async function loadData(token: string): Promise<Remote> {
-  const [p, c] = await Promise.all([readJson<Project[]>(token, DATA_PATH, REPO.branch), readJson<string[]>(token, CATS_PATH, REPO.branch)]);
+  const [p, c, a] = await Promise.all([readJson<Project[]>(token, DATA_PATH, REPO.branch), readJson<string[]>(token, CATS_PATH, REPO.branch), readJson<AccessEntry[]>(token, ACCESS_PATH, REPO.branch)]);
   const projects = p.value || [];
   const categories = c.value || [...new Set(projects.flatMap((x) => (Array.isArray(x.cat) ? x.cat : [x.cat])))];
-  return { projects, categories, shas: { [DATA_PATH]: p.sha, [CATS_PATH]: c.sha } };
+  return { projects, categories, users: a.value || [], shas: { [DATA_PATH]: p.sha, [CATS_PATH]: c.sha, [ACCESS_PATH]: a.sha } };
+}
+
+/* ---------- Login + password: the token is stored encrypted (PBKDF2-SHA256 → AES-256-GCM) ---------- */
+
+const ITER = 310_000;
+const toB64 = (b: ArrayBuffer | Uint8Array) => btoa(String.fromCharCode(...new Uint8Array(b instanceof Uint8Array ? b : new Uint8Array(b))));
+const fromB64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+export const normLogin = (l: string) => l.trim().toLowerCase();
+
+async function deriveKey(password: string, salt: Uint8Array, iter: number) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: salt as BufferSource, iterations: iter }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+
+export async function encryptToken(login: string, password: string, token: string): Promise<AccessEntry> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt, ITER);
+  const login_ = normLogin(login);
+  const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData: new TextEncoder().encode(login_) }, key, new TextEncoder().encode(token));
+  return { login: login_, salt: toB64(salt), iv: toB64(iv), data: toB64(data), iter: ITER };
+}
+
+/** The token, or null when the password is wrong. */
+export async function decryptToken(e: AccessEntry, password: string): Promise<string | null> {
+  try {
+    const key = await deriveKey(password, fromB64(e.salt), e.iter);
+    const out = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(e.iv) as BufferSource, additionalData: new TextEncoder().encode(e.login) }, key, fromB64(e.data) as BufferSource);
+    return new TextDecoder().decode(out);
+  } catch {
+    return null;
+  }
+}
+
+/** The published list of logins (no token needed). The repo copy first (fresh right after a publish), the site copy if the repo is unreachable. */
+export async function fetchAccess(base: string): Promise<AccessEntry[]> {
+  const t = Date.now();
+  for (const u of [`https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/${REPO.branch}/${ACCESS_PATH}?t=${t}`, `${base}/admin-access.json?t=${t}`]) {
+    try {
+      const r = await fetch(u, { cache: 'no-store' });
+      if (r.ok) { const l = await r.json(); if (Array.isArray(l)) return l; }
+    } catch { /* try the next copy */ }
+  }
+  return [];
 }
 
 async function listDir(token: string, dir: string) {
